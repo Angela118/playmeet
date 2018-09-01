@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="kr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link href="../css/bootstrap.min.css" rel="stylesheet">
+  <link href="../css/common.css" rel="stylesheet">
+  <link href="../css/FRAME.css" rel="stylesheet">
+  <link href="../css/my_match.css" rel="stylesheet">
+  <!--<link href="https://fonts.googleapis.com/css?family=Yeon+Sung" rel="stylesheet">-->
+  <title>내가 등록한 매칭</title>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="../js/jquery.js"></script>
+  <script src="../js/bootstrap.bundle.min.js"></script>
+
+</head>
+
+<body class="whiteB">
+
+<!--메뉴 영역 시작-->
+
+<script type="text/javascript">
+    function goBack(){
+        window.history.back();
+    }
+</script>
+
+<nav class="navbar blueB">
+  <div class="top">
+    <div>
+      <img src="../img/left-arrow.png" alt="" width="20rem" height="20rem" style="margin-right:3rem" onclick="goBack();">
+		
+		<a href="/"><p onclick="/" class="logo">축하싶</p></a>
+      <p class="logo ml-sm-3 whiteW">내가 등록한 매칭</p>
+    </div>
+
+    <div>
+      <a href="/chatroom"><img src="../img/envelope.png" class="menu_img" width="20rem" height="20rem" style="margin-right:1rem"></a>
+
+      <img src="../img/menu.png" width="20rem" height="20rem" class="navbar-toggler" data-toggle="collapse" data-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
+    </div>
+  </div>
+
+  <div class="collapse navbar-collapse" id="navbarsExample01">
+    <div class="mypage">
+      <img src="../profile_img/<%= profile_img %>" id="profile_pic" style="margin-right: .2rem; width:3rem; height: 3rem">
+      <span id="name" style="font-weight: bold; font-size: 1.2rem; margin-left: .5rem"><%= teamname %> 팀</span>
+      <a href="/teamprofile"><button class="btn btn-sm btn-warning" type="submit" style="margin-right: .5rem">내 정보</button></a>
+      <a href="/uploadimg"><button class="btn btn-sm btn-warning" type="submit" style="margin-right: .5rem">프로필 사진 변경</button></a>
+      <a href="/logout"><button class="btn btn-sm btn-warning" type="submit">로그아웃</button></a>
+    </div>
+
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="/">홈 (매칭 팀 검색)</a>
+      </li>
+      <li class="nav-item" style="display:flex; align-items:center">
+        <span style="margin-bottom: 0; padding: .5rem 0rem; color:white">우리 팀</span>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" href="/teamreceivedreview" style="margin-left:2rem">우리 팀 평가 점수</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/teamschedule" style="margin-left:2rem">경기 스케줄</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="matchapplication">매칭 등록</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/mymatch">내가 등록한 매칭</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/contact">개발자에게 연락</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<div class="py-4 text-center"></div>
+
+<!--메뉴 영역 끝-->
+
+<div class="container" style="padding-top:1rem">
+  <div class="reco">
+
+    <% for(var i = 0; i < event_data.length; i++) {
+      var curEmail = event_data[i].email;
+      var curCreatedMonth = event_data[i].created_month;
+      var curCreatedDay = event_data[i].created_day;
+      var curTeamname = event_data[i].teamname;
+      var curAdd = event_data[i].add[0] +' '+ event_data[i].add[1];
+      var curRegion = event_data[i].region;
+      var curMove = event_data[i].move;
+      var curAge = event_data[i].age;
+      var curDate = event_data[i].event_date;
+      var curTime = event_data[i].event_time;
+      var curMention = event_data[i].mention;
+	  var curApplicationNumber = event_data[i].application_number;
+    
+    if(curMove == 100){
+        curMove = 'O';
+    }else if(curMove == 50){
+        curMove = 'X';
+    }
+		  
+	if(curTime == 'none'){
+        curTime = '시간 무관';
+    }
+    %>
+    <div class="content mb-3"> <!--content-->
+      <div class="date">
+        <h3 style="font-weight: bold"><%= curCreatedMonth %>.<%= curCreatedDay %></h3>
+      </div>
+      <div class= "events mb-3">
+        <div class="score_content">
+          <div class = "schedule-detail">
+            <p class="schedule-detail-content">
+              <span class="bold">지역 | </span>
+              <span><%= curAdd %></span>
+            </p>
+            <p class="schedule-detail-content">
+              <span class="bold">장소 | </span>
+              <span><%= curRegion %></span>
+            </p>
+            <p class="schedule-detail-content">
+              <span class="bold">원정가능 유무 | </span>
+              <span><%= curMove %></span>
+            </p>
+            <p class="schedule-detail-content">
+              <span class="bold">연령대 | </span>
+              <span><%= curAge %></span>
+            </p>
+            <p class="schedule-detail-content">
+              <span class="bold">날짜 | </span>
+              <span><%= curDate %></span>
+            </p>
+            <p class="schedule-detail-content">
+              <span class="bold">시간 | </span>
+              <span><%= curTime %></span>
+            </p>
+            <p class="schedule-detail-content">
+              <span class="bold">기타 할 말 | </span>
+              <span><%= curMention %></span>
+            </p>
+            <div>
+				<form action="/mymatch" method="post">
+					<input type="hidden" name="user" id="user" class="form-control" value="<%= curEmail %>" readonly/>
+					<input type="hidden" name="date" id="date" class="form-control" value="<%= curDate %>" readonly/>
+					<input type="hidden" name="time" id="time" class="form-control" value="<%= curTime %>" readonly/>
+					<input type="hidden" name="event_region" id="event_region" class="form-control" value="<%= curRegion %>" readonly/>
+					<input type="hidden" name="event_application_number" id="event_application_number" class="form-control" value="<%= curApplicationNumber %>" readonly/>
+					
+					<a href="/matchapplicationedit"><button value="mod" class="btn btn-block blueB mt-3">수정하기</button></a>
+					<a href="/mymatch"><button class="btn btn-block blueB mt-3" onclick="del_clicked()" id="opt" name="opt">삭제하기</button></a>
+				</form>
+            </div>
+			  
+			  <script>
+				function del_clicked(){
+					
+					/* confirm(문자열, 초기값) */
+					var check = confirm("정말로 삭제하시겠습니까?");
+					/* if(check == true) else false */
+					if(check){
+						alert("삭제되었습니다.");
+						document.getElementById('opt').value = 'del';
+					}else{						
+					}
+				};
+			  </script>
+
+          </div>
+        </div>
+      </div>
+    </div> <!--content-->
+    <%} %>
+  </div> <!--reco-->
+
+</div><!--container-->
+
+</body>
+</html>
