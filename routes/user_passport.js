@@ -697,7 +697,8 @@ module.exports = function(router, passport, upload) {
 				'profile_img':profile_photo
 			};
 			
-            res.render('chat_room.ejs', user_context);
+  //          res.render('chat_room.ejs', user_context);
+			res.redirect('/chatroomchat');
         }
     });
 	
