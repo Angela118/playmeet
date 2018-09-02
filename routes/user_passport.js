@@ -43,7 +43,7 @@ module.exports = function(router, passport, upload) {
 			var fs = require('fs');
 			
 			const Json2csvParser = require('json2csv').Parser;
-			const fields = ['email', 'age', 'gender', 'nofteam', 'geoLng', 'geoLat',/*여기까지*/ 'teamname', 'region', 'add', 'move', 'event_date', 'event_time', 'event_day', 'event_day', 'mention', 'created_month', 'creted_day', 'application_number'];
+			const fields = ['email', 'age', 'gender', 'nofteam', 'career_year', 'career_count', 'geoLng', 'geoLat',/*여기까지*/ 'teamname', 'region', 'add', 'move', 'event_date', 'event_time', 'event_day', 'event_day', 'mention', 'created_month', 'creted_day', 'application_number'];
 			const eventData = [];	
 			
 			var userdata = {
@@ -51,6 +51,8 @@ module.exports = function(router, passport, upload) {
 				'age':req.user.age,
 				'gender':req.user.gender,
 				'nofteam':req.user.nofteam,
+				'career_year':req.user.career_year,
+				'career_count':req.user.career_count,
 				'geoLng':req.user.geoLng,
 				'geoLat':req.user.geoLat
 			};
@@ -62,6 +64,8 @@ module.exports = function(router, passport, upload) {
 					var data = {
 						'email' : result[i]._doc.email, 
 						'teamname' : result[i]._doc.teamname,
+						'career_year' : result[i]._doc.career_year,
+						'career_count' : result[i]._doc.career_count,
 						'region' : result[i]._doc.region,
 						'add' : result[i]._doc.add,
 						'move' : result[i]._doc.move,
@@ -1223,22 +1227,24 @@ module.exports = function(router, passport, upload) {
 			dbm.ApplicationModel.find({$and: search}, function (err, result) {
 				for (var i = 0; i < result.length; i++) {
 					var data = {
-						'email' : result[i]._doc.email,
+						'email' : result[i]._doc.email, 
 						'teamname' : result[i]._doc.teamname,
-						'add' : result[i]._doc.add,
+						'career_year' : result[i]._doc.career_year,
+						'career_count' : result[i]._doc.career_count,
 						'region' : result[i]._doc.region,
+						'add' : result[i]._doc.add,
 						'move' : result[i]._doc.move,
-						'age' : result[i]._doc.age,
+						'age' : result[i]._doc.age,	
 						'gender' : result[i]._doc.gender,
 						'event_date' : result[i]._doc.event_date,
 						'event_time' : result[i]._doc.event_time,
 						'event_day' : result[i]._doc.event_day,
-						'mention' : result[i]._doc.mention,
-						'created_month' : result[i]._doc.created_month,
-						'created_day' : result[i]._doc.created_day,
+						'mention' : result[i]._doc.mention,	
+						'nofteam' : result[i]._doc.nofteam,
 						'geoLng' : result[i]._doc.geoLng,
 						'geoLat' : result[i]._doc.geoLat,
-						'nofteam' : result[i]._doc.nofteam,
+						'created_month' : result[i]._doc.created_month,
+						'created_day' : result[i]._doc.created_day,
 						'application_number' : result[i]._doc.application_number
 					};
 					eventData[i] = data;
@@ -1687,6 +1693,8 @@ module.exports = function(router, passport, upload) {
         var event = {
             'email': req.user.email,
             'teamname': req.user.teamname,
+			'career_year':req.user.career_year,
+			'career_count':req.user.career_count,
             'region': req.body.region || req.query.region,
 			'add':req.body.add ||req.query.add,
             'place' : req.body.place || req.query.place,
@@ -1751,17 +1759,22 @@ module.exports = function(router, passport, upload) {
 					var data = {
 						'email' : result[i]._doc.email, 
 						'teamname' : result[i]._doc.teamname,
+						'career_year' : result[i]._doc.career_year,
+						'career_count' : result[i]._doc.career_count,
 						'region' : result[i]._doc.region,
 						'add' : result[i]._doc.add,
 						'move' : result[i]._doc.move,
 						'age' : result[i]._doc.age,	
+						'gender' : result[i]._doc.gender,
 						'event_date' : result[i]._doc.event_date,
 						'event_time' : result[i]._doc.event_time,
-						'mention' : result[i]._doc.mention,
-						'created_month' : result[i]._doc.created_month,
-						'created_day' : result[i]._doc.created_day,
+						'event_day' : result[i]._doc.event_day,
+						'mention' : result[i]._doc.mention,	
+						'nofteam' : result[i]._doc.nofteam,
 						'geoLng' : result[i]._doc.geoLng,
 						'geoLat' : result[i]._doc.geoLat,
+						'created_month' : result[i]._doc.created_month,
+						'created_day' : result[i]._doc.created_day,
 						'application_number' : result[i]._doc.application_number
 					};				
 					eventData[i] = data;
@@ -1844,26 +1857,32 @@ module.exports = function(router, passport, upload) {
 			
 			console.dir(selectone);
 
-			dbm.ApplicationModel.find({$and:[{email:selectone.user}, {event_date:selectone.date}, {event_time:selectone.time}, {region:selectone.region}]}, function (err, result) {				
+			dbm.ApplicationModel.find({$and:[{email:selectone.user}, /*{event_date:selectone.date}, {event_time:selectone.time}, {region:selectone.region}, */{application_number:selectone.application_number}]}, function (err, result) {
 				for(var i = 0 ; i < result.length ; i++) {
-					if(result[i]._doc.email == req.user.email){
-						var data = {
-							'email' : result[i]._doc.email, 
-							'teamname' : result[i]._doc.teamname,
-							'add' : [result[i]._doc.add[0], result[i]._doc.add[1]],
-							'region' : result[i]._doc.region,
-							'move' : result[i]._doc.move,
-							'age' : result[i]._doc.age,	
-							'event_date' : result[i]._doc.event_date,
-							'event_time' : result[i]._doc.event_time,
-							'mention' : result[i]._doc.mention,
-							'created_month' : result[i]._doc.created_month,
-							'created_day' : result[i]._doc.created_day,
-							'application_number' : result[i]._doc.application_number
-						};
-					}					
+					var data = {
+						'email' : result[i]._doc.email, 
+						'teamname' : result[i]._doc.teamname,
+						'career_year' : result[i]._doc.career_year,
+						'career_count' : result[i]._doc.career_count,
+						'region' : result[i]._doc.region,
+						'add' : result[i]._doc.add,
+						'move' : result[i]._doc.move,
+						'age' : result[i]._doc.age,	
+						'gender' : result[i]._doc.gender,
+						'event_date' : result[i]._doc.event_date,
+						'event_time' : result[i]._doc.event_time,
+						'event_day' : result[i]._doc.event_day,
+						'mention' : result[i]._doc.mention,	
+						'nofteam' : result[i]._doc.nofteam,
+						'geoLng' : result[i]._doc.geoLng,
+						'geoLat' : result[i]._doc.geoLat,
+						'created_month' : result[i]._doc.created_month,
+						'created_day' : result[i]._doc.created_day,
+						'application_number' : result[i]._doc.application_number
+					};				
 					eventData[i] = data;
 				}
+				
 				
 				
 				var user_context = {
@@ -1890,8 +1909,6 @@ module.exports = function(router, passport, upload) {
             	res.render('match_application_edit.ejs', user_context);
 			
 			});
-
-
         }
 	});
 	
