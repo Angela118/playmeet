@@ -2,7 +2,6 @@ import numpy as np
 import csv
 from numpy import array
 from scipy.spatial import distance
-#from pymongo import MongoClient
 import warnings
 import sys
 
@@ -34,13 +33,11 @@ header = data[0]
 
 del data[0]
 
+
+
+#scaling
 for i in range(0, len(data)):
-    if data[i][3] == '여자':
-        data[i][3] = 100
-    elif data[i][3] == '남자':
-        data[i][3] = 50
-    elif data[i][3] == '혼성':
-        data[i][3] = 25
+    data[i][4] = data[i][4] + '0'
 
         
 dat = data[:]
@@ -55,24 +52,16 @@ for i in range(1, len(data)):
 
 
 
-'''
-for i in range(0, len(predict)):
-    predict[i] = float(predict[i])
-'''
-
-#print(data)
-print()
-
-#predict = np.array(predict, dtype=np.float64)
 data = np.array(data)
 
-data = data[:, 0:5]
+data = data[:, 0:7]
 
 print(data)
 print()
 
 
 data = data.astype('float64')
+
 
 print(data)
 print()
@@ -84,11 +73,14 @@ for i in range(1, len(data)):
 
 print(euc_dst)
 print()
+
 ar_euc = []
 for i in range(0, len(euc_dst)):
     ar_euc.append([i+1, euc_dst[i]])
 print(ar_euc)
 print()
+
+
 
 #sorting    
 for size in reversed(range(len(ar_euc))):
@@ -102,8 +94,15 @@ for i in range(0, len(ar_euc)):
     result_data.append(dat[ar_euc[i][0]])
     result_data[i].insert(0, idArray[i])
 
+
+#scaling 되돌리기
+for i in range(0, len(result_data)):
+    result_data[i][4] = result_data[i][4][0:len(result_data[i][4])-1]
+
+
 result_data.insert(0, header)
-        
+
+
 print(result_data)
 print()
 
