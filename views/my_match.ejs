@@ -67,7 +67,7 @@
         <a class="nav-link" href="/teamschedule" style="margin-left:2rem">경기 스케줄</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="matchapplication">매칭 등록</a>
+        <a class="nav-link" href="/matchapplication">매칭 등록</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/mymatch">내가 등록한 매칭</a>
@@ -153,25 +153,10 @@
 					<input type="hidden" name="event_region" id="event_region" class="form-control" value="<%= curRegion %>" readonly/>
 					<input type="hidden" name="event_application_number" id="event_application_number" class="form-control" value="<%= curApplicationNumber %>" readonly/>
 					
-					<a href="/matchapplicationedit"><button value="mod" class="btn btn-block blueB mt-3">수정하기</button></a>
-					<a href="/mymatch"><button class="btn btn-block blueB mt-3" onclick="del_clicked()" id="opt" name="opt">삭제하기</button></a>
+					<a href="/matchapplicationedit"><button value="mod" class="btn btn-block blueB mt-3" onclick="href='/matchapplicationedit'" id="opt" name="opt" value="mod">수정하기</button></a>
+					<a href="/mymatch"><button class="btn btn-block blueB mt-3" onclick="alert('삭제되었습니다.')" id="opt" name="opt" value="del">삭제하기</button></a>
 				</form>
             </div>
-			  
-			  <script>
-				function del_clicked(){
-					
-					/* confirm(문자열, 초기값) */
-					var check = confirm("정말로 삭제하시겠습니까?");
-					/* if(check == true) else false */
-					if(check){
-						alert("삭제되었습니다.");
-						document.getElementById('opt').value = 'del';
-					}else{						
-					}
-				};
-			  </script>
-
           </div>
         </div>
       </div>

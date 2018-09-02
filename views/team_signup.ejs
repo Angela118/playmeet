@@ -24,8 +24,7 @@
 		.hAddr {position:absolute;left:10px;top:10px;border-radius: 2px;background:#fff;background:rgba(255,255,255,0.8);z-index:1;padding:5px;}
 		#centerAddr {display:block;margin-top:2px;font-weight: normal;}
 		.bAddr {padding:5px;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
-	</style>
-	
+	</style>	
 </head>
 
 <script type="text/javascript">
@@ -237,46 +236,6 @@
 						infowindow.setContent(content);
 						infowindow.open(map, marker); 
 					}
-					
-					/*
-					
-					// 지도를 클릭했을 때 클릭 위치 좌표에 대한 주소정보를 표시하도록 이벤트를 등록합니다
-					daum.maps.event.addListener(marker, 'click', function() {
-						searchDetailAddrFromCoords((geoLng, geoLat), function(result, status) {
-							if (status === daum.maps.services.Status.OK) {
-								var detailAddr = !!result[0].road_address ? '<div>도로명주소 : ' + result[0].road_address.address_name + '</div>' : '';
-									detailAddr += '<div>지번 주소 : ' + result[0].address.address_name + '</div>';
-								var content = '<div class="bAddr">' +
-												'<span class="title">'+ place.place_name+''</span>' + 
-												detailAddr + 
-											'</div>';
-							
-								// 인포윈도우에 클릭한 위치에 대한 법정동 상세 주소정보를 표시합니다
-								infowindow.setContent(content);
-								infowindow.open(map, marker);
-							}   
-						});
-					});	
-					
-					
-					
-					// 마커에 클릭이벤트를 등록합니다
-					daum.maps.event.addListener(marker, 'click', function() {
-						// 마커를 클릭하면 장소명이 인포윈도우에 표출됩니다
-						infowindow.setContent('<div style="padding:5px;font-size:12px;">' + place.place_name + '</div>');
-						infowindow.open(map, marker);
-						var region = document.getElementById('region');
-						region.value = place.place_name;
-						var resultLat = document.getElementById('resultLat');
-						resultLat.value = geoLat;
-						var resultLng = document.getElementById('resultLng');
-						resultLng.value = geoLng;
-					});
-					
-					
-					*/
-					
-					
 				}
 				</script>
 				</div>
@@ -310,7 +269,7 @@
             <div class="mb-3">
                 <label for="career_count">여태까지 경기 횟수</label>
                 <div class="enter">
-                    <input type="text" class="form-control one" name="career_count" id="career_count" placeholder="숫자 입력" onkeydown='return onlyNumber(event)' onkeyup='removeChar(event)' style='ime-mode:disabled;' required><div class="two">번</div>
+                    <input type="text" class="form-control one" name="career_count" id="career_count" placeholder="숫자 입력" onkeydown='return onlyNumber(event)' onkeyup='removeChar(event)' onkeypress="onlyInt" style='ime-mode:disabled;' required><div class="two">번</div>
                 </div>
             </div>
 

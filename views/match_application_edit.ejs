@@ -60,7 +60,7 @@
         <a class="nav-link" href="/teamschedule" style="margin-left:2rem">경기 스케줄</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="matchapplication">매칭 등록</a>
+        <a class="nav-link" href="/matchapplication">매칭 등록</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/mymatch">내가 등록한 매칭</a>
@@ -81,20 +81,22 @@
     <div class="reco" style="margin-top: 2.3rem">
         <h5 class="mb-3 blackW" style="font-weight: bold">매칭 등록</h5>
 
-        <form name="select_region" method="post" action="/matchapplicationedit">
+        <form name="select_region" method="post" action="/matchapplicationedit">			
             <table class="table">
                 <tbody>
 					
-                    
-                    <%
+				<%
                     if(event_data[0].move == 100){
                         var curMove = 'O';
                     }else if(event_data[0].move == 50){
                         var curMove = 'X';
-                    }
-                    
-                    %>
-                    
+                    }  
+					
+					
+                    if(event_data[0].event_time == 'none')
+                        var curTime = '시간 무관';                   
+                 %>
+					
                     
 	<!--
                 <tr>
@@ -278,13 +280,11 @@
                     <script>
 				
 					$(document).ready(function() {
-						var matchYear = <%= event_data[0].event_date %>.substring(0,4);
-						var matchMonth = <%= event_data[0].event_date %>.substring(5,7);
-						var matchDay = <%= event_data[0].event_date %>.substring(8,10);
+						var curDate = '<%= event_data[0].event_date %>';
 						
-    					var day = date.getDate();
-						var month = date.getMonth() + 1;
-    					var year = date.getFullYear();
+						var matchYear = curDate.substring(0,4);
+						var matchMonth = curDate.substring(5,7);
+						var matchDay = curDate.substring(8,10);
 						
     					var today = matchYear + "-" + matchMonth + "-" + matchDay;       
     					$("#theDate").attr("value", today);
@@ -299,7 +299,7 @@
                     <th>시간대</th>
                     <td>
 						<select name="event_time" class="form-control">
-							<option value="<%= event_data[0].event_time %>" selected disabled hidden><%= event_data[0].event_time %></option>
+							<option value="<%= curTime %>" selected disabled hidden><%= curTime %></option>
 							<option value="none">시간무관</option>
 							<option>00</option>
 							<option>01</option>
