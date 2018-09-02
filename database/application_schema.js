@@ -15,9 +15,11 @@ Schema.createSchema = function(mongoose) {
 
 	
 	// 스키마 정의
-	var ApplicationSchema = mongoose.Schema({		//17개
+	var ApplicationSchema = mongoose.Schema({		//19개
 		email: {type: String, 'default':''},
 		teamname: {type: String, index: 'hashed', 'default':''},
+		career_year: {type:Number, 'default':''},
+		career_count: {type:Number, 'default':''},
 		add: [{type: String, 'default':''}],
 		region : {type:String, 'default':''},
 		move : {type:String, 'default':''},
