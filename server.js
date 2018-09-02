@@ -164,7 +164,7 @@ app.use('/css', express.static(__dirname + '/views/css')); // redirect CSS boots
 app.use('/img', express.static(__dirname + '/views/css/img'));
 app.use('/public', express.static(__dirname + '/public'));
 app.use('/views', express.static(__dirname + '/views'));
-
+app.use('/html', express.static(__dirname + '/html'));
 
 
 // cookie-parser 설정
