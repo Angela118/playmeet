@@ -258,7 +258,7 @@ var errorHandler = expressErrorHandler({
 
  static: {
 
-   '404': './public/404.html'
+   '404': './public/404.ejs'
 
  }
 
@@ -285,9 +285,7 @@ process.on('uncaughtException', function (err) {
 	console.log('uncaughtException 발생함 : ' + err);
 
 	console.log('서버 프로세스 종료하지 않고 유지함.');
-
 	
-
 	console.log(err.stack);
 
 });
