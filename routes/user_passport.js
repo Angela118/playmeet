@@ -33,7 +33,7 @@ module.exports = function(router, passport, upload) {
 	
 	//홈 화면, 추천
 	router.route('/').get(function(req, res) {
-		 console.log('/main 패스 get 요청됨.');		 
+		 console.log('/ 패스 get 요청됨.');		 
      
         // 인증 안된 경우
         if (!req.user) {
@@ -107,48 +107,57 @@ module.exports = function(router, passport, upload) {
 				
 				console.log('Python run');
 				console.log('%j', results)
-			});			
+			});		
 			
-			setTimeout(function(){
-				var csvf = require('csvtojson');
-				
-				csvf()
-				.fromFile('recOutput.csv')
-				.then(function(output){
-	
-					profile_photo = req.user.profile_img;			
-					if(profile_img == null)
-						profile_img = req.user.profile_img;
-					if(profile_img != req.user.profile_img)
-						profile_photo = profile_img;
-
-					var user_context = {
-						'email':req.user.email, 
-						'password':req.user.password, 
-						'teamname':req.user.teamname, 
-						'gender':req.user.gender, 
-						'age':req.user.age,
-						'region':req.user.region,
-						'add':req.user.add,
-						'move':req.user.move,
-						'nofteam':req.user.nofteam,
-						'career_year':req.user.career_year,
-						'career_count':req.user.career_count,
-						'introteam':req.user.introteam,
-						'profile_img':profile_photo,
-						'event_data':output
-					};
-
-					console.dir(user_context);
-
-					res.render('main.ejs', user_context);				
-				});
-				
-			}, 1500);
+			res.render('loading.ejs');
 		}        
     });
+	
+	router.route('/main').get(function(req, res){
+		console.log('/main 패스 get 요청됨.');		 
+     
+        // 인증 안된 경우
+        if (!req.user) {
+            console.log('사용자 인증 안된 상태임.');
+            res.redirect('/login');
+        } else {
+			var csvf = require('csvtojson');
 
-	router.route('/').post(function(req, res) {
+			csvf()
+			.fromFile('recOutput.csv')
+			.then(function(output){
+
+				profile_photo = req.user.profile_img;			
+				if(profile_img == null)
+					profile_img = req.user.profile_img;
+				if(profile_img != req.user.profile_img)
+					profile_photo = profile_img;
+
+				var user_context = {
+					'email':req.user.email, 
+					'password':req.user.password, 
+					'teamname':req.user.teamname, 
+					'gender':req.user.gender, 
+					'age':req.user.age,
+					'region':req.user.region,
+					'add':req.user.add,
+					'move':req.user.move,
+					'nofteam':req.user.nofteam,
+					'career_year':req.user.career_year,
+					'career_count':req.user.career_count,
+					'introteam':req.user.introteam,
+					'profile_img':profile_photo,
+					'event_data':output
+				};
+
+				console.dir(user_context);
+
+				res.render('main.ejs', user_context);				
+			});
+		}
+	});
+
+	router.route('/main').post(function(req, res) {
         console.log('/main 패스 post 요청됨.');
 
         var others = {
@@ -205,7 +214,7 @@ module.exports = function(router, passport, upload) {
             console.log('data : ' + data);
         });
 
-        res.redirect('/');
+        res.redirect('/main');
 
     });
 	
