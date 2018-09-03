@@ -60,7 +60,7 @@
         <a class="nav-link" href="/teamschedule" style="margin-left:2rem">경기 스케줄</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="matchapplication">매칭 등록</a>
+        <a class="nav-link" href="/matchapplication">매칭 등록</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/mymatch">내가 등록한 매칭</a>
@@ -129,6 +129,7 @@
 					<input type="hidden" name="resultLng" id="resultLng" placeholder="경도" class="form-control" readonly/ >
 					<input name="region" id="region" class="form-control" size="15" readonly/>
 					<input name="add" id="add" class="form-control" readonly/>
+					<input name="add2" id="add2" class="form-control" readonly/>
 
 					<div id="map" style="width:100%;height:350px;"></div>
 
@@ -194,6 +195,7 @@
 							document.getElementById('resultLat').value = geoLat;
 							document.getElementById('resultLng').value = geoLng;
 							document.getElementById('add').value = place.road_address_name;
+							document.getElementById('add2').value = place.address_name;
 						});
 						// 클릭한 마커에 대한 장소 상세정보를 커스텀 오버레이로 표시하는 함수입니다
 						function displayPlaceInfo (place) {
@@ -244,7 +246,7 @@
 						*/
 					}
 					</script>
-						</td>
+					</td>
 					
 					
                 </tr>
