@@ -214,7 +214,7 @@ module.exports = function(router, passport, upload) {
             console.log('data : ' + data);
         });
 
-        res.redirect('/main');
+        res.redirect('/');
 
     });
 	
@@ -615,9 +615,18 @@ module.exports = function(router, passport, upload) {
 		}
 		if(req.body.region || req.query.region){
 			user_context.add = req.body.add || req.query.add;
-			var addr = [];
-			addr= user_context.add.split(' ');
-			user_context.add = [addr[0], addr[1]];
+			if(!user_context.add){		//도로명 주소 없을 경우 지번 주소
+				user_context.add = req.body.add2 || req.query.add2;
+			}else{		
+				var addr = [];
+				addr= user_context.add.split(' ');
+
+				if(addr[0] == '제주특별자치도'){
+					user_context.add = [addr[1], addr[2]];
+				}else
+					user_context.add = [addr[0], addr[1]];
+			}
+			
 			user_context.region = req.body.region || req.query.region;
 			user_context.geoLat = req.body.resultLat || req.query.resultLat;
 			user_context.geoLng = req.body.resultLng || req.query.resultLng;
@@ -966,7 +975,6 @@ module.exports = function(router, passport, upload) {
 	
 	
     
-    
     router.route('/chat').get(function(req, res){
         console.log('/chat 패스 get으로 요청됨.');
 
@@ -1100,10 +1108,19 @@ module.exports = function(router, passport, upload) {
 		event.event_region = req.body.region || req.query.region;
 		event.event_add = req.body.add || req.query.add;
 		event.event_nofteam = req.body.event_nofteam || req.query.event_nofteam;
+		
 
-		var addr = [];
-		addr= event.event_add.split(' ');
-		event.event_add = [addr[0], addr[1]];
+		if(!event.add){		//도로명주소 없는 경우 지번 주소
+			event.add = req.body.add2 || req.query.add2;
+		}else{		
+			var addr = [];
+			addr= event.add.split(' ');
+
+			if(addr[0] == '제주특별자치도'){
+				event.add = [addr[1], addr[2]];
+			}else
+				event.add = [addr[0], addr[1]];
+		}
 
         console.dir(event);
       
@@ -1181,10 +1198,8 @@ module.exports = function(router, passport, upload) {
    
       
       
-	router.route('/mainsearchresult').get(function(req, res){
-	   
+	router.route('/mainsearchresult').get(function(req, res){	   
 		console.log('/mainsearchresult 패스 get 요청됨.');
-
 
 		if(!req.user){
 			console.log('사용자 인증 안된 상태임.');
@@ -1724,9 +1739,17 @@ module.exports = function(router, passport, upload) {
         var whatDay = new Date(event.event_date);
         event.event_day = week[whatDay.getDay()];
 		
-		var addr = [];
-		addr= event.add.split(' ');
-		event.add = [addr[0], addr[1]];
+		if(!event.add){		//도로명주소 없는 경우 지번 주소
+			event.add = req.body.add2 || req.query.add2;
+		}else{		
+			var addr = [];
+			addr= event.add.split(' ');
+
+			if(addr[0] == '제주특별자치도'){
+				event.add = [addr[1], addr[2]];
+			}else
+				event.add = [addr[0], addr[1]];
+		}
 
         console.dir(event);
 
@@ -1940,9 +1963,17 @@ module.exports = function(router, passport, upload) {
 			'application_number': selectone.application_number
 		};
 		
-		var addr = [];
-		addr= update.add.split(' ');
-		update.add = [addr[0], addr[1]];
+		if(!event.add){		//도로명주소 없는 경우 지번 주소
+			event.add = req.body.add2 || req.query.add2;
+		}else{		
+			var addr = [];
+			addr= event.add.split(' ');
+
+			if(addr[0] == '제주특별자치도'){
+				event.add = [addr[1], addr[2]];
+			}else
+				event.add = [addr[0], addr[1]];
+		}
 		
 		if(update.add[0] == undefined)
 			delete update.add;
