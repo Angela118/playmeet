@@ -7,7 +7,7 @@ module.exports = function(router, passport, upload) {
 			
 	var an = 0;
 	var dbm = require('../database/database');
-		console.log('database 모듈 가져옴');
+	console.log('database 모듈 가져옴');
 	
 	var profile_img;
 	var profile_photo;
@@ -40,10 +40,31 @@ module.exports = function(router, passport, upload) {
             console.log('사용자 인증 안된 상태임.');
             res.redirect('/login');
         } else {
+			
+			// expire
+			var newDate = new Date();
+			var nowYear = newDate.getFullYear();
+			var nowMonth = (newDate.getMonth() + 1);
+			var nowDate = newDate.getDate();
+			
+			dbm.ApplicationModel.remove({'eventYear_forExpire':{$lt:nowYear}}, function(err){
+				if(err) throw err
+			});
+			
+			dbm.ApplicationModel.remove({'eventMonth_forExpire':{$lt:nowMonth}}, function(err){
+				if(err) throw err
+			});
+
+			dbm.ApplicationModel.remove({$and:[{'eventMonth_forExpire':nowMonth}, {'eventDate_forExpire':{$lt:nowDate}}]}, function(err){
+				if(err) throw err
+			});
+
+
+			
 			var fs = require('fs');
 			
 			const Json2csvParser = require('json2csv').Parser;
-			const fields = ['email', 'age', 'gender', 'nofteam', 'career_year', 'career_count', 'geoLng', 'geoLat',/*여기까지*/ 'teamname', 'region', 'add', 'move', 'event_date', 'event_time', 'event_day', 'event_day', 'mention', 'created_month', 'creted_day', 'application_number'];
+			const fields = ['email', 'age', 'gender', 'nofteam', 'career_year', 'career_count', 'geoLng', 'geoLat',/*여기까지*/ 'teamname', 'region', 'add', 'move', 'event_date', 'event_time', 'event_day', 'event_day', 'mention', 'created_month', 'creted_day', 'application_number', 'eventYear_forExpire', 'eventMonth_forExpire', 'eventDate_forExpire'];
 			const eventData = [];	
 			
 			var userdata = {
@@ -58,7 +79,8 @@ module.exports = function(router, passport, upload) {
 			};
 			var j=1;
 			eventData[0] = userdata;
-
+			
+			
 			dbm.ApplicationModel.find({email:{$ne:req.user.email}}, function (err, result) {				
 				for(var i = 0 ; i < result.length ; i++) {
 					var data = {
@@ -1732,12 +1754,19 @@ module.exports = function(router, passport, upload) {
             'geoLng': req.body.resultLng || req.query.resultLng,
             'geoLat': req.body.resultLat || req.query.resultLat,
             'nofteam' : req.user.nofteam || req.user.nofteam,
-			'application_number' : an
+			'application_number' : an,
+			'eventYear_forExpire': 0,
+			'eventMonth_forExpire': 0,
+			'eventDate_forExpire' : 0,
         };
 		
 		var week = new Array('일', '월', '화', '수', '목', '금', '토');
         var whatDay = new Date(event.event_date);
         event.event_day = week[whatDay.getDay()];
+		
+		event.eventYear_forExpire = event.event_date.substring(0,4);
+		event.eventMonth_forExpire = event.event_date.substring(5,7);
+		event.eventDate_forExpire = event.event_date.substring(8,10);
 		
 		if(!event.add){		//도로명주소 없는 경우 지번 주소
 			event.add = req.body.add2 || req.query.add2;
