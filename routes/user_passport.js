@@ -59,10 +59,10 @@ module.exports = function(router, passport, upload) {
             var j=1;
             eventData[0] = userdata;
 
-            var async = require('async');
-            var Promise = require('promise');
-
-            var asyncfunction;
+            // var async = require('async');
+            // var Promise = require('promise');
+            //
+            // var asyncfunction;
 
             console.log('req.user.email : ' + req.user.email);
 
@@ -98,24 +98,32 @@ module.exports = function(router, passport, upload) {
 
                 } //endapplicationfor
                 // console.dir(eventData);
-                    //----------------------------------
+
+
+                //----------------------------------제가 쓴 부분
                 console.log('eventData.length : ' + eventData.length); //0은 user 정보
 
+
                 var repeatFunction = function (a, callback) {
+
+                    console.log(a + '번째 eventData[' + a + '].email : ' + eventData[a].email);
+                    console.log(a + '번째 eventData[' + a + '].region : ' + eventData[a].region);
+
                         dbm.MatchModel.find({$or: [{"email": eventData[a].email}, {"others.sEmail": eventData[a].email}]}, function (err, result) {
                             var sum = 0;
                             var count = 0;
 
-                            for (var i = 0; i < result.length; i++) {
-                                console.log('a : ' + a + ', i : ' + i);
+                            for (var b = 0; b < result.length; b++) {
+                                console.log('a : ' + a + ', b : ' + b);
                                 console.log('result.length : ' + result.length);
 
-                                if ((result[i]._doc.email === eventData[a].email) && (result[i]._doc.others.sEmail !== eventData[a].email)) {
-                                    sum += parseInt(result[i]._doc.received_review);
+                                if ((result[b]._doc.email === eventData[a].email) && (result[b]._doc.others.sEmail !== eventData[a].email)) {
+
+                                    sum += parseInt(result[b]._doc.received_review);
                                     count++;
 
-                                } else if ((result[i]._doc.email !== eventData[a].email) && (result[i]._doc.others.sEmail === eventData[a].email)) {
-                                    sum += parseInt(result[i]._doc.others.sReceivedReview);
+                                } else if ((result[b]._doc.email !== eventData[a].email) && (result[b]._doc.others.sEmail === eventData[a].email)) {
+                                    sum += parseInt(result[b]._doc.others.sReceivedReview);
                                     count++;
 
                                 } else {
@@ -126,13 +134,19 @@ module.exports = function(router, passport, upload) {
 
                             console.log('sum : ' + sum);
                             console.log('count : ' + count);
-                            var aver = sum/count;
+
+                            var aver;
+
+                            if(count == 0) {
+                                aver = sum;
+                            }else {
+                                aver = sum / count;
+                            }
 
                             console.log('aver : ' + aver);
-                            eventData[a]['allRating'] = aver
+                            eventData[a]['allRating'] = aver;
 
                             console.log('eventData[a]["allRating"] : ' + eventData[a]['allRating']);
-
 
                             if(a>=eventData.length-1) {
                                 console.log('##eventData['+a+']["allRating"] : ' + eventData[a]['allRating']);
@@ -147,6 +161,12 @@ module.exports = function(router, passport, upload) {
 
                 repeatFunction(1, function () {
                     console.log('done');
+
+                    for(var k=0; k<eventData.length; k++) {
+                        console.log('11111111111');
+                        console.log(k + '번째 eventData[' + k + '].email : ' + eventData[k].email);
+                        console.log(k + '번째 eventData[' + k + '].region : ' + eventData[k].region);
+                    }
 
                     const json2csvParser = new Json2csvParser({ fields });
                     const csv = json2csvParser.parse(eventData);
@@ -169,7 +189,7 @@ module.exports = function(router, passport, upload) {
             };
 
             pythonShell.run('recEvent.py', options, function(err, results){
-                if(err) throw err
+                if(err) throw err;
 
                 console.log('Python run');
                 console.log('%j', results)
