@@ -92,7 +92,7 @@ for size in reversed(range(len(ar_euc))):
 result_data = []
 for i in range(0, len(ar_euc)):
     result_data.append(dat[ar_euc[i][0]])
-    result_data[i].insert(0, idArray[i])
+    result_data[i].insert(0, idArray[ar_euc[i][0]-1])
 
 
 #scaling 되돌리기
