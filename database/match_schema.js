@@ -3,8 +3,6 @@
 var Schema = {};
 
 Schema.createSchema = function(mongoose) {
-	
-
 	var newDate = new Date();
 
 	// Get the month, day, and year.

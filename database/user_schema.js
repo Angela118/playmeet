@@ -19,7 +19,7 @@ Schema.createSchema = function(mongoose) {
         gender: {type:String, 'default':''},
         age: {type:Number, 'default':''},
 		region: {type:String, 'default':''},
-		add: {type:String, 'default':''},
+		add: [{type:String, 'default':''}],
 		move: {type:String, 'default':''},
 		nofteam: {type:Number, 'default':''},
 		career_year: {type:Number, 'default':''},
