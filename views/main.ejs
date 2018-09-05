@@ -149,6 +149,7 @@
                 </div>
                 <div class="list_item_team">
                     <p class="list_item_team_detail">
+                        지역 : <%=curAdd%><br>
                         성별 : <%= curGender %><br>
                         나이 : <%= curAge %>대<br>
                         장소 : <%= curRegion %><br>
@@ -212,7 +213,7 @@
                 $("div[name=careerYear]").eq(index).text('경기 경력(년수) : ' + careerYear + '년');
                 $("div[name=careerCount]").eq(index).text('경기 경력(횟수) : ' + careerCount + '번');
                 $("div[name=date]").eq(index).text('날짜 : ' + date);
-                $("div[name=time]").eq(index).text('시간 : ' + time);
+                $("div[name=time]").eq(index).text('시간 : ' + time + '시');
                 $("div[name=day]").eq(index).text('요일 : ' + day + '요일');
                 $("div[name=mention]").eq(index).text('한마디 : ' + mention);
                 $("span[name=createdMonth]").eq(index).text('등록한 날짜 : ' + createdMonth + '월 ');

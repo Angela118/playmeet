@@ -43,7 +43,7 @@ module.exports = function(router, passport, upload) {
             var fs = require('fs');
 
             const Json2csvParser = require('json2csv').Parser;
-            const fields = ['email', 'age', 'gender', 'nofteam', 'career_year', 'career_count', 'geoLng', 'geoLat',/*여기까지*/ 'teamname', 'region', 'add', 'move', 'event_date', 'event_time', 'event_day', 'event_day', 'mention', 'created_month', 'created_day', 'application_number'];
+            const fields = ['email', 'age', 'gender', 'nofteam', 'career_year', 'career_count', 'geoLng', 'geoLat',/*여기까지*/ 'teamname', 'region', 'add', 'move', 'event_date', 'event_time', 'event_day', 'event_day', 'mention', 'created_month', 'created_day', 'application_number', 'allRating'];
             const eventData = [];
 
             var userdata = {
@@ -59,40 +59,98 @@ module.exports = function(router, passport, upload) {
             var j=1;
             eventData[0] = userdata;
 
+            var async = require('async');
+            var Promise = require('promise');
+
+            var asyncfunction;
+
+            console.log('req.user.email : ' + req.user.email);
+
             dbm.ApplicationModel.find({email:{$ne:req.user.email}}, function (err, result) {
+                console.log('application result.length : ' + result.length);
+
                 for(var i = 0 ; i < result.length ; i++) {
                     var data = {
-                        'email' : result[i]._doc.email,
-                        'teamname' : result[i]._doc.teamname,
-                        'region' : result[i]._doc.region,
-                        'add' : result[i]._doc.add,
-                        'move' : result[i]._doc.move,
-                        'age' : result[i]._doc.age,
-                        'gender' : result[i]._doc.gender,
-                        'career_year' : result[i]._doc.career_year,
-                        'career_count' : result[i]._doc.career_count,
-                        'event_date' : result[i]._doc.event_date,
-                        'event_time' : result[i]._doc.event_time,
-                        'event_day' : result[i]._doc.event_day,
-                        'mention' : result[i]._doc.mention,
-                        'nofteam' : result[i]._doc.nofteam,
-                        'geoLng' : result[i]._doc.geoLng,
-                        'geoLat' : result[i]._doc.geoLat,
-                        'created_month' : result[i]._doc.created_month,
-                        'created_day' : result[i]._doc.created_day,
-                        'application_number' : result[i]._doc.application_number
+                        'email': result[i]._doc.email, // 나 아닌 매칭 신청한 팀
+                        'teamname': result[i]._doc.teamname,
+                        'region': result[i]._doc.region,
+                        'add': result[i]._doc.add,
+                        'move': result[i]._doc.move,
+                        'age': result[i]._doc.age,
+                        'gender': result[i]._doc.gender,
+                        'career_year': result[i]._doc.career_year,
+                        'career_count': result[i]._doc.career_count,
+                        'event_date': result[i]._doc.event_date,
+                        'event_time': result[i]._doc.event_time,
+                        'event_day': result[i]._doc.event_day,
+                        'mention': result[i]._doc.mention,
+                        'nofteam': result[i]._doc.nofteam,
+                        'geoLng': result[i]._doc.geoLng,
+                        'geoLat': result[i]._doc.geoLat,
+                        'created_month': result[i]._doc.created_month,
+                        'created_day': result[i]._doc.created_day,
+                        'application_number': result[i]._doc.application_number,
+                        'allRating': ''
                     };
-                    eventData[j] = data;
-                    j+=1;
-                }
-                const json2csvParser = new Json2csvParser({ fields });
-                const csv = json2csvParser.parse(eventData);
 
-                fs.writeFile('recEvent.csv', csv, 'utf8', function(err){
-                    if(err) throw err
-                    console.log('File Write.');
+                        eventData[j] = data;
+                        j++;
+
+                } //endapplicationfor
+                // console.dir(eventData);
+                    //----------------------------------
+                console.log('eventData.length : ' + eventData.length); //0은 user 정보
+
+                var repeatFunction = function (a, callback) {
+                        dbm.MatchModel.find({$or: [{"email": eventData[a].email}, {"others.sEmail": eventData[a].email}]}, function (err, result) {
+                            var sum = 0;
+
+                            for (var i = 0; i < result.length; i++) {
+                                console.log('a : ' + a + ', i : ' + i);
+                                console.log('result.length : ' + result.length);
+
+                                if ((result[i]._doc.email === eventData[a].email) && (result[i]._doc.others.sEmail !== eventData[a].email)) {
+                                    sum += parseInt(result[i]._doc.received_review);
+
+                                } else if ((result[i]._doc.email !== eventData[a].email) && (result[i]._doc.others.sEmail === eventData[a].email)) {
+                                    sum += parseInt(result[i]._doc.others.sReceivedReview);
+
+                                } else {
+                                    continue;
+                                }
+                                console.log('*********');
+                            } //end in match for
+
+                            eventData[a]['allRating'] = sum;
+                            console.log('sum : ' + sum);
+                            console.log('eventData[a]["allRating"] : ' + eventData[a]['allRating']);
+
+
+                            if(a>=eventData.length-1) {
+                                console.log('##eventData['+a+']["allRating"] : ' + eventData[a]['allRating']);
+                                callback();
+                            }else{
+                                console.log('!!eventData[' + a + ']["allRating"] : ' + eventData[a]['allRating']);
+                                repeatFunction(a+1, callback);
+                            }
+
+                        });
+                }
+
+                repeatFunction(1, function () {
+                    console.log('done');
+
+                    const json2csvParser = new Json2csvParser({ fields });
+                    const csv = json2csvParser.parse(eventData);
+
+                    fs.writeFile('recEvent.csv', csv, 'utf8', function(err){
+                        if(err) throw err;
+                        console.log('File Write.');
+                    });
+
                 });
             });
+
 
             var pythonShell = require('python-shell');
 
@@ -348,14 +406,14 @@ module.exports = function(router, passport, upload) {
     });
     */
 
-    // 로그인 화면
+// 로그인 화면
     router.route('/login').get(function(req, res) {
         console.log('/login 패스 get 요청됨.');
         res.render('login.ejs', {message: req.flash('loginMessage')});
     });
 
 
-    // 로그인 인증
+// 로그인 인증
     router.route('/login').post(passport.authenticate('local-login', {
         successRedirect : '/',
         failureRedirect : '/login',
@@ -364,14 +422,14 @@ module.exports = function(router, passport, upload) {
 
 
 
-    // 회원가입 화면
+// 회원가입 화면
     router.route('/teamsignup').get(function(req, res) {
         console.log('/teamsignup 패스 get 요청됨.');
         flag=0, flag2=0;
         res.render('team_signup.ejs', {message: req.flash('signupMessage')});
     });
 
-    // 회원가입 인증
+// 회원가입 인증
     router.route('/teamsignup').post(passport.authenticate('local-signup', {
         successRedirect : '/uploadimg',
         failureRedirect : '/teamsignup',
@@ -379,7 +437,7 @@ module.exports = function(router, passport, upload) {
     }));
 
 
-    // 프로필 사진
+// 프로필 사진
     router.route('/uploadimg').get(function(req, res){
         console.log('/uploadimg 패스 get 요청됨.');
 
@@ -487,7 +545,7 @@ module.exports = function(router, passport, upload) {
 
 
 
-    // 프로필
+// 프로필
     router.route('/teamprofile').get(function(req, res) {
         console.log('/teamprofile 패스 get 요청됨.');
 
@@ -656,7 +714,7 @@ module.exports = function(router, passport, upload) {
     });
 
 
-    //아이디, 비밀번호 찾기
+//아이디, 비밀번호 찾기
     router.route('/findid').get(function(req, res){
         console.log('/findid 패스 get 요청됨.');
         res.render('find_id.ejs');
@@ -670,7 +728,7 @@ module.exports = function(router, passport, upload) {
 
 
 
-    //채팅
+//채팅
     router.route('/chatroom').get(function(req, res){
         console.log('/chatrooom 패스 get으로 요청됨.');
 
@@ -810,7 +868,7 @@ module.exports = function(router, passport, upload) {
         }
     });
 
-    // message get 역할 함
+// message get 역할 함
     router.route('/chatroommessage').post(function(req, res) {
         // ------------------------------- data 삽입위치 수정
         console.log('/chatroommessage 패스 post 요청됨.');
@@ -1114,10 +1172,10 @@ module.exports = function(router, passport, upload) {
 
 
 
-    // ===== 메뉴
+// ===== 메뉴
 
 
-    //경기 검색
+//경기 검색
     router.route('/mainsearch').get(function(req, res){
         console.log('/main_search 패스 get 요청됨.');
 
@@ -1335,7 +1393,7 @@ module.exports = function(router, passport, upload) {
         res.redirect('/');
     });
 
-    //경기 스케쥴
+//경기 스케쥴
     router.route('/teamschedule').get(function(req, res) {
         console.log('/teamschedule 패스 get 요청됨.');
 
@@ -1482,7 +1540,7 @@ module.exports = function(router, passport, upload) {
         res.redirect('/teamschedule');
     });
 
-    // 상대팀 리뷰하기
+// 상대팀 리뷰하기
     router.route('/teamreview').get(function(req, res){
         console.log('/teamreview 패스 get 요청됨.');
 
@@ -1580,7 +1638,7 @@ module.exports = function(router, passport, upload) {
         res.redirect('/teamschedule');
     });
 
-    // 우리팀이 받은 리뷰
+// 우리팀이 받은 리뷰
     router.route('/teamreceivedreview').get(function(req, res) {
         console.log('/teamreceivedreview 패스 get 요청됨');
 
@@ -1652,7 +1710,7 @@ module.exports = function(router, passport, upload) {
     });
 
 
-    //매칭 등록
+//매칭 등록
     router.route('/matchapplication').get(function(req, res){
         console.log('/match_application 패스 get 요청됨.');
 
@@ -2009,7 +2067,7 @@ module.exports = function(router, passport, upload) {
     });
 
 
-    // 로그아웃
+// 로그아웃
     router.route('/logout').get(function(req, res) {
         console.log('/logout 패스 get 요청됨.');
         profile_img=null;
