@@ -186,7 +186,7 @@
                 alert(teamname + '팀에게 매칭 신청하였습니다. 상대팀에서 수락하면 채팅방이 열리게 됩니다.')
             }
 
-            function modal_open_clicked(email, teamname, add, region, move, age, gender, careerYear, careerCount, date, time, day, mention, createdMonth, createdDay, geoLng, geoLat, nofteam, index) {
+            function modal_open_clicked(email, teamname, add, region, move, age, gender, careerYear, careerCount, date, time, day, mention, createdMonth, createdDay, geoLng, geoLat, nofteam, allRating, index) {
                 if(gender == 25) {
                     gender = '무관'
                 }else if(gender == 50) {
@@ -219,6 +219,7 @@
                 $("span[name=createdMonth]").eq(index).text('등록한 날짜 : ' + createdMonth + '월 ');
                 $("span[name=createdDay]").eq(index).text(createdDay + '일');
                 $("div[name=nofteam]").eq(index).text('인원수 : ' + nofteam + '명');
+                $("div[name=allRating]").eq(index).text('평점 : ' + allRating);
                 $("div[name=myModal]").eq(index).modal();
             }
         </script>
@@ -265,6 +266,7 @@
                         '<%= event_data[i].geoLng %>',
                         '<%= event_data[i].geoLat %>',
                         '<%= event_data[i].nofteam %>',
+                        '<%= event_data[i].allRating %>',
                         '<%= i%>')">상세 정보</button>
             </div>
 
@@ -299,7 +301,7 @@
                             <div name="geoLng" value='' class="modal_content"></div>
                             <div name="geoLat" value='' class="modal_content"></div>
                             <div name="nofteam" value='' class="modal_content"></div>
-                            <div>평균 평점 :  -- 별점 연동하기</div>
+                            <div name="allRating" value='' class="modal_content"></div>
                         </div>
 
                         <!--&lt;!&ndash; Modal footer &ndash;&gt;-->
@@ -325,6 +327,7 @@
                                     '<%= event_data[i].geoLat %>',
                                     '<%= event_data[i].nofteam %>',
                                     '<%= event_data[i].application_number %>',
+                                    '<%= event_data[i].allRating %>',
                                     '<%= i%>')">매칭 신청</button>
                         </div>
                     </div>
