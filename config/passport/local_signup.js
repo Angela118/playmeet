@@ -29,17 +29,16 @@ module.exports = new LocalStrategy({
 	var profile_img = "profile_basic.png";
 	
 	
-	if(!event.add){		//도로명주소 없는 경우 지번 주소
-			event.add = req.body.add2 || req.query.add2;
-	}else{		
-		var addr = [];
-		addr= event.add.split(' ');
+	if(!add){		//도로명주소 없는 경우 지번 주소
+		add = req.body.add2 || req.query.add2;
+	}		
+	var addr = [];
+	addr= add.split(' ');
 
-		if(addr[0] == '제주특별자치도'){
-			event.add = [addr[1], addr[2]];
-		}else
-			event.add = [addr[0], addr[1]];
-	}
+	if(addr[0] == '제주특별자치도'){
+		add = [addr[1], addr[2]];
+	}else
+		add = [addr[0], addr[1]];
 	
 
 
