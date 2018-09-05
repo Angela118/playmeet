@@ -64,7 +64,7 @@ module.exports = function(router, passport, upload) {
 			var fs = require('fs');
 			
 			const Json2csvParser = require('json2csv').Parser;
-			const fields = ['email', 'age', 'gender', 'nofteam', 'career_year', 'career_count', 'geoLng', 'geoLat',/*여기까지*/ 'teamname', 'region', 'add', 'move', 'event_date', 'event_time', 'event_day', 'event_day', 'mention', 'created_month', 'creted_day', 'application_number', 'eventYear_forExpire', 'eventMonth_forExpire', 'eventDate_forExpire'];
+			const fields = ['email', 'age', 'gender', 'nofteam', 'career_year', 'career_count', 'geoLng', 'geoLat',/*여기까지*/ 'teamname', 'region', 'add', 'move', 'event_date', 'event_time', 'event_day', 'event_day', 'mention', 'created_month', 'creted_day', 'application_number', 'eventYear_forExpire', 'eventMonth_forExpire', 'eventDate_forExpire', 'allRating'];
 			const eventData = [];	
 			
 			var userdata = {
@@ -102,11 +102,90 @@ module.exports = function(router, passport, upload) {
 						'geoLat' : result[i]._doc.geoLat,
 						'created_month' : result[i]._doc.created_month,
 						'created_day' : result[i]._doc.created_day,
-						'application_number' : result[i]._doc.application_number
+						'application_number' : result[i]._doc.application_number,
+						'allRating': ''
 					};										
 					eventData[j] = data;
 					j+=1;
 				}
+				
+				
+				
+				  //----------------------------------제가 쓴 부분
+                console.log('eventData.length : ' + eventData.length); //0은 user 정보
+
+
+                var repeatFunction = function (a, callback) {
+
+                    console.log(a + '번째 eventData[' + a + '].email : ' + eventData[a].email);
+                    console.log(a + '번째 eventData[' + a + '].region : ' + eventData[a].region);
+
+
+					dbm.MatchModel.find({$or: [{"email": eventData[a].email}, {"others.sEmail": eventData[a].email}]}, function (err, result) {
+						var sum = 0;
+						var count = 0;
+
+						for (var b = 0; b < result.length; b++) {
+							console.log('a : ' + a + ', b : ' + b);
+							console.log('result.length : ' + result.length);
+
+							if ((result[b]._doc.email === eventData[a].email) && (result[b]._doc.others.sEmail !== eventData[a].email)) {
+
+								sum += parseInt(result[b]._doc.received_review);
+								count++;
+
+							} else if ((result[b]._doc.email !== eventData[a].email) && (result[b]._doc.others.sEmail === eventData[a].email)) {
+								sum += parseInt(result[b]._doc.others.sReceivedReview);
+								count++;
+
+							} else {
+								continue;
+							}
+							console.log('*********');
+						} //end in match for
+
+						console.log('sum : ' + sum);
+						console.log('count : ' + count);
+
+						var aver;
+
+						if(count == 0) {
+							aver = sum;
+						}else {
+							aver = sum / count;
+						}
+
+						console.log('aver : ' + aver);
+						eventData[a]['allRating'] = aver;
+
+						console.log('eventData[a]["allRating"] : ' + eventData[a]['allRating']);
+
+
+						if(a>=eventData.length-1) {
+							console.log('##eventData['+a+']["allRating"] : ' + eventData[a]['allRating']);
+							callback();
+						}else{
+							console.log('!!eventData[' + a + ']["allRating"] : ' + eventData[a]['allRating']);
+							repeatFunction(a+1, callback);
+						}
+
+					});
+                }
+
+                repeatFunction(1, function () {
+                    console.log('done');
+
+                    for(var k=0; k<eventData.length; k++) {
+                        console.log('11111111111');
+                        console.log(k + '번째 eventData[' + k + '].email : ' + eventData[k].email);
+                        console.log(k + '번째 eventData[' + k + '].region : ' + eventData[k].region);
+                    }
+
+                    //----------------------------------제가 쓴 부분 (아래 write가 여기 와야 써져용..의미를 잘 모르겠지마는..)
+
+				
+				
+				
 				const json2csvParser = new Json2csvParser({ fields });
 				const csv = json2csvParser.parse(eventData);
 
@@ -114,7 +193,10 @@ module.exports = function(router, passport, upload) {
 					if(err) throw err
 					console.log('File Write.');
 				});	
-			});			
+			});	
+				
+				
+			});
 			
 			var pythonShell = require('python-shell');
 			
@@ -637,17 +719,16 @@ module.exports = function(router, passport, upload) {
 		}
 		if(req.body.region || req.query.region){
 			user_context.add = req.body.add || req.query.add;
-			if(!user_context.add){		//도로명 주소 없을 경우 지번 주소
-				user_context.add = req.body.add2 || req.query.add2;
-			}else{		
-				var addr = [];
-				addr= user_context.add.split(' ');
+			if(!event.add){		//도로명주소 없는 경우 지번 주소
+				event.add = req.body.add2 || req.query.add2;
+			}		
+			var addr = [];
+			addr= event.add.split(' ');
 
-				if(addr[0] == '제주특별자치도'){
-					user_context.add = [addr[1], addr[2]];
-				}else
-					user_context.add = [addr[0], addr[1]];
-			}
+			if(addr[0] == '제주특별자치도'){
+				event.add = [addr[1], addr[2]];
+			}else
+				event.add = [addr[0], addr[1]];
 			
 			user_context.region = req.body.region || req.query.region;
 			user_context.geoLat = req.body.resultLat || req.query.resultLat;
@@ -779,7 +860,7 @@ module.exports = function(router, passport, upload) {
         }
     });
 	
-	 router.route('/chatroommessage').get(function(req, res){
+	router.route('/chatroommessage').get(function(req, res){
         console.log('/chatroommessage 패스 get으로 요청됨.');
 
         if (!req.user) {
@@ -1134,15 +1215,14 @@ module.exports = function(router, passport, upload) {
 
 		if(!event.add){		//도로명주소 없는 경우 지번 주소
 			event.add = req.body.add2 || req.query.add2;
-		}else{		
-			var addr = [];
-			addr= event.add.split(' ');
+		}		
+		var addr = [];
+		addr= event.add.split(' ');
 
-			if(addr[0] == '제주특별자치도'){
-				event.add = [addr[1], addr[2]];
-			}else
-				event.add = [addr[0], addr[1]];
-		}
+		if(addr[0] == '제주특별자치도'){
+			event.add = [addr[1], addr[2]];
+		}else
+			event.add = [addr[0], addr[1]];
 
         console.dir(event);
       
@@ -1422,7 +1502,7 @@ module.exports = function(router, passport, upload) {
                 }
 
                 // 내가 매칭 신청한 팀 찾기
-                dbm.MatchModel.find({email : req.user.email} ,function (err, result) {
+                dbm.MatchModel.find({email: req.user.email} ,function (err, result) {
                     for (var i = 0; i < result.length; i++) {
                         if (result[i]._doc.email === req.user.email) {
                             var data = {
@@ -1770,15 +1850,15 @@ module.exports = function(router, passport, upload) {
 		
 		if(!event.add){		//도로명주소 없는 경우 지번 주소
 			event.add = req.body.add2 || req.query.add2;
-		}else{		
-			var addr = [];
-			addr= event.add.split(' ');
+		}		
+		var addr = [];
+		addr= event.add.split(' ');
 
-			if(addr[0] == '제주특별자치도'){
-				event.add = [addr[1], addr[2]];
-			}else
-				event.add = [addr[0], addr[1]];
-		}
+		if(addr[0] == '제주특별자치도'){
+			event.add = [addr[1], addr[2]];
+		}else
+			event.add = [addr[0], addr[1]];
+
 
         console.dir(event);
 
@@ -1994,15 +2074,14 @@ module.exports = function(router, passport, upload) {
 		
 		if(!event.add){		//도로명주소 없는 경우 지번 주소
 			event.add = req.body.add2 || req.query.add2;
-		}else{		
-			var addr = [];
-			addr= event.add.split(' ');
+		}		
+		var addr = [];
+		addr= event.add.split(' ');
 
-			if(addr[0] == '제주특별자치도'){
-				event.add = [addr[1], addr[2]];
-			}else
-				event.add = [addr[0], addr[1]];
-		}
+		if(addr[0] == '제주특별자치도'){
+			event.add = [addr[1], addr[2]];
+		}else
+			event.add = [addr[0], addr[1]];
 		
 		if(update.add[0] == undefined)
 			delete update.add;
