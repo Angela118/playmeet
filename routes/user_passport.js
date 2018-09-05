@@ -104,6 +104,7 @@ module.exports = function(router, passport, upload) {
                 var repeatFunction = function (a, callback) {
                         dbm.MatchModel.find({$or: [{"email": eventData[a].email}, {"others.sEmail": eventData[a].email}]}, function (err, result) {
                             var sum = 0;
+                            var count = 0;
 
                             for (var i = 0; i < result.length; i++) {
                                 console.log('a : ' + a + ', i : ' + i);
@@ -111,9 +112,11 @@ module.exports = function(router, passport, upload) {
 
                                 if ((result[i]._doc.email === eventData[a].email) && (result[i]._doc.others.sEmail !== eventData[a].email)) {
                                     sum += parseInt(result[i]._doc.received_review);
+                                    count++;
 
                                 } else if ((result[i]._doc.email !== eventData[a].email) && (result[i]._doc.others.sEmail === eventData[a].email)) {
                                     sum += parseInt(result[i]._doc.others.sReceivedReview);
+                                    count++;
 
                                 } else {
                                     continue;
@@ -121,8 +124,13 @@ module.exports = function(router, passport, upload) {
                                 console.log('*********');
                             } //end in match for
 
-                            eventData[a]['allRating'] = sum;
                             console.log('sum : ' + sum);
+                            console.log('count : ' + count);
+                            var aver = sum/count;
+
+                            console.log('aver : ' + aver);
+                            eventData[a]['allRating'] = aver
+
                             console.log('eventData[a]["allRating"] : ' + eventData[a]['allRating']);
 
 
