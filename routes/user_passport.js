@@ -64,7 +64,7 @@ module.exports = function(router, passport, upload) {
 			var fs = require('fs');
 			
 			const Json2csvParser = require('json2csv').Parser;
-			const fields = ['email', 'age', 'gender', 'nofteam', 'career_year', 'career_count', 'geoLng', 'geoLat',/*여기까지*/ 'teamname', 'region', 'add', 'move', 'event_date', 'event_time', 'event_day', 'event_day', 'mention', 'created_month', 'creted_day', 'application_number', 'eventYear_forExpire', 'eventMonth_forExpire', 'eventDate_forExpire', 'allRating'];
+			const fields = ['email', 'age', 'gender', 'nofteam', 'career_year', 'career_count', 'geoLng', 'geoLat',/*여기까지*/ 'teamname', 'region', 'add', 'move', 'event_date', 'event_time', 'event_day', 'event_day', 'mention', 'created_month', 'created_day', 'application_number', 'eventYear_forExpire', 'eventMonth_forExpire', 'eventDate_forExpire', 'allRating'];
 			const eventData = [];	
 			
 			var userdata = {
