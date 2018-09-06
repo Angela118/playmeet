@@ -282,6 +282,8 @@ module.exports = function(router, passport, upload) {
             'sMove' : req.body.sMove,
             'sAge': req.body.sAge,
             'sGender': req.body.sGender,
+            'sCareerYear': req.body.sCareerYear,
+            'sCareerCount': req.body.sCareerCount,
             'sEvent_date': req.body.sDate,
             'sEvent_time': req.body.sTime,
             'sEvent_day' : req.body.sDay,
@@ -1381,7 +1383,8 @@ module.exports = function(router, passport, upload) {
                         'geoLat' : result[i]._doc.geoLat,
                         'created_month' : result[i]._doc.created_month,
                         'created_day' : result[i]._doc.created_day,
-                        'application_number' : result[i]._doc.application_number
+                        'application_number' : result[i]._doc.application_number,
+                        'allRating': ''
                     };
                     eventData[i] = data;
                 }
@@ -1422,6 +1425,8 @@ module.exports = function(router, passport, upload) {
             'sMove' : req.body.sMove,
             'sAge': req.body.sAge,
             'sGender': req.body.sGender,
+            'sCareerYear': req.body.sCareerYear,
+            'sCareerCount': req.body.sCareerCount,
             'sEvent_date': req.body.sDate,
             'sEvent_time': req.body.sTime,
             'sEvent_day' : req.body.sDay,
@@ -1431,6 +1436,7 @@ module.exports = function(router, passport, upload) {
             'sGeoLng': req.body.sGeoLng,
             'sGeoLat': req.body.sGeoLat,
             'sNofteam': req.body.sNofteam,
+            'sApplicationNumber':req.body.sApplicationNumber,
             'sScore': 0,
             'sReceivedReview' : 0,
             'sReceivedReviewComment' : '',

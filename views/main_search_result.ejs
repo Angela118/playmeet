@@ -169,17 +169,17 @@
                     <div style="">
                         <p style="font-weight: bold; margin-bottom: 0"><%=curTeamname%> 팀</p>
                         <p style="font-size: .7rem">
-
                             <span>지역 : <%=curAdd%></span><br>
                             <span>성별 : <%= curGender %></span><br>
                             <span>나이 : <%= curAge %>대</span><br>
                             <span>장소 : <%= curRegion %></span><br>
                             <span>팀원 : <%= curNofteam %>명</span><br>
+                            <span>한마디 : <%= curMention %>명</span><br>
                         </p>
                     </div>
 
                     <script>
-                        function clicked(email, teamname, add, region, move, age, gender, date, time, day, mention, createdMonth, createdDay, geoLng, geoLat, nofteam, index) {
+                        function clicked(email, teamname, add, region, move, age, gender, careerYear, careerCount, date, time, day, mention, createdMonth, createdDay, geoLng, geoLat, nofteam, application_number, index) {
                             document.getElementsByName('sEmail')[index].value = email;
                             document.getElementsByName('sTeamname')[index].value = teamname;
                             document.getElementsByName('sAdd0')[index].value = add.split(',')[0];
@@ -188,6 +188,8 @@
                             document.getElementsByName('sMove')[index].value = move;
                             document.getElementsByName('sAge')[index].value = age;
                             document.getElementsByName('sGender')[index].value = gender;
+                            document.getElementsByName('sCareerYear')[index].value = careerYear;
+                            document.getElementsByName('sCareerCount')[index].value = careerCount;
                             document.getElementsByName('sDate')[index].value = date;
                             document.getElementsByName('sTime')[index].value = time;
                             document.getElementsByName('sDay')[index].value = day;
@@ -197,10 +199,11 @@
                             document.getElementsByName('sGeoLng')[index].value = geoLng;
                             document.getElementsByName('sGeoLat')[index].value = geoLat;
                             document.getElementsByName('sNofteam')[index].value = nofteam;
+                            document.getElementsByName('sApplicationNumber')[index].value = application_number;
                             alert(teamname + '팀에게 매칭 신청하였습니다. 상대팀에서 수락하면 채팅방이 열리게 됩니다.')
                         }
 
-                        function modal_open_clicked(email, teamname, add, region, move, age, gender, date, time, day, mention, createdMonth, createdDay, geoLng, geoLat, nofteam, index) {
+                        function modal_open_clicked(email, teamname, add, region, move, age, gender, careerYear, careerCount, date, time, day, mention, createdMonth, createdDay, geoLng, geoLat, nofteam, allRating, index) {
                             if(gender == 25) {
                                 gender = '무관'
                             }else if(gender == 50) {
@@ -216,20 +219,23 @@
 
                             // alert(region + email + city);
 
-                                $("div[name=email]").eq(index).text('주장 이메일 : ' + email);
+                            $("div[name=email]").eq(index).text('주장 이메일 : ' + email);
                             $("div[name=teamname]").eq(index).text('팀명: ' + teamname + '팀');
                             $("div[name=add]").eq(index).text('지역 : ' + add);
                             $("div[name=region]").eq(index).text('장소 : ' + region);
                             $("div[name=move]").eq(index).text('원정가능여부 : ' + move);
                             $("div[name=age]").eq(index).text('연령대 : ' + age +'대');
                             $("div[name=gender]").eq(index).text('성별 : ' + gender);
+                            $("div[name=careerYear]").eq(index).text('경기 경력(년수) : ' + careerYear + '년');
+                            $("div[name=careerCount]").eq(index).text('경기 경력(횟수) : ' + careerCount + '번');
                             $("div[name=date]").eq(index).text('날짜 : ' + date);
-                            $("div[name=time]").eq(index).text('시간 : ' + time);
+                            $("div[name=time]").eq(index).text('시간 : ' + time + '시');
                             $("div[name=day]").eq(index).text('요일 : ' + day + '요일');
                             $("div[name=mention]").eq(index).text('한마디 : ' + mention);
                             $("span[name=createdMonth]").eq(index).text('등록한 날짜 : ' + createdMonth + '월 ');
                             $("span[name=createdDay]").eq(index).text(createdDay + '일');
-                            $("div[name=nofteam]").eq(index).text('인원수 : ' + nofteam+ '명');
+                            $("div[name=nofteam]").eq(index).text('인원수 : ' + nofteam + '명');
+                            $("div[name=allRating]").eq(index).text('평점 : ' + allRating);
                             $("div[name=myModal]").eq(index).modal();
                         }
                     </script>
@@ -243,6 +249,8 @@
                     <input type="hidden" name="sMove" id="sMove" value=''>
                     <input type="hidden" name="sAge" id="sAge" value=''>
                     <input type="hidden" name="sGender" id="sGender" value=''>
+                    <input type="hidden" name="sCareerYear" id="sCareerYear" value=''>
+                    <input type="hidden" name="sCareerCount" id="sCareerCount" value=''>
                     <input type="hidden" name="sDate" id="sDate" value=''>
                     <input type="hidden" name="sTime" id="sTime" value=''>
                     <input type="hidden" name="sDay" id="sDay" value=''>
@@ -252,27 +260,31 @@
                     <input type="hidden" name="sGeoLng" id="sGeoLng" value=''>
                     <input type="hidden" name="sGeoLat" id="sGeoLat" value=''>
                     <input type="hidden" name="sNofteam" id="sNofteam" value=''>
+                    <input type="hidden" name="sApplicationNumber" id="sApplicationNumber" value=''>
 
                     <div style="text-align: center">
                         <!--<button type="button" class="btn btn-primary" onclick='clicked()'>매칭 신청</button>-->
-                        <button type="button" class="btn btn-primary" name="modal_open_button" onclick='modal_open_clicked(
-                                `<%= event_data[i].email %>`,
-                                `<%= event_data[i].teamname %>`,
-                                `<%= event_data[i].add %>`,
-                                `<%= event_data[i].region %>`,
-                                `<%= event_data[i].move %>`,
-                                `<%= event_data[i].age %>`,
-                                `<%= event_data[i].gender %>`,
-                                `<%= event_data[i].event_date %>`,
-                                `<%= event_data[i].event_time %>`,
-                                `<%= event_data[i].event_day %>`,
-                                `<%= event_data[i].mention %>`,
-                                `<%= event_data[i].created_month %>`,
-                                `<%= event_data[i].created_day %>`,
-                                `<%= event_data[i].geoLng %>`,
-                                `<%= event_data[i].geoLat %>`,
-                                `<%= event_data[i].nofteam %>`,
-                                `<%= i%>`)'>상세 정보</button>
+                        <button type="button" class="btn btn-primary" name="modal_open_button" onclick="modal_open_clicked(
+                                '<%= event_data[i].email %>',
+                                '<%= event_data[i].teamname %>',
+                                '<%= event_data[i].add %>',
+                                '<%= event_data[i].region %>',
+                                '<%= event_data[i].move %>',
+                                '<%= event_data[i].age %>',
+                                '<%= event_data[i].gender %>',
+                                '<%= event_data[i].career_year %>',
+                                '<%= event_data[i].career_count %>',
+                                '<%= event_data[i].event_date %>',
+                                '<%= event_data[i].event_time %>',
+                                '<%= event_data[i].event_day %>',
+                                '<%= event_data[i].mention %>',
+                                '<%= event_data[i].created_month %>',
+                                '<%= event_data[i].created_day %>',
+                                '<%= event_data[i].geoLng %>',
+                                '<%= event_data[i].geoLat %>',
+                                '<%= event_data[i].nofteam %>',
+                                '<%= event_data[i].allRating %>',
+                                '<%= i%>')">상세 정보</button>
                     </div>
 
                     <!-- The Modal -->
@@ -295,6 +307,8 @@
                                     <div name="move" value='' class="modal_content"></div>
                                     <div name="age" value='' class="modal_content"></div>
                                     <div name="gender" value='' class="modal_content"></div>
+                                    <div name="careerYear" value='' class="modal_content"></div>
+                                    <div name="careerCount" value='' class="modal_content"></div>
                                     <div name="date"  value='' class="modal_content"></div>
                                     <div name="time" value='' class="modal_content"></div>
                                     <div name="day" value='' class="modal_content"></div>
@@ -304,30 +318,33 @@
                                     <div name="geoLng" value='' class="modal_content"></div>
                                     <div name="geoLat" value='' class="modal_content"></div>
                                     <div name="nofteam" value='' class="modal_content"></div>
-                                    <div>평균 평점 :  -- 별점 연동하기</div>
+                                    <div name="allRating" value='' class="modal_content"></div>
                                 </div>
 
                                 <!--&lt;!&ndash; Modal footer &ndash;&gt;-->
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-danger" data-dismiss="modal" >닫기</button>
-                                    <a href="/mainsearchresult"><button type="submit" class="btn btn-primary" onclick='clicked(
-                                            `<%= event_data[i].email %>`,
-                                            `<%= event_data[i].teamname %>`,
-                                            `<%= event_data[i].add %>`,
-                                            `<%= event_data[i].region %>`,
-                                            `<%= event_data[i].move %>`,
-                                            `<%= event_data[i].age %>`,
-                                            `<%= event_data[i].gender %>`,
-                                            `<%= event_data[i].event_date %>`,
-                                            `<%= event_data[i].event_time %>`,
-                                            `<%= event_data[i].event_day %>`,
-                                            `<%= event_data[i].mention %>`,
-                                            `<%= event_data[i].created_month %>`,
-                                            `<%= event_data[i].created_day %>`,
-                                            `<%= event_data[i].geoLng %>`,
-                                            `<%= event_data[i].geoLat %>`,
-                                            `<%= event_data[i].nofteam %>`,
-                                            `<%= i%>`)' >매칭 신청</button>
+                                    <a href="/mainsearchresult"><button type="submit" class="btn btn-primary" onclick="clicked(
+                                                '<%= event_data[i].email %>',
+                                                '<%= event_data[i].teamname %>',
+                                                '<%= event_data[i].add %>',
+                                                '<%= event_data[i].region %>',
+                                                '<%= event_data[i].move %>',
+                                                '<%= event_data[i].age %>',
+                                                '<%= event_data[i].gender %>',
+                                                '<%= event_data[i].career_year %>',
+                                                '<%= event_data[i].career_count %>',
+                                                '<%= event_data[i].event_date %>',
+                                                '<%= event_data[i].event_time %>',
+                                                '<%= event_data[i].event_day %>',
+                                                '<%= event_data[i].mention %>',
+                                                '<%= event_data[i].created_month %>',
+                                                '<%= event_data[i].created_day %>',
+                                                '<%= event_data[i].geoLng %>',
+                                                '<%= event_data[i].geoLat %>',
+                                                '<%= event_data[i].nofteam %>',
+                                                '<%= event_data[i].application_number %>',
+                                            '<%= i%>')" >매칭 신청</button>
 										</a>
                                 </div>
                             </div>
