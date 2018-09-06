@@ -131,8 +131,10 @@ module.exports = function(router, passport, upload) {
 
                             if ((result[b]._doc.email === eventData[a].email) && (result[b]._doc.others.sEmail !== eventData[a].email)) {
                                 console.log('if');
+                                console.log('result['+b+']._doc.review_date : ' + result[b]._doc.review_date);
 
-                                if(parseInt(result[b]._doc.received_review) != 0) {
+                                // if(parseInt(result[b]._doc.received_review) != 0) {
+                                if((result[b]._doc.review_date) != null) {
                                     sum += parseInt(result[b]._doc.received_review);
                                     count++;
                                 }
@@ -140,8 +142,10 @@ module.exports = function(router, passport, upload) {
 
                             } else if ((result[b]._doc.email !== eventData[a].email) && (result[b]._doc.others.sEmail === eventData[a].email)) {
                                 console.log('elseif');
+                                console.log('result['+b+']._doc.review_date : ' + result[b]._doc.review_date);
 
-                                if(parseInt(result[b]._doc.others.sReceivedReview) != 0){
+                                // if(parseInt(result[b]._doc.others.sReceivedReview) != 0){
+                                if((result[b]._doc.others.sReviewDate) != 0){
                                     sum += parseInt(result[b]._doc.others.sReceivedReview);
                                     count++;
                                 }
@@ -160,7 +164,7 @@ module.exports = function(router, passport, upload) {
                         var aver;
 
                         if(count == 0) {
-                            aver = sum;
+                            aver = "리뷰없음";
                         }else {
                             aver = (sum / count).toFixed(2);
                         }
@@ -1688,6 +1692,10 @@ module.exports = function(router, passport, upload) {
         var review_comment = req.body.review_comment;
         var eventDate = req.body.eventDate; // 경기 날짜
         var eventTime = req.body.eventTime; // 경기 시간
+
+        if(rating == null) {
+            rating = 0;
+        }
 
         console.log('email : ' + email);
         console.log('reviewDate : ' + reviewDate);
