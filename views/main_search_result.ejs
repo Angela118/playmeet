@@ -135,6 +135,7 @@
                 var curDay = event_data[i].event_day;
                 var curMention = event_data[i].mention;
                 var curNofteam = event_data[i].nofteam;
+				var curApplicationNumber = event_data[i].application_number;
                 var matchYear = curDate.substring(0,4);
                 var matchMonth = curDate.substring(5,7);
                 var matchDay = curDate.substring(8,10);
@@ -179,7 +180,7 @@
                     </div>
 
                     <script>
-                        function clicked(email, teamname, add, region, move, age, gender, date, time, day, mention, createdMonth, createdDay, geoLng, geoLat, nofteam, index) {
+                        function clicked(email, teamname, add, region, move, age, gender, date, time, day, mention, createdMonth, createdDay, geoLng, geoLat, nofteam, application_number, index) {
                             document.getElementsByName('sEmail')[index].value = email;
                             document.getElementsByName('sTeamname')[index].value = teamname;
                             document.getElementsByName('sAdd0')[index].value = add.split(',')[0];
@@ -197,6 +198,7 @@
                             document.getElementsByName('sGeoLng')[index].value = geoLng;
                             document.getElementsByName('sGeoLat')[index].value = geoLat;
                             document.getElementsByName('sNofteam')[index].value = nofteam;
+							document.getElementsByName('sApplicationNumber')[index].value = application_number;
                             alert(teamname + '팀에게 매칭 신청하였습니다. 상대팀에서 수락하면 채팅방이 열리게 됩니다.')
                         }
 
@@ -216,7 +218,7 @@
 
                             // alert(region + email + city);
 
-                                $("div[name=email]").eq(index).text('주장 이메일 : ' + email);
+                            $("div[name=email]").eq(index).text('주장 이메일 : ' + email);
                             $("div[name=teamname]").eq(index).text('팀명: ' + teamname + '팀');
                             $("div[name=add]").eq(index).text('지역 : ' + add);
                             $("div[name=region]").eq(index).text('장소 : ' + region);
@@ -252,6 +254,7 @@
                     <input type="hidden" name="sGeoLng" id="sGeoLng" value=''>
                     <input type="hidden" name="sGeoLat" id="sGeoLat" value=''>
                     <input type="hidden" name="sNofteam" id="sNofteam" value=''>
+					<input type="hidden" name="sApplicationNumber" id="sApplicationNumber" value=''>
 
                     <div style="text-align: center">
                         <!--<button type="button" class="btn btn-primary" onclick='clicked()'>매칭 신청</button>-->
@@ -327,6 +330,7 @@
                                             `<%= event_data[i].geoLng %>`,
                                             `<%= event_data[i].geoLat %>`,
                                             `<%= event_data[i].nofteam %>`,
+											`<%= event_data[i].application_number %>`,
                                             `<%= i%>`)' >매칭 신청</button>
 										</a>
                                 </div>

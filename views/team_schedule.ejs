@@ -247,6 +247,7 @@
                 var curReview = event_data[i].review; // 상대팀이 이 경기에서 받은 리뷰
                 var score = event_data[i].sScore; // 내 이 경기 스코어
                 var review = event_data[i].sReceivedReview; // 내가 이 경기에서 받은 리뷰
+				var applicationNumber = event_data[i].sApplicationNumber;
                 var matchMonth = curDate.substring(5,7);
                 var matchDay = curDate.substring(8,10);
             if(i == (event_data.length - 1) && (count == 0)) { %>
@@ -262,6 +263,7 @@
                     curReview = event_data[i].sReceivedReview; // 상대팀 review
                     score = event_data[i].score; // 내 score
                     review = event_data[i].review; // 내 review
+					applicationNumber = event_data[i].sApplicationNumber;
                 }
             %>
             <div class="date">
@@ -323,7 +325,7 @@
                                 document.getElementsByName('eventTime')[count].value = eventTime;
                                 document.getElementsByName('formPost2')[count].submit();
                             }
-                            function cancelClicked(cCallTeamEmail, cReceiveTeamName, cReceiveTeamEmail, cEvent_date, cEvent_time, count){
+                            function cancelClicked(cCallTeamEmail, cReceiveTeamName, cReceiveTeamEmail, cEvent_date, cEvent_time, applicationNumber, count){
                                 alert('count : ' + count);
                                 alert('cCallTeamEmail : ' + cCallTeamEmail + 'cReceiveTeamName' + cReceiveTeamName + ', cReceiveTeamEmail : ' + cReceiveTeamEmail + ', cEvent_date : ' + cEvent_date + ', eventTime : ' + cEvent_time + ', count : ' + count);
 								
@@ -332,6 +334,7 @@
                                 document.getElementsByName('cReceiveTeamEmail')[count].value = cReceiveTeamEmail;
                                 document.getElementsByName('cEvent_date')[count].value = cEvent_date;
                                 document.getElementsByName('cEvent_time')[count].value = cEvent_time;
+								document.getElementsByName('applicationNumber')[count].value = applicationNumber;
                                 document.getElementsByName('formPost3').submit();
                             }
                         </script>
@@ -398,6 +401,7 @@
 								<input type="hidden" name="cReceiveTeamEmail" id="cReceiveTeamEmail" value='<%=event_data[i].otherEmail%>'>
 								<input type="hidden" name="cEvent_date" id="cEvent_date" value='<%=event_data[i].event_date%>'>
 								<input type="hidden" name="cEvent_time" id="cEvent_time" value='<%=event_data[i].event_time%>'>
+								<input type="hidden" name="cApplicationNumber" id="cApplicationNumber" value='<%=event_data[i].sApplicationNumber%>'>
 	
                                 <button class="btn btn-block" style="color:black" onclick="alert('<%=event_data[i].otherTeam%> 팀에게 신청을 취소합니다.')">신청 취소<br><span style="font-size: smaller">상대팀이 수락하기 전까지 가능</span></button>
                             </div>
