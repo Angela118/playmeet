@@ -1337,7 +1337,7 @@ module.exports = function(router, passport, upload) {
 
             var eventData = new Array();
 
-            console.dir(event_search);
+            // console.dir(event_search);
 
             if(event_search.teamname == 'none')
                 delete event_search.teamname;
@@ -1366,9 +1366,11 @@ module.exports = function(router, passport, upload) {
                 }
             }
 
+            var j = 0;
+
             search.push({email : {"$ne" : req.user.email}});
 
-            console.dir(search);
+            // console.dir(search);
 
             dbm.ApplicationModel.find({$and: search}, function (err, result) {
                 for (var i = 0; i < result.length; i++) {
@@ -1394,29 +1396,113 @@ module.exports = function(router, passport, upload) {
                         'application_number' : result[i]._doc.application_number,
                         'allRating': ''
                     };
-                    eventData[i] = data;
+                    eventData[j++] = data;
                 }
 
-                var user_context = {
-                    'email':req.user.email,
-                    'password':req.user.password,
-                    'teamname':req.user.teamname,
-                    'gender':req.user.gender,
-                    'age':req.user.age,
-                    'region':req.user.region,
-                    'add':req.user.add,
-                    'move':req.user.move,
-                    'nofteam':req.user.nofteam,
-                    'career_year':req.user.career_year,
-                    'career_count':req.user.career_count,
-                    'introteam':req.user.introteam,
-                    'profile_img':profile_photo,
-                    'event_data':eventData
-                };
 
-                console.dir(eventData);
+                var repeatFunction = function (a, callback) {
 
-                res.render('main_search_result.ejs', user_context);
+                    console.log(a + '번째 eventData[' + a + '].email : ' + eventData[a].email);
+                    console.log(a + '번째 eventData[' + a + '].region : ' + eventData[a].region);
+
+
+                    dbm.MatchModel.find({$or: [{"email": eventData[a].email}, {"others.sEmail": eventData[a].email}]}, function (err, result) {
+                        var sum = 0;
+                        var count = 0;
+
+                        for (var b = 0; b < result.length; b++) {
+                            console.log('a : ' + a + ', b : ' + b);
+                            console.log('result.length : ' + result.length);
+
+                            if ((result[b]._doc.email === eventData[a].email) && (result[b]._doc.others.sEmail !== eventData[a].email)) {
+                                console.log('if');
+                                console.log('result['+b+']._doc.review_date : ' + result[b]._doc.review_date);
+
+                                // if(parseInt(result[b]._doc.received_review) != 0) {
+                                if((result[b]._doc.review_date) != null) {
+                                    sum += parseInt(result[b]._doc.received_review);
+                                    count++;
+                                }
+                                console.log('if count : ' + count);
+
+                            } else if ((result[b]._doc.email !== eventData[a].email) && (result[b]._doc.others.sEmail === eventData[a].email)) {
+                                console.log('elseif');
+                                console.log('result['+b+']._doc.review_date : ' + result[b]._doc.review_date);
+
+                                // if(parseInt(result[b]._doc.others.sReceivedReview) != 0){
+                                if((result[b]._doc.others.sReviewDate) != 0){
+                                    sum += parseInt(result[b]._doc.others.sReceivedReview);
+                                    count++;
+                                }
+                                console.log('elseif count : ' + count);
+
+                            } else {
+                                console.log('else');
+                                continue;
+                            }
+                            console.log('*********');
+                        } //end in match for
+
+                        console.log('sum : ' + sum);
+                        console.log('count : ' + count);
+
+                        var aver;
+
+                        if(count == 0) {
+                            aver = "리뷰없음";
+                        }else {
+                            aver = (sum / count).toFixed(2);
+                        }
+
+                        console.log('aver : ' + aver);
+                        eventData[a]['allRating'] = aver;
+
+                        console.log('eventData[a]["allRating"] : ' + eventData[a]['allRating']);
+
+
+                        if(a>=eventData.length-1) {
+                            console.log('##eventData['+a+']["allRating"] : ' + eventData[a]['allRating']);
+                            callback();
+                        }else{
+                            console.log('!!eventData[' + a + ']["allRating"] : ' + eventData[a]['allRating']);
+                            repeatFunction(a+1, callback);
+                        }
+
+                    });
+                }
+
+                var user_context;
+
+                repeatFunction(0, function () {
+                    console.log('done');
+
+                    user_context = {
+                        'email':req.user.email,
+                        'password':req.user.password,
+                        'teamname':req.user.teamname,
+                        'gender':req.user.gender,
+                        'age':req.user.age,
+                        'region':req.user.region,
+                        'add':req.user.add,
+                        'move':req.user.move,
+                        'nofteam':req.user.nofteam,
+                        'career_year':req.user.career_year,
+                        'career_count':req.user.career_count,
+                        'introteam':req.user.introteam,
+                        'profile_img':profile_photo,
+                        'event_data':eventData
+                    };
+                    console.dir(eventData);
+
+                    res.render('main_search_result.ejs', user_context);
+                    console.log('mainsearchresult 다시 render함---------------------');
+
+                });
+
+                // console.dir(eventData);
+
+                // res.render('main_search_result.ejs', user_context);
+                // console.log('mainsearchresult 다시 render함---------------------');
             });
         }
     });
