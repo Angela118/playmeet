@@ -972,6 +972,8 @@ module.exports = function(router, passport, upload) {
                     var data = {
                         'email': result[i]._doc.email,
                         'teamname': result[i]._doc.teamname,
+                        'career_year' : result[i]._doc.career_year,
+                        'career_count' : result[i]._doc.career_count,
                         'add': result[i]._doc.add,
                         'region': result[i]._doc.region,
                         'move': result[i]._doc.move,
@@ -986,6 +988,8 @@ module.exports = function(router, passport, upload) {
                         'nofteam': result[i]._doc.nofteam,
                         'created_month': result[i]._doc.created_month,
                         'created_day': result[i]._doc.created_day,
+                        'application_number' : result[i]._doc.application_number,
+                        'allRating': ''
                         'others': result[i]._doc.others //내가 등록한 매칭 정보
                     };
                     eventData[j++] = data;
