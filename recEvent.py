@@ -4,15 +4,26 @@ from numpy import array
 from scipy.spatial import distance
 import warnings
 import sys
-
+from pymongo import MongoClient
 warnings.filterwarnings('always')
 warnings.filterwarnings('ignore')
 
 
-
-
 def swap(x, i, j):
     x[i], x[j] = x[j], x[i]
+
+
+
+
+conn = MongoClient('mongodb://localhost:27017')
+db = conn.local
+matchCollection = db.match
+matches=[]
+matches = matchCollection.find()
+
+print(matches)
+print()
+
 
 
 #파일 불러오기 
