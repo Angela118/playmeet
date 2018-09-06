@@ -41,34 +41,34 @@
             <img src="../profile_img/<%= profile_img %>" id="profile_pic" style="margin-right: .2rem; width:3rem; height: 3rem">
             <span id="name" style="font-weight: bold; font-size: 1.2rem; margin-left: .5rem"><%= teamname %> 팀</span>
             <a href="/teamprofile"><button class="btn btn-sm btn-warning" type="submit" style="margin-right: .5rem">내 정보</button></a>
-			<a href="/uploadimg"><button class="btn btn-sm btn-warning" type="submit" style="margin-right: .5rem">프로필 사진 변경</button></a>
+            <a href="/uploadimg"><button class="btn btn-sm btn-warning" type="submit" style="margin-right: .5rem">프로필 사진 변경</button></a>
             <a href="/logout"><button class="btn btn-sm btn-warning" type="submit">로그아웃</button></a>
         </div>
 
-       <ul class="navbar-nav mr-auto">
-      <li class="nav-item">
-        <a class="nav-link" href="/">홈 (매칭 팀 검색)</a>
-      </li>
-      <li class="nav-item" style="display:flex; align-items:center">
-        <span style="margin-bottom: 0; padding: .5rem 0rem; color:white">우리 팀</span>
-      </li>
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/">홈 (매칭 팀 검색)</a>
+            </li>
+            <li class="nav-item" style="display:flex; align-items:center">
+                <span style="margin-bottom: 0; padding: .5rem 0rem; color:white">우리 팀</span>
+            </li>
 
-      <li class="nav-item">
-        <a class="nav-link" href="/teamreceivedreview" style="margin-left:2rem">우리 팀 평가 점수</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/teamschedule" style="margin-left:2rem">경기 스케줄</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/matchapplication">매칭 등록</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/mymatch">내가 등록한 매칭</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/contact">개발자에게 연락</a>
-      </li>
-    </ul>
+            <li class="nav-item">
+                <a class="nav-link" href="/teamreceivedreview" style="margin-left:2rem">우리 팀 평가 점수</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/teamschedule" style="margin-left:2rem">경기 스케줄</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/matchapplication">매칭 등록</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/mymatch">내가 등록한 매칭</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/contact">개발자에게 연락</a>
+            </li>
+        </ul>
     </div>
 </nav>
 
@@ -87,7 +87,6 @@
         </div>
 
         <script>
-			
             var Cal = function(divId) {
                 //Store div id
                 this.divId = divId;
@@ -250,9 +249,9 @@
                 var review = event_data[i].sReceivedReview; // 내가 이 경기에서 받은 리뷰
                 var matchMonth = curDate.substring(5,7);
                 var matchDay = curDate.substring(8,10);
-                if(i == (event_data.length - 1) && (count == 0)) { %>
-                    <p style="font-weight: bold">스케줄이 없습니다.</p>
-                <% }
+            if(i == (event_data.length - 1) && (count == 0)) { %>
+            <p style="font-weight: bold">스케줄이 없습니다.</p>
+            <% }
             if(event_data[i].match_success == 1){
                 // 내가 매칭 신청한 경우 변수 반대로 넣음
                 if(curEmail == email) {
@@ -302,6 +301,7 @@
                         <script>
                             function clicked(callTeamEmail, receiveTeamEmail, event_date, event_time, count) {
                                 alert('callTeamEmail : ' + callTeamEmail + ', receiveTeamEmail : ' + receiveTeamEmail + ', event_date : ' + event_date + ', event_time : ' + event_time + ', count : ' + count);
+								
                                 document.getElementsByName('callTeamEmail')[count].value = callTeamEmail;
                                 document.getElementsByName('receiveTeamEmail')[count].value = receiveTeamEmail;
                                 document.getElementsByName('event_date')[count].value = event_date;
@@ -317,10 +317,22 @@
                                     reviewedTeamEmail = callTeamEmail;
                                 }
                                 alert('reviewedTeamEmail : ' + reviewedTeamEmail +  ', eventDate : ' + eventDate + ', eventTime : ' + eventTime + ', count : ' + count);
+								
                                 document.getElementsByName('reviewedTeamEmail')[count].value = reviewedTeamEmail;
                                 document.getElementsByName('eventDate')[count].value = eventDate;
                                 document.getElementsByName('eventTime')[count].value = eventTime;
                                 document.getElementsByName('formPost2')[count].submit();
+                            }
+                            function cancelClicked(cCallTeamEmail, cReceiveTeamName, cReceiveTeamEmail, cEvent_date, cEvent_time, count){
+                                alert('count : ' + count);
+                                alert('cCallTeamEmail : ' + cCallTeamEmail + 'cReceiveTeamName' + cReceiveTeamName + ', cReceiveTeamEmail : ' + cReceiveTeamEmail + ', cEvent_date : ' + cEvent_date + ', eventTime : ' + cEvent_time + ', count : ' + count);
+								
+                                document.getElementsByName('cCallTeamEmail')[count].value = cCallTeamEmail;
+                                document.getElementsByName('cReceiveTeamName')[count].value = cReceiveTeamName;
+                                document.getElementsByName('cReceiveTeamEmail')[count].value = cReceiveTeamEmail;
+                                document.getElementsByName('cEvent_date')[count].value = cEvent_date;
+                                document.getElementsByName('cEvent_time')[count].value = cEvent_time;
+                                document.getElementsByName('formPost3').submit();
                             }
                         </script>
                         <form action="/teamschedule" name="formPost" method="post">
@@ -365,19 +377,35 @@
                     <h3 style="font-weight: bold"><%= matchMonth%>. <%= matchDay%></h3>
                 </div>
                 <div class= "events">
-                    <div class="events-detail">
-                        <div>
-                            <!-- 내가 신청한 팀으로 해야 함-->
-                            <span class="event-name"><%=event_data[i].otherTeam%> 팀에게 매칭 신청 중...
+                    <form action="/teamschedule" method="post" name="formPost3">
+                        <div class="events-detail">
+                            <div>
+                                <!-- 내가 신청한 팀으로 해야 함-->
+                                <span class="event-name"><%=event_data[i].otherTeam%> 팀에게 매칭 신청 중...
 <p style="font-size: smaller; margin-top: .4rem">승낙하면 현재 란이 매칭 스케줄란으로 바뀝니다.
 거절시, 또는 경기 전날까지 승인이 안될 시에 현재 란이 삭제됩니다.</p>
                         </span>
-                            <button class="btn btn-block" style="color:black">신청 취소<br><span style="font-size: smaller">상대팀이 수락하기 전까지 가능</span></button>
+		<!--						
+                                <input type="" name="cCallTeamEmail" id="cCallTeamEmail">
+                                <input type="" name="cReceiveTeamName" id="cReceiveTeamName" >
+                                <input type="" name="cReceiveTeamEmail" id="cReceiveTeamEmail">
+                                <input type="" name="cEvent_date" id="cEvent_date">
+                                <input type="" name="cEvent_time" id="cEvent_time">	
+	-->		
+								
+								<input type="hidden" name="cCallTeamEmail" id="cCallTeamEmail" value='<%=event_data[i].email%>'>
+								<input type="hidden" name="cReceiveTeamName" id="cReceiveTeamName" value='<%=event_data[i].otherTeam%>'>
+								<input type="hidden" name="cReceiveTeamEmail" id="cReceiveTeamEmail" value='<%=event_data[i].otherEmail%>'>
+								<input type="hidden" name="cEvent_date" id="cEvent_date" value='<%=event_data[i].event_date%>'>
+								<input type="hidden" name="cEvent_time" id="cEvent_time" value='<%=event_data[i].event_time%>'>
+	
+                                <button class="btn btn-block" style="color:black" onclick="alert('<%=event_data[i].otherTeam%> 팀에게 신청을 취소합니다.')">신청 취소<br><span style="font-size: smaller">상대팀이 수락하기 전까지 가능</span></button>
+                            </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
-            <%
+            <% count++;
             } else{
             }
             }
