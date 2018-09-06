@@ -989,7 +989,7 @@ module.exports = function(router, passport, upload) {
                         'created_month': result[i]._doc.created_month,
                         'created_day': result[i]._doc.created_day,
                         'application_number' : result[i]._doc.application_number,
-                        'allRating': ''
+                        'allRating': '',
                         'others': result[i]._doc.others //내가 등록한 매칭 정보
                     };
                     eventData[j++] = data;
