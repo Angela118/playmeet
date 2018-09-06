@@ -170,35 +170,42 @@
 
         for(var i = 0; i < event_data.length; i++) {
             var email = event_data[i].email;
-            var otherEmail = event_data[i].otherEmail; %>
+            var otherEmail = event_data[i].otherEmail;
+            var match_success = event_data[i].match_success;
+        %>
 
         <script>
-            function clicked(email, otherEmail, index) {
+            function clicked(email, otherEmail, match_success, index) {
                 document.getElementsByName('email')[index].value = email;
                 document.getElementsByName('otherEmail')[index].value = otherEmail;
-                alert('email : ' + email + ', otherEmail : ' + otherEmail + ', index : ' + index);
-                // document.getElementsByName('formPost')[index].submit();
-                location.href="/chat";
+                document.getElementsByName('match_success')[index].value = match_success;
+                
+                alert('email : ' + email + ', otherEmail : ' + otherEmail + ', index : ' + index + ', match_success : ' + match_success);
+                
+                if(match_success == 0) {
+                    alert("아직 매칭이 완료되지 않았습니다.");
+                    location.href="/chatroomchat";
+                } else
+                    location.href="/chat";
             }
         </script>
 
         <form action="/chatroomchat" method="get">
             <input type="hidden" name="email" id="email">
             <input type="hidden" name="otherEmail" id="otherEmail">
+            <input type="hidden" name="match_success" id="match_success">
         </form>
-            <div class="message" onclick="clicked( '<%= event_data[i].email %>','<%=event_data[i].otherEmail%>', '<%= count%>')">
-                <div class="chat_room_content">채팅방 /  <br>email : <%=email%><br>otherEmail : <%=otherEmail%></div>
-            </div>
+        <div class="message" onclick="clicked( '<%= event_data[i].email %>','<%=event_data[i].otherEmail%>', '<%= event_data[i].match_success %>', '<%= count%>')">
+            <div class="chat_room_content">채팅방 /  <br>email : <%=email%><br>otherEmail : <%=otherEmail%></div>
+        </div>
         
         <hr class="mb-4">
 
         <%
             count++;
-        }%>
+            }
+        %>
     </div>
 </div>
-
-
-
 </body>
 </html>

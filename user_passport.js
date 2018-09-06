@@ -731,7 +731,8 @@ module.exports = function(router, passport, upload) {
                     if (result[i]._doc.others.sEmail === req.user.email) {
                         var data = {
                             'email' : req.user.email, // 나
-                            'otherEmail': result[i]._doc.email//상대팀
+                            'otherEmail': result[i]._doc.email, //상대팀
+                            'match_success': result[i]._doc.match_success //매치 수락 여부
                         };
                         eventData[j++] = data;
                     }
@@ -743,7 +744,8 @@ module.exports = function(router, passport, upload) {
                         if (result[i]._doc.email === req.user.email) {
                             var data = {
                                 'email': result[i]._doc.email,//나
-                                'otherEmail': result[i]._doc.others.sEmail // 상대팀
+                                'otherEmail': result[i]._doc.others.sEmail, // 상대팀
+                                'match_success': result[i]._doc.match_success //매치 수락 여부
                             };
                             eventData[j++] = data;
                         }
@@ -761,7 +763,7 @@ module.exports = function(router, passport, upload) {
                         'career_count': req.user.career_count,
                         'introteam': req.user.introteam,
                         'profile_img': profile_photo,
-                  'event_data': eventData
+                        'event_data': eventData
                     };
                     console.dir(eventData);
                     res.render('chat_room_chat.ejs', user_context);
@@ -987,7 +989,6 @@ module.exports = function(router, passport, upload) {
     });
 	
 	
-    
     router.route('/chat').get(function(req, res){
         console.log('/chat 패스 get으로 요청됨.');
 
@@ -1061,7 +1062,8 @@ module.exports = function(router, passport, upload) {
         
 		var event = {
 			'email':req.body.email || req.query.email,
-			'otherEmail': req.body.otherEmail || req.query.otherEmail
+			'otherEmail': req.body.otherEmail || req.query.otherEmail,
+            'match_success': req.body.match_success || req.query.match_success
 		}
 		
 		console.dir(event);
