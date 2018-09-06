@@ -172,13 +172,15 @@
             var email = event_data[i].email;
             var otherEmail = event_data[i].otherEmail;
             var match_success = event_data[i].match_success;
+            var otherTeamname = event_data[i].otherTeamname;
         %>
 
         <script>
-            function clicked(email, otherEmail, match_success, index) {
+            function clicked(email, otherEmail, match_success, otherTeamname, index) {
                 document.getElementsByName('email')[index].value = email;
                 document.getElementsByName('otherEmail')[index].value = otherEmail;
                 document.getElementsByName('match_success')[index].value = match_success;
+                document.getElementsByName('otherTeamname')[index].value = otherTeamname;
                 
                 alert('email : ' + email + ', otherEmail : ' + otherEmail + ', index : ' + index + ', match_success : ' + match_success);
                 
@@ -194,9 +196,12 @@
             <input type="hidden" name="email" id="email">
             <input type="hidden" name="otherEmail" id="otherEmail">
             <input type="hidden" name="match_success" id="match_success">
+            <input type="hidden" name="otherTeamname" id="otherTeamname">
         </form>
-        <div class="message" onclick="clicked( '<%= event_data[i].email %>','<%=event_data[i].otherEmail%>', '<%= event_data[i].match_success %>', '<%= count%>')">
-            <div class="chat_room_content">채팅방 /  <br>email : <%=email%><br>otherEmail : <%=otherEmail%></div>
+        <div class="message" onclick="clicked( '<%= event_data[i].email %>','<%=event_data[i].otherEmail%>', '<%= event_data[i].match_success %>', <%= event_data[i].otherTeamname %>, '<%= count%>')">
+            <div class="chat_room_content">
+                <div><br>채팅 with " <%=otherTeamname%> "팀<br></div>       
+            </div>
         </div>
         
         <hr class="mb-4">
