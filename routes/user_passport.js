@@ -135,7 +135,6 @@ module.exports = function(router, passport, upload) {
 
                                 // if(parseInt(result[b]._doc.received_review) != 0) {
                                 if((result[b]._doc.review_date) != 0) {
-                                    console.log('ifin');
                                     sum += parseInt(result[b]._doc.received_review);
                                     count++;
                                 }
@@ -147,7 +146,6 @@ module.exports = function(router, passport, upload) {
 
                                 // if(parseInt(result[b]._doc.others.sReceivedReview) != 0){
                                 if((result[b]._doc.others.sReviewDate) != 0){
-                                    console.log('elseifin');
                                     sum += parseInt(result[b]._doc.others.sReceivedReview);
                                     count++;
                                 }
@@ -179,28 +177,31 @@ module.exports = function(router, passport, upload) {
 
                         if(a>=eventData.length-1) {
                             console.log('##eventData['+a+']["allRating"] : ' + eventData[a]['allRating']);
+
+                            const json2csvParser = new Json2csvParser({ fields });
+                            const csv = json2csvParser.parse(eventData);
+
+                            fs.writeFile('recEvent.csv', csv, 'utf8', function(err){
+                                if(err) throw err
+                                console.log('File Write.');
+                            });
+
                             callback();
                         }else{
                             console.log('!!eventData[' + a + ']["allRating"] : ' + eventData[a]['allRating']);
                             repeatFunction(a+1, callback);
                         }
-
                     });
                 }
 
-                repeatFunction(1, function () {
-                    console.log('done');
+                if(eventData.length>1){
+                    repeatFunction(1, function () {
+                        console.log('done');
 
-                    // for(var k=0; k<eventData.length; k++) {
-                    //     console.log('11111111111');
-                    //     console.log(k + '번째 eventData[' + k + '].email : ' + eventData[k].email);
-                    //     console.log(k + '번째 eventData[' + k + '].region : ' + eventData[k].region);
-                    // }
+                        //----------------------------------제가 쓴 부분 (아래 write가 여기 와야 써져용..의미를 잘 모르겠지마는..)
 
-                    //----------------------------------제가 쓴 부분 (아래 write가 여기 와야 써져용..의미를 잘 모르겠지마는..)
-
-
-
+                    });
+                }else{
 
                     const json2csvParser = new Json2csvParser({ fields });
                     const csv = json2csvParser.parse(eventData);
@@ -209,8 +210,7 @@ module.exports = function(router, passport, upload) {
                         if(err) throw err
                         console.log('File Write.');
                     });
-                });
-
+                }
 
             });
 
@@ -288,8 +288,6 @@ module.exports = function(router, passport, upload) {
             'sMove' : req.body.sMove,
             'sAge': req.body.sAge,
             'sGender': req.body.sGender,
-            'sCareerYear': req.body.sCareerYear,
-            'sCareerCount': req.body.sCareerCount,
             'sEvent_date': req.body.sDate,
             'sEvent_time': req.body.sTime,
             'sEvent_day' : req.body.sDay,
@@ -339,8 +337,6 @@ module.exports = function(router, passport, upload) {
         res.redirect('/');
 
     });
-
-
     /*
     router.route('/').post(function(req, res){
         var kofsort = req.body.sort || req.query.sort;
@@ -1074,9 +1070,35 @@ module.exports = function(router, passport, upload) {
             } //repeatfunction 정의
 
 
-            repeatFunction(0, function () {
-                console.log('done');
+            if(eventData.length>0) {
+                repeatFunction(0, function () {
+                    console.log('done');
 
+                    var user_context = {
+                        'email': req.user.email,
+                        'password': req.user.password,
+                        'teamname': req.user.teamname,
+                        'gender': req.user.gender,
+                        'age': req.user.age,
+                        'region': req.user.region,
+                        'move': req.user.move,
+                        'nofteam': req.user.nofteam,
+                        'career_year': req.user.career_year,
+                        'career_count': req.user.career_count,
+                        'introteam': req.user.introteam,
+                        'profile_img': profile_photo,
+                        'event_data': eventData,
+                        'sSameEmailIndex': sSameEmailIndex // email 중복시 index
+                    };
+                    console.log(eventData);
+
+                    console.log('chatmessagepostend----------------------');
+                    res.render('message.ejs', user_context);
+                    console.log('render 함');
+
+
+                }); //end repeatfunction
+            } else{
                 var user_context = {
                     'email': req.user.email,
                     'password': req.user.password,
@@ -1098,9 +1120,7 @@ module.exports = function(router, passport, upload) {
                 console.log('chatmessagepostend----------------------');
                 res.render('message.ejs', user_context);
                 console.log('render 함');
-
-
-            }); //end repeatfunction
+            }
         }); //endmatch1
     });
 
@@ -1194,67 +1214,135 @@ module.exports = function(router, passport, upload) {
                 profile_photo = profile_img;
 
 
-            var user_context = {
-                'email':req.user.email,
-                'password':req.user.password,
-                'teamname':req.user.teamname,
-                'gender':req.user.gender,
-                'age':req.user.age,
-                'region':req.user.region,
-                'add':req.user.add,
-                'move':req.user.move,
-                'nofteam':req.user.nofteam,
-                'career_year':req.user.career_year,
-                'career_count':req.user.career_count,
-                'introteam':req.user.introteam,
-                'profile_img':profile_photo
-            };
+            var dbm = require('../database/database');
+            console.log('database 모듈 가져옴');
 
+            var eventData = new Array();
+            var j = 0;
 
-            res.render('chat_.ejs', user_context);
-        }
+            // 나한테 매칭 신청한 팀 찾기
+            dbm.MatchModel.find({email : {"$ne" : req.user.email}} ,function (err, result) {
+                for (var i = 0; i < result.length; i++) {
+                    if (result[i]._doc.others.sEmail === req.user.email) {
+                        var data = {
+                            'email' : req.user.email, // 나
+                            'otherEmail': result[i]._doc.email//상대팀
+                        };
+                        eventData[j++] = data;
+                    }
+                }
+
+                // 내가 매칭 신청한 팀 찾기
+                dbm.MatchModel.find({email : req.user.email} ,function (err, result) {
+                    for (var i = 0; i < result.length; i++) {
+                        if (result[i]._doc.email === req.user.email) {
+                            var data = {
+                                'email': result[i]._doc.email,//나
+                                'otherEmail': result[i]._doc.others.sEmail // 상대팀
+                            };
+                            eventData[j++] = data;
+                        }
+                    }
+                    var user_context = {
+                        'email': req.user.email,
+                        'password': req.user.password,
+                        'teamname': req.user.teamname,
+                        'gender': req.user.gender,
+                        'age': req.user.age,
+                        'region': req.user.region,
+                        'move': req.user.move,
+                        'nofteam': req.user.nofteam,
+                        'career_year': req.user.career_year,
+                        'career_count': req.user.career_count,
+                        'introteam': req.user.introteam,
+                        'profile_img': profile_photo,
+                        'event_data': eventData
+                    };
+                    console.dir(eventData);
+                    res.render('chat.ejs', user_context);
+                });
+            });
+
+        };
     });
-    /*
-        router.route('/chat').post(function(req, res){
-            console.log('/chat appointment 패스 post 요청됨.');
+
+    //채팅
+    router.route('/chatroomchat').get(function(req, res){
+        console.log('/chatrooomchat 패스 get으로 요청됨.');
+
+        if (!req.user) {
+            console.log('사용자 인증 안된 상태임.');
+            res.redirect('/');
+        }else{
+            profile_photo = req.user.profile_img;
+            if(profile_img == null)
+                profile_img = req.user.profile_img;
+            if(profile_img != req.user.profile_img)
+                profile_photo = profile_img;
 
             var dbm = require('../database/database');
             console.log('database 모듈 가져옴');
 
+            var eventData = new Array();
+            var j = 0;
 
-            var event = {
-                'email':req.user.email,
-                'teamname':req.user.teamname,
-                'event_date': '',
-                'event_time': '',
-                'event_place': ''
-            };
+            // 나한테 매칭 신청한 팀 찾기
+            dbm.MatchModel.find({email : {"$ne" : req.user.email}} ,function (err, result) {
+                for (var i = 0; i < result.length; i++) {
+                    if (result[i]._doc.others.sEmail === req.user.email) {
+                        var data = {
+                            'email' : req.user.email, // 나
+                            'otherEmail': result[i]._doc.email//상대팀
+                        };
+                        eventData[j++] = data;
+                    }
+                }
 
-
-
-            event.event_date = req.body.event_date || req.query.event_date;
-            event.event_time = req.body.event_time || req.query.event_time;
-            event.event_place = req.body.event_place || req.query.event_place;
-            event.event_nofteam = req.body.event_nofteam || req.query.event_nofteam;
-
-
-
-            console.dir(event);
-
-
-            var event_appointment = new dbm.AppointmentModel(event);
-
-            event_appointment.save(function (err, data) {
-              if (err) {// TODO handle the error
-                  console.log("appointment save error");
-              }
-              console.log('New appointment inserted');
+                // 내가 매칭 신청한 팀 찾기
+                dbm.MatchModel.find({email : req.user.email} ,function (err, result) {
+                    for (var i = 0; i < result.length; i++) {
+                        if (result[i]._doc.email === req.user.email) {
+                            var data = {
+                                'email': result[i]._doc.email,//나
+                                'otherEmail': result[i]._doc.others.sEmail // 상대팀
+                            };
+                            eventData[j++] = data;
+                        }
+                    }
+                    var user_context = {
+                        'email': req.user.email,
+                        'password': req.user.password,
+                        'teamname': req.user.teamname,
+                        'gender': req.user.gender,
+                        'age': req.user.age,
+                        'region': req.user.region,
+                        'move': req.user.move,
+                        'nofteam': req.user.nofteam,
+                        'career_year': req.user.career_year,
+                        'career_count': req.user.career_count,
+                        'introteam': req.user.introteam,
+                        'profile_img': profile_photo,
+                        'event_data': eventData
+                    };
+                    console.dir(eventData);
+                    res.render('chat_room_chat.ejs', user_context);
+                });
             });
+        }
+    });
 
+    router.route('/chatroomchat').post(function(req, res){
+        console.log('/mainsearch 패스 post 요청됨.');
 
+        var event = {
+            'email':req.body.email || req.query.email,
+            'otherEmail': req.body.otherEmail || req.query.otherEmail
+        }
 
-        });
-        */
+        console.dir(event);
+        res.redirect('/chat');
+
+    });
 
     router.route('/chatappointment').get(function(req, res){
         console.log('/chatappointment 패스 get으로 요청됨.');
@@ -1375,7 +1463,6 @@ module.exports = function(router, passport, upload) {
                 'introteam':req.user.introteam,
                 'profile_img':profile_photo
             };
-
             res.render('main_search.ejs', user_context);
         }
     });
@@ -1479,7 +1566,6 @@ module.exports = function(router, passport, upload) {
                     eventData[j++] = data;
                 }
 
-
                 var repeatFunction = function (a, callback) {
 
                     console.log(a + '번째 eventData[' + a + '].email : ' + eventData[a].email);
@@ -1553,31 +1639,52 @@ module.exports = function(router, passport, upload) {
 
                 var user_context;
 
-                repeatFunction(0, function () {
-                    console.log('done');
+                if(eventData.length>0) {
+                    repeatFunction(0, function () {
+                        console.log('done');
 
+                        user_context = {
+                            'email': req.user.email,
+                            'password': req.user.password,
+                            'teamname': req.user.teamname,
+                            'gender': req.user.gender,
+                            'age': req.user.age,
+                            'region': req.user.region,
+                            'add': req.user.add,
+                            'move': req.user.move,
+                            'nofteam': req.user.nofteam,
+                            'career_year': req.user.career_year,
+                            'career_count': req.user.career_count,
+                            'introteam': req.user.introteam,
+                            'profile_img': profile_photo,
+                            'event_data': eventData
+                        };
+                        console.dir(eventData);
+
+                        res.render('main_search_result.ejs', user_context);
+
+                    });
+
+                } else{
                     user_context = {
-                        'email':req.user.email,
-                        'password':req.user.password,
-                        'teamname':req.user.teamname,
-                        'gender':req.user.gender,
-                        'age':req.user.age,
-                        'region':req.user.region,
-                        'add':req.user.add,
-                        'move':req.user.move,
-                        'nofteam':req.user.nofteam,
-                        'career_year':req.user.career_year,
-                        'career_count':req.user.career_count,
-                        'introteam':req.user.introteam,
-                        'profile_img':profile_photo,
-                        'event_data':eventData
+                        'email': req.user.email,
+                        'password': req.user.password,
+                        'teamname': req.user.teamname,
+                        'gender': req.user.gender,
+                        'age': req.user.age,
+                        'region': req.user.region,
+                        'add': req.user.add,
+                        'move': req.user.move,
+                        'nofteam': req.user.nofteam,
+                        'career_year': req.user.career_year,
+                        'career_count': req.user.career_count,
+                        'introteam': req.user.introteam,
+                        'profile_img': profile_photo,
+                        'event_data': eventData
                     };
                     console.dir(eventData);
-
                     res.render('main_search_result.ejs', user_context);
-                    console.log('mainsearchresult 다시 render함---------------------');
-
-                });
+                }
 
                 // console.dir(eventData);
 
