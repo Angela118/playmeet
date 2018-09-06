@@ -116,9 +116,9 @@ module.exports = function(router, passport, upload) {
 
 
                 var repeatFunction = function (a, callback) {
-
-                    console.log(a + '번째 eventData[' + a + '].email : ' + eventData[a].email);
-                    console.log(a + '번째 eventData[' + a + '].region : ' + eventData[a].region);
+					
+					console.log(a + '번째 eventData[' + a + '].email : ' + eventData[a].email);
+					console.log(a + '번째 eventData[' + a + '].region : ' + eventData[a].region);
 
 
 					dbm.MatchModel.find({$or: [{"email": eventData[a].email}, {"others.sEmail": eventData[a].email}]}, function (err, result) {
@@ -163,41 +163,43 @@ module.exports = function(router, passport, upload) {
 
 						if(a>=eventData.length-1) {
 							console.log('##eventData['+a+']["allRating"] : ' + eventData[a]['allRating']);
+							
+							const json2csvParser = new Json2csvParser({ fields });
+							const csv = json2csvParser.parse(eventData);
+
+							fs.writeFile('recEvent.csv', csv, 'utf8', function(err){
+								if(err) throw err
+								console.log('File Write.');
+							});	
+							
 							callback();
 						}else{
 							console.log('!!eventData[' + a + ']["allRating"] : ' + eventData[a]['allRating']);
 							repeatFunction(a+1, callback);
 						}
-
-					});
+					});					
                 }
-
-                repeatFunction(1, function () {
-                    console.log('done');
-
-                    for(var k=0; k<eventData.length; k++) {
-                        console.log('11111111111');
-                        console.log(k + '번째 eventData[' + k + '].email : ' + eventData[k].email);
-                        console.log(k + '번째 eventData[' + k + '].region : ' + eventData[k].region);
-                    }
-
-                    //----------------------------------제가 쓴 부분 (아래 write가 여기 와야 써져용..의미를 잘 모르겠지마는..)
-
 				
-				
-				
-				const json2csvParser = new Json2csvParser({ fields });
-				const csv = json2csvParser.parse(eventData);
+				if(eventData.length>1){
+					repeatFunction(1, function () {
+						console.log('done');
 
-				fs.writeFile('recEvent.csv', csv, 'utf8', function(err){
-					if(err) throw err
-					console.log('File Write.');
-				});	
-			});	
+						//----------------------------------제가 쓴 부분 (아래 write가 여기 와야 써져용..의미를 잘 모르겠지마는..)
+
+					});	
+				}else{
+					
+					const json2csvParser = new Json2csvParser({ fields });
+					const csv = json2csvParser.parse(eventData);
+
+					fs.writeFile('recEvent.csv', csv, 'utf8', function(err){
+						if(err) throw err
+						console.log('File Write.');
+					});	
+				}
 				
-				
-			});
-			
+			});				
+		
 			var pythonShell = require('python-shell');
 			
 			var options = {
@@ -1137,7 +1139,6 @@ module.exports = function(router, passport, upload) {
 		event.event_place = req.body.event_place || req.query.event_place;
 		event.event_nofteam = req.body.event_nofteam || req.query.event_nofteam;
 		
-
 		
 		console.dir(event);
 		
@@ -1152,7 +1153,6 @@ module.exports = function(router, passport, upload) {
         });
 		
 		
-
 	});
 	*/
 	
@@ -1566,6 +1566,7 @@ module.exports = function(router, passport, upload) {
 
         // 대기 상태에서 취소
         var cCallTeamEmail = req.body.cCallTeamEmail;
+		var cReceiveTeamName = req.body.cReceiveTeamName;
         var cReceiveTeamEmail = req.body.cReceiveTeamEmail;
         var cEvent_date = req.body.cEvent_date;
         var cEvent_time = req.body.cEvent_time;
@@ -1584,7 +1585,6 @@ module.exports = function(router, passport, upload) {
         console.log('scoreCallTeamEmail : ' + scoreCallTeamEmail);
 
         if(scoreCallTeamEmail) {
-
             // score update
             dbm.MatchModel.update(
                 {email: scoreCallTeamEmail, "others.sEvent_date": scoreEventDate, "others.sEvent_time": scoreEventTime},
@@ -1598,9 +1598,11 @@ module.exports = function(router, passport, upload) {
 
         } // match 신청 cancel
         else {
-
-
-
+			dbm.MatchModel.remove({email:cCallTeamEmail, 'others.sEmail':cReceiveTeamEmail, 'others.sTeamname':cReceiveTeamName, 'others.sEvent_date':cEvent_date, 'others.sEvent_time':cEvent_time}, function(err){
+				if(err) throw err
+				
+				console.log('=== Match Deleted ===');
+			});
         }
 
         res.redirect('/teamschedule');
@@ -1960,7 +1962,7 @@ module.exports = function(router, passport, upload) {
 		if(req.body.opt == 'del'){
 			if(dbm.MatchModel.find({'others.sApplicationNumber':selectone.application_number})){
 				console.log('=== Match deleted ===');
-				dbm.MatchModel.remove({'others.sApplicationNumber':selectone.application_number}, 1);
+				dbm.MatchModel.remove({'others.sApplicationNumber':selectone.application_number}, 1);				
 			}
 			
 			setTimeout(function(){
