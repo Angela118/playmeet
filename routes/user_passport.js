@@ -1816,7 +1816,157 @@ module.exports = function(router, passport, upload) {
                         }
                     }
 
-                    var user_context = {
+                    var repeatFunction = function (a, callback) {
+
+                        console.log(a + '번째 eventData[' + a + '].email : ' + eventData[a].email);
+                        console.log(a + '번째 eventData[' + a + '].region : ' + eventData[a].region);
+
+
+                        dbm.MatchModel.find({$or: [{"email": eventData[a].email}, {"others.sEmail": eventData[a].email}]}, function (err, result) {
+                            var sum = 0;
+                            var count = 0;
+
+                            for (var b = 0; b < result.length; b++) {
+                                console.log('a : ' + a + ', b : ' + b);
+                                console.log('result.length : ' + result.length);
+
+                                if ((result[b]._doc.email === eventData[a].email) && (result[b]._doc.others.sEmail !== eventData[a].email)) {
+                                    console.log('if');
+                                    console.log('result['+b+']._doc.review_date : ' + result[b]._doc.review_date);
+
+                                    // if(parseInt(result[b]._doc.received_review) != 0) {
+                                    if((result[b]._doc.review_date) != 0) {
+                                        sum += parseInt(result[b]._doc.received_review);
+                                        count++;
+                                    }
+                                    console.log('if count : ' + count);
+
+                                } else if ((result[b]._doc.email !== eventData[a].email) && (result[b]._doc.others.sEmail === eventData[a].email)) {
+                                    console.log('elseif');
+                                    console.log('result['+b+']._doc.review_date : ' + result[b]._doc.review_date);
+
+                                    // if(parseInt(result[b]._doc.others.sReceivedReview) != 0){
+                                    if((result[b]._doc.others.sReviewDate) != 0){
+                                        sum += parseInt(result[b]._doc.others.sReceivedReview);
+                                        count++;
+                                    }
+                                    console.log('elseif count : ' + count);
+
+                                } else {
+                                    console.log('else');
+                                    continue;
+                                }
+                                console.log('*********');
+                            } //end in match for
+
+                            console.log('sum : ' + sum);
+                            console.log('count : ' + count);
+
+                            var aver;
+
+                            if(count == 0) {
+                                aver = "리뷰없음";
+                            }else {
+                                aver = (sum / count).toFixed(2);
+                            }
+
+                            console.log('aver : ' + aver);
+                            eventData[a]['allRating'] = aver;
+
+                            console.log('eventData[a]["allRating"] : ' + eventData[a]['allRating']);
+
+
+                            if(a>=eventData.length-1) {
+                                console.log('##eventData['+a+']["allRating"] : ' + eventData[a]['allRating']);
+                                callback();
+                            }else{
+                                console.log('!!eventData[' + a + ']["allRating"] : ' + eventData[a]['allRating']);
+                                repeatFunction(a+1, callback);
+                            }
+
+                        });
+                    }
+
+                    var otherEmailforProfile;;
+
+                    var profileFunction = function (a, callback) {
+
+                        if(eventData[a].otherEmail){
+                            otherEmailforProfile = eventData[a].otherEmail;
+                        }else {
+                            otherEmailforProfile = eventData[a].email;
+                        }
+
+                        dbm.UserModel.find({email : otherEmailforProfile} ,function (err, result) {
+                            for (var i = 0; i < result.length; i++) {
+                                console.log('i : ' + i);
+                                var otherProfileImg = result[i]._doc.profile_img;
+                                console.log('otherProfileImg : ' + otherProfileImg);
+                                eventData[a]["otherProfileImg"] = otherProfileImg;
+                            }
+
+                            if(a>=eventData.length-1) {
+
+                                callback();
+                            }else{
+
+                                profileFunction(a+1, callback);
+                            }
+                        });
+
+                    }
+
+                    if(eventData.length>0) {
+                        repeatFunction(0, function () {
+                            console.log('Rating done');
+
+                            profileFunction(0, function () {
+                                console.log('Profile done');
+
+                                var user_context = {
+                                    'email': req.user.email,
+                                    'password': req.user.password,
+                                    'teamname': req.user.teamname,
+                                    'add' : req.user.add,
+                                    'region': req.user.region,
+                                    'move': req.user.move,
+                                    'gender': req.user.gender,
+                                    'age': req.user.age,
+                                    'nofteam': req.user.nofteam,
+                                    'career_year': req.user.career_year,
+                                    'career_count': req.user.career_count,
+                                    'introteam': req.user.introteam,
+                                    'profile_img': profile_photo,
+                                    'event_data':eventData
+                                }; // user_context
+                                console.dir(eventData);
+                                res.render('team_schedule.ejs', user_context);
+                            });
+
+                        });
+
+                    } else{
+                        var user_context = {
+                            'email': req.user.email,
+                            'password': req.user.password,
+                            'teamname': req.user.teamname,
+                            'add' : req.user.add,
+                            'region': req.user.region,
+                            'move': req.user.move,
+                            'gender': req.user.gender,
+                            'age': req.user.age,
+                            'nofteam': req.user.nofteam,
+                            'career_year': req.user.career_year,
+                            'career_count': req.user.career_count,
+                            'introteam': req.user.introteam,
+                            'profile_img': profile_photo,
+                            'event_data':eventData
+                        }; // user_context
+                        console.dir(eventData);
+                        res.render('team_schedule.ejs', user_context);
+                    }
+
+                    /*var user_context = {
                         'email': req.user.email,
                         'password': req.user.password,
                         'teamname': req.user.teamname,
@@ -1833,7 +1983,7 @@ module.exports = function(router, passport, upload) {
                         'event_data':eventData
                     }; // user_context
                     console.dir(eventData);
-                    res.render('team_schedule.ejs', user_context);
+                    res.render('team_schedule.ejs', user_context);*/
 
                 }); // dbm event_data2 end
             }); // dbm event_data end
