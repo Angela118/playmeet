@@ -31,7 +31,7 @@ module.exports = function(router, passport, upload) {
 		}
 
 	
-	    //홈 화면, 추천
+	//홈 화면, 추천
     router.route('/').get(function(req, res) {
         console.log('/ 패스 get 요청됨.');
 
@@ -830,25 +830,158 @@ module.exports = function(router, passport, upload) {
             if(profile_img != req.user.profile_img)
                 profile_photo = profile_img;
 
+            var dbm = require('../database/database');
+            console.log('database 모듈 가져옴');
 
-            var user_context = {
-                'email':req.user.email,
-                'password':req.user.password,
-                'teamname':req.user.teamname,
-                'gender':req.user.gender,
-                'age':req.user.age,
-                'region':req.user.region,
-                'move':req.user.move,
-                'nofteam':req.user.nofteam,
-                'career_year':req.user.career_year,
-                'career_count':req.user.career_count,
-                'introteam':req.user.introteam,
-                'profile_img':profile_photo
-            };
+            var eventData = new Array();
+            var j = 0;
 
-            res.render('chat_room_chat.ejs', user_context);
+            // 나한테 매칭 신청한 팀 찾기
+            dbm.MatchModel.find({email : {"$ne" : req.user.email}} ,function (err, result) {
+                for (var i = 0; i < result.length; i++) {
+                    if (result[i]._doc.others.sEmail === req.user.email) {
+                        var data = {
+                            'email' : req.user.email, // 나
+                            'otherEmail': result[i]._doc.email, //상대팀
+                            'match_success': result[i]._doc.match_success, //매치 수락 여부
+                            'otherTeamname': result[i]._doc.teamname // 상대팀 팀명
+                        };
+                        eventData[j++] = data;
+                    }
+                }
+
+                // 내가 매칭 신청한 팀 찾기
+                dbm.MatchModel.find({email : req.user.email} ,function (err, result) {
+                    for (var i = 0; i < result.length; i++) {
+                        if (result[i]._doc.email === req.user.email) {
+                            var data = {
+                                'email': result[i]._doc.email,//나
+                                'otherEmail': result[i]._doc.others.sEmail, // 상대팀
+                                'match_success': result[i]._doc.match_success, //매치 수락 여부
+                                'otherTeamname': result[i]._doc.others.sTeamname // 상대팀 팀명
+                            };
+                            eventData[j++] = data;
+                        }
+                    }
+                    var user_context = {
+                        'email': req.user.email,
+                        'password': req.user.password,
+                        'teamname': req.user.teamname,
+                        'gender': req.user.gender,
+                        'age': req.user.age,
+                        'region': req.user.region,
+                        'move': req.user.move,
+                        'nofteam': req.user.nofteam,
+                        'career_year': req.user.career_year,
+                        'career_count': req.user.career_count,
+                        'introteam': req.user.introteam,
+                        'profile_img': profile_photo,
+                        'event_data': eventData
+                    };
+                    console.dir(eventData);
+                    res.render('chat_room_chat.ejs', user_context);
+                });
+            });
         }
     });
+	
+	router.route('/chatroomchat').post(function(req, res){
+		console.log('/chatroomchat 패스 post 요청됨.');
+        
+		var event = {
+			'email':req.body.email || req.query.email,
+			'otherEmail': req.body.otherEmail || req.query.otherEmail,
+            'match_success': req.body.match_success || req.query.match_success,
+            'otherTeamname': req.body.otherTeamname || req.query.otherTeamname
+		}
+		
+		console.dir(event);
+		res.redirect('/chat');
+		
+	});
+	
+	router.route('/chatappointment').get(function(req, res){
+        console.log('/chatappointment 패스 get으로 요청됨.');
+
+        
+        if (!req.user) {
+            console.log('사용자 인증 안된 상태임.');
+            res.redirect('/login');
+        }else{
+         profile_photo = req.user.profile_img;			
+			if(profile_img == null)
+				profile_img = req.user.profile_img;
+			if(profile_img != req.user.profile_img)
+				profile_photo = profile_img;
+
+			
+			var user_context = {
+				'email':req.user.email, 
+				'password':req.user.password, 
+				'teamname':req.user.teamname, 
+				'gender':req.user.gender, 
+				'age':req.user.age,
+				'region':req.user.region,
+				'add':req.user.add,
+				'move':req.user.move,
+				'nofteam':req.user.nofteam,
+				'career_year':req.user.career_year,
+				'career_count':req.user.career_count,
+				'introteam':req.user.introteam,
+				'profile_img':profile_photo
+			};      
+         
+         
+            res.render('chat_appointment.ejs', user_context);
+        }
+    });
+	
+	router.route('/chatappointment').post(function(req, res) {
+       console.log('/chatappointment 패스 post 요청됨');
+      
+		var event = {
+			'email':req.user.email,
+			'teamname':req.user.teamname,
+			'event_date': req.user.event_date,
+			'event_time': req.user.event_time,
+			'event_region': req.user.event_region,
+			'event_add': req.user.event_add,
+			'event_nofteam': req.user.event_nofteam
+		};
+            
+      
+		event.event_date = req.body.event_date || req.query.event_date;
+		event.event_time = req.body.event_time || req.query.event_time;
+		event.event_region = req.body.region || req.query.region;
+		event.event_add = req.body.add || req.query.add;
+		event.event_nofteam = req.body.event_nofteam || req.query.event_nofteam;
+		
+
+		if(!event.add){		//도로명주소 없는 경우 지번 주소
+			event.add = req.body.add2 || req.query.add2;
+		}else{		
+			var addr = [];
+			addr= event.add.split(' ');
+
+			if(addr[0] == '제주특별자치도'){
+				event.add = [addr[1], addr[2]];
+			}else
+				event.add = [addr[0], addr[1]];
+		}
+
+        console.dir(event);
+      
+		var event_appointment = new dbm.AppointmentModel(event);
+ 
+        event_appointment.save(function (err, data) {
+          if (err) {// TODO handle the error
+              console.log("appointment save error");
+          }
+          console.log('New appointment inserted');
+        });
+	   
+      res.redirect('/chat');
+   })
 	
 	router.route('/chatroommessage').get(function(req, res){
         console.log('/chatroommessage 패스 get으로 요청됨.');
@@ -988,7 +1121,9 @@ module.exports = function(router, passport, upload) {
             };
             console.log(eventData);
 
+            console.log('chatmessagepostend----------------------');
             res.render('message.ejs', user_context);
+            console.log('render 함');
         });
     });
 
@@ -1074,34 +1209,66 @@ module.exports = function(router, passport, upload) {
             console.log('사용자 인증 안된 상태임.');
             res.redirect('/login');
         }else{
-			
-			profile_photo = req.user.profile_img;			
-			if(profile_img == null)
-				profile_img = req.user.profile_img;
-			if(profile_img != req.user.profile_img)
-				profile_photo = profile_img;
+         
+         profile_photo = req.user.profile_img;         
+         if(profile_img == null)
+            profile_img = req.user.profile_img;
+         if(profile_img != req.user.profile_img)
+            profile_photo = profile_img;
+            
+            
+            var dbm = require('../database/database');
+            console.log('database 모듈 가져옴');
+            
+            var eventData = new Array();
+            var j = 0;
 
-			
-			var user_context = {
-				'email':req.user.email, 
-				'password':req.user.password, 
-				'teamname':req.user.teamname, 
-				'gender':req.user.gender, 
-				'age':req.user.age,
-				'region':req.user.region,
-				'add':req.user.add,
-				'move':req.user.move,
-				'nofteam':req.user.nofteam,
-				'career_year':req.user.career_year,
-				'career_count':req.user.career_count,
-				'introteam':req.user.introteam,
-				'profile_img':profile_photo
-			};	
-			
-			
-            res.render('chat_.ejs', user_context);
-        }
+            // 나한테 매칭 신청한 팀 찾기
+            dbm.MatchModel.find({email : {"$ne" : req.user.email}} ,function (err, result) {
+                for (var i = 0; i < result.length; i++) {
+                    if (result[i]._doc.others.sEmail === req.user.email) {
+                        var data = {
+                            'email' : req.user.email, // 나
+                            'otherEmail': result[i]._doc.email//상대팀
+                        };
+                        eventData[j++] = data;
+                    }
+                }
+
+                // 내가 매칭 신청한 팀 찾기
+                dbm.MatchModel.find({email : req.user.email} ,function (err, result) {
+                    for (var i = 0; i < result.length; i++) {
+                        if (result[i]._doc.email === req.user.email) {
+                            var data = {
+                                'email': result[i]._doc.email,//나
+                                'otherEmail': result[i]._doc.others.sEmail // 상대팀
+                            };
+                            eventData[j++] = data;
+                        }
+                    }
+                    var user_context = {
+                        'email': req.user.email,
+                        'password': req.user.password,
+                        'teamname': req.user.teamname,
+                        'gender': req.user.gender,
+                        'age': req.user.age,
+                        'region': req.user.region,
+                        'move': req.user.move,
+                        'nofteam': req.user.nofteam,
+                        'career_year': req.user.career_year,
+                        'career_count': req.user.career_count,
+                        'introteam': req.user.introteam,
+                        'profile_img': profile_photo,
+                        'event_data': eventData
+                    };
+                    console.dir(eventData);
+                    res.render('chat.ejs', user_context);
+                });
+            });
+
+        };
     });
+	
 /*	
 	router.route('/chat').post(function(req, res){
 		console.log('/chat appointment 패스 post 요청됨.');
