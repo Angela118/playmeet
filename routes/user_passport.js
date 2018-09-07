@@ -1777,6 +1777,7 @@ module.exports = function(router, passport, upload) {
                             'match_success': result[i]._doc.match_success,
                             'score': result[i]._doc.score, // 상대팀의 이 경기 score
                             'review': result[i]._doc.received_review, // 상대팀이 이 경기에서 받은 review
+                            'review_date': result[i]._doc.review_date,
                             'sScore' : result[i]._doc.others.sScore, // 내 이 경기 스코어
                             'sReceivedReview': result[i]._doc.others.sReceivedReview, // 내가 이 경기에서 받은 리뷰
                             'sReceivedReviewComment': result[i]._doc.others.sReceivedReviewComment,

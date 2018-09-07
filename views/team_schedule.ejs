@@ -281,6 +281,7 @@
                 var curProfileImg = event_data[i].otherProfile; // 상대팀 프로필 (경로지정 해줘야함) // 다시 해야함
                 var curScore = event_data[i].score; // 상대팀의 이 경기 score
                 var curReview = event_data[i].review; // 상대팀이 이 경기에서 받은 리뷰
+                var curReviewDate = event_data[i].review_date;
                 var score = event_data[i].sScore; // 내 이 경기 스코어
                 var review = event_data[i].sReceivedReview; // 내가 이 경기에서 받은 리뷰
                 var applicationNumber = event_data[i].sApplicationNumber;
@@ -296,6 +297,7 @@
                     curNofteam = event_data[i].other_nofteam; // 상대팀 인원수
                     curScore = event_data[i].sScore; // 상대팀 score
                     curReview = event_data[i].sReceivedReview; // 상대팀 review
+                    curReviewDate = event_data[i].sReviewDate;
                     score = event_data[i].score; // 내 score
                     review = event_data[i].review; // 내 review
                     applicationNumber = event_data[i].sApplicationNumber;
@@ -418,9 +420,15 @@
                             <input type="hidden" name="eventDate" id="eventDate" value=''>
                             <input type="hidden" name="eventTime" id="eventTime" value=''>
 
+
                             <div>
+                                <%if(curReviewDate == 0) {%>
                                 <button type="button" class="btn btn-block blueB" onclick="reviewClicked( `<%=event_data[i].email%>`, `<%=event_data[i].otherEmail%>`, `<%=event_data[i].event_date%>`,`<%=event_data[i].event_time%>`, `<%=count%>`)">상대팀 평가/채팅방 삭제하기</button>
+                                <%}else {%>
+                                <button type="button" class="btn btn-block blueB">상대팀 평가 완료</button>
+                                <%}%>
                             </div>
+
                         </form>
 
                     </div>
