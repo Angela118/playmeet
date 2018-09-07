@@ -26,6 +26,9 @@ Schema.createSchema = function(mongoose) {
 		career_count: {type:Number, 'default':''},
 		introteam: {type:String, default:''},
 		profile_img: {type:String, 'default':'profile_basic.png'},
+		img_flag: {type:Number, 'default':0},
+		//img_flag[0]: get,	0:from 회원가입, 1:from 프로필 이미지 수정
+		//img_flag[1]:post,	0:회원가입, 1:로그인, 2:프로필 이미지 수정
 		geoLng:{type:Number, 'default':''},
 		geoLat:{type:Number, 'default':''},
 		created_at: {type: Date, index: {unique: false}, 'default': Date.now},
