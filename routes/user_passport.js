@@ -1900,9 +1900,16 @@ module.exports = function(router, passport, upload) {
                         dbm.UserModel.find({email : otherEmailforProfile} ,function (err, result) {
                             for (var i = 0; i < result.length; i++) {
                                 console.log('i : ' + i);
-                                var otherProfileImg = result[i]._doc.profile_img;
-                                console.log('otherProfileImg : ' + otherProfileImg);
-                                eventData[a]["otherProfileImg"] = otherProfileImg;
+                                // console.log('otherProfileImg : ' + otherProfileImg);
+                                eventData[a]["otherProfileImg"] = result[i]._doc.profile_img;
+                                eventData[a]["otherRealAdd"] = result[i]._doc.add;
+                                eventData[a]["otherRealRegion"] = result[i]._doc.region;
+                                eventData[a]["otherMove"] = result[i]._doc.move;
+                                eventData[a]["otherAge"] = result[i]._doc.age;
+                                eventData[a]["otherGender"] = result[i]._doc.gender;
+                                eventData[a]["otherCareerYear"] = result[i]._doc.career_year;
+                                eventData[a]["otherCareerCount"] = result[i]._doc.career_count;
+                                eventData[a]["otherNofteam"] = result[i]._doc.nofteam;
                             }
 
                             if(a>=eventData.length-1) {
