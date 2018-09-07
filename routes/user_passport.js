@@ -1115,6 +1115,8 @@ module.exports = function(router, passport, upload) {
         var eventData = new Array();
         var j = 0;
 
+
+
         // 나한테 신청한 사람 이메일 받아온거로 matches에서 email 찾아서
         dbm.MatchModel.find({email: otherEmail}, function (err, result) {
             console.log('result.length : ' + result.length);
@@ -1141,10 +1143,6 @@ module.exports = function(router, passport, upload) {
                 }
             }
 
-            console.log('00000000000000000000000000000000000000000000');
-            console.log('eventData : ');
-            console.log(eventData);
-
             var teamname = eventData[sSameEmailIndex].teamname;
             console.log('teamname : ' + teamname);
 
@@ -1155,17 +1153,30 @@ module.exports = function(router, passport, upload) {
 
             console.log('findEventTime ; ' + findEventTime);
 
-            dbm.MatchModel.update(
-                {email: otherEmail, "others.sEvent_date": findEventDate, "others.sEvent_time": findEventTime},
-                {$set: {match_success: match}}, function (err, result) {
-                    if (err) {
-                        console.log(err.message);
-                    } else {
-                        console.dir(result);
-                    }
+
+            if(match == 1){
+                dbm.MatchModel.update(
+                    {email: otherEmail, "others.sEvent_date": findEventDate, "others.sEvent_time": findEventTime},
+                    {$set: {match_success: match}}, function (err, result) {
+                        if (err) {
+                            console.log(err.message);
+                        } else {
+                            console.dir(result);
+                        }
+                    });
+            }else if(match == 2){
+                dbm.ApplicationModel.update({email:req.user.email, event_date:findEventDate, event_time:findEventTime}, {$set: {match:0}}, function (err, result) {
+                    if(err) throw err
                 });
 
+                setTimeout(function(){
+                    dbm.MatchModel.remove({email: otherEmail, "others.sEvent_date": findEventDate, "others.sEvent_time": findEventTime}, function(err){
+                        if(err) throw err
+                    });
+                }, 500);
+            }
         });
+
         res.redirect('/chatroommessage');
     });
 
