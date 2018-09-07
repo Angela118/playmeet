@@ -28,7 +28,8 @@
         });
         
         function connect(){
-            var host = '192.168.29.111';  // $('#hostInput').val(); //203.153.146.124
+            var host = '10.100.74.243';  // 아이피 바꾸기!!!!!!
+            $('#hostInput').val(); //203.153.146.124
             var port = 3000;  // $('#portInput').val();
             //서버에 접속
             connectToServer(host, port);
@@ -82,13 +83,12 @@
             var message = {
                 email:email,
                 sender:sender,
-                recipient:recipient, //'ALL                
+                recipient:recipient, //ALL
                 command:chattype,
                 data:data,
                 type:'text'
             };
             socket.emit('message', message);
-            
             addToChatting(message.email, message.data); 
         }
       
