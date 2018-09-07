@@ -111,8 +111,10 @@
 
                 <div class="stars mb-3">
 
-                    <% if(result == 1) {%>
+                    <% if((result >= 1) && (result <1.5)) {%>
                         <img src="../img/star.png" width="20" height="20">
+                    <%}else if((result >= 0.5) && (result < 1)){%>
+                        <img src="../img/star-half.png" width="20" height="20">
                     <%}%>
 
                     <% for(var i = 0; i < Math.round(result)-1; i++) {%>
