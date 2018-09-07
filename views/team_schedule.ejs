@@ -18,7 +18,7 @@
     <script src="../js/bootstrap.bundle.min.js"></script>
 
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <!--<script src="http://code.jquery.com/jquery-latest.js"></script>-->
 
 </head>
 <body class="whiteB">
@@ -362,40 +362,6 @@
                         </p>
 
 
-                        <!-- The Modal -->
-                        <div class="modal" name="myModal">
-                            <div class="modal-dialog modal-dialog-centered modal-sm">
-                                <div class="modal-content">
-
-                                    <!--&lt;!&ndash; Modal Header &ndash;&gt;-->
-                                    <div class="modal-header">
-                                        <h4 class="modal-title" style="text-align: center"><%=event_data[i].teamname%> 팀</h4>
-                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    </div>
-
-                                    <!--&lt;!&ndash; Modal body &ndash;&gt;-->
-                                    <div class="modal-body">
-                                        <div name="email" value='' class="modal_content"></div>
-                                        <div name="teamname" value='' class="modal_content"></div>
-                                        <div name="realAdd" value='' class="modal_content"></div>
-                                        <div name="realRegion" value='' class="modal_content"></div>
-                                        <div name="move" value='' class="modal_content"></div>
-                                        <div name="age" value='' class="modal_content"></div>
-                                        <div name="gender" value='' class="modal_content"></div>
-                                        <div name="careerYear" value='' class="modal_content"></div>
-                                        <div name="careerCount" value='' class="modal_content"></div>
-                                        <div name="nofteam" value='' class="modal_content"></div>
-                                        <div name="allRating" value='' class="modal_content"></div>
-                                    </div>
-
-                                    <!--&lt;!&ndash; Modal footer &ndash;&gt;-->
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-danger" data-dismiss="modal" >닫기</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
                         <script>
                             function clicked(callTeamEmail, receiveTeamEmail, event_date, event_time, count) {
                                 alert('callTeamEmail : ' + callTeamEmail + ', receiveTeamEmail : ' + receiveTeamEmail + ', event_date : ' + event_date + ', event_time : ' + event_time + ', count : ' + count);
@@ -442,7 +408,7 @@
 */
 
                             function team_inform_clicked(email, teamname, realAdd, realRegion, move, age, gender, careerYear, careerCount, nofteam, allRating, index) {
-                                alert('email : ' + email + ', teamname : ' + teamname + ', allRating : ' + allRating + ', realAdd : ' + realAdd + ', realRegion : ' + realRegion + ' move : ' + move + ' age :' + age + ', gender : ' + gender + ', careerYear : ' + careerYear + ', careerCount : ' + careerCount + 'nofteam : ' + nofteam + ', index : ' + index);
+                                // alert('email : ' + email + ', teamname : ' + teamname + ', allRating : ' + allRating + ', realAdd : ' + realAdd + ', realRegion : ' + realRegion + ' move : ' + move + ' age :' + age + ', gender : ' + gender + ', careerYear : ' + careerYear + ', careerCount : ' + careerCount + 'nofteam : ' + nofteam + ', index : ' + index);
                                 if(gender == 25) {
                                     gender = '무관'
                                 }else if(gender == 50) {
@@ -469,12 +435,43 @@
                                 $("div[name=nofteam]").eq(index).text('인원수 : ' + nofteam + '명');
                                 $("div[name=allRating]").eq(index).text('평점 : ' + allRating);
                                 $("div[name=myModal]").eq(index).modal();
-                                alert('modal 후');
                             }
 
                         </script>
 
+                        <!-- The Modal -->
+                        <div class="modal" name="myModal">
+                            <div class="modal-dialog modal-dialog-centered modal-sm">
+                                <div class="modal-content">
 
+                                    <!--&lt;!&ndash; Modal Header &ndash;&gt;-->
+                                    <div class="modal-header">
+                                        <h4 class="modal-title" style="text-align: center"><%=curTeamname%> 팀</h4>
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    </div>
+
+                                    <!--&lt;!&ndash; Modal body &ndash;&gt;-->
+                                    <div class="modal-body">
+                                        <div name="email" value='' class="modal_content"></div>
+                                        <div name="teamname" value='' class="modal_content"></div>
+                                        <div name="realAdd" value='' class="modal_content"></div>
+                                        <div name="realRegion" value='' class="modal_content"></div>
+                                        <div name="move" value='' class="modal_content"></div>
+                                        <div name="age" value='' class="modal_content"></div>
+                                        <div name="gender" value='' class="modal_content"></div>
+                                        <div name="careerYear" value='' class="modal_content"></div>
+                                        <div name="careerCount" value='' class="modal_content"></div>
+                                        <div name="nofteam" value='' class="modal_content"></div>
+                                        <div name="allRating" value='' class="modal_content"></div>
+                                    </div>
+
+                                    <!--&lt;!&ndash; Modal footer &ndash;&gt;-->
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger" data-dismiss="modal" >닫기</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         <form action="/teamschedule" name="formPost" method="post">
                             <input type="hidden" name="callTeamEmail" id="callTeamEmail" value=''>
