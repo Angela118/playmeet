@@ -9,10 +9,9 @@ module.exports = function(router, passport, upload) {
 	var dbm = require('../database/database');
 	console.log('database 모듈 가져옴');
 	
-	var profile_img;
+	var imgi=0;
+	var profile_img=[];
 	var profile_photo;
-	var flag=1,
-		flag2=1;
 	
 	var event_search = {
         'teamname':'',
@@ -40,14 +39,12 @@ module.exports = function(router, passport, upload) {
             console.log('사용자 인증 안된 상태임.');
             res.redirect('/login');
         } else {
-
-            // expire
+			// expire
             var newDate = new Date();
             var nowYear = newDate.getFullYear();
             var nowMonth = (newDate.getMonth() + 1);
             var nowDate = newDate.getDate();
 			var nowHour = newDate.getHours();
-			console.log(nowHour);
 
             dbm.ApplicationModel.remove({'eventYear_forExpire':{$lt:nowYear}}, function(err){
                 if(err) throw err
@@ -212,20 +209,22 @@ module.exports = function(router, passport, upload) {
             console.log('사용자 인증 안된 상태임.');
             res.redirect('/login');
         } else {
+			profile_photo = req.user.profile_img;	
+			if(profile_img.length > 0){
+				for(var i=0; i<profile_img.length; i++){
+					if(profile_img[i][0] == req.user.email)
+						profile_photo = profile_img[i][1];
+				}		
+			} else{
+				profile_img[imgi] = [req.user.email, req.user.profile_img];
+			}
+			
+			
 			var csvf = require('csvtojson');
 
 			csvf()
 			.fromFile('recOutput.csv')
 			.then(function(output){
-
-				
-				profile_photo = req.user.profile_img;			
-				if(profile_img == null)
-					profile_img = req.user.profile_img;
-				if(profile_img != req.user.profile_img)
-					profile_photo = profile_img;
-				
-
 				var user_context = {
 					'email':req.user.email, 
 					'password':req.user.password, 
@@ -466,11 +465,9 @@ module.exports = function(router, passport, upload) {
     }));
 
 	
-	
     // 회원가입 화면
     router.route('/teamsignup').get(function(req, res) {
         console.log('/teamsignup 패스 get 요청됨.');
-		flag=0, flag2=0;
         res.render('team_signup.ejs', {message: req.flash('signupMessage')});
     });
 	
@@ -484,32 +481,22 @@ module.exports = function(router, passport, upload) {
 	
 	// 프로필 사진
 	router.route('/uploadimg').get(function(req, res){
-		console.log('/uploadimg 패스 get 요청됨.');
-		
+		console.log('/uploadimg 패스 get 요청됨.');		
 		
 		// 인증 안된 경우
         if (!req.user) {
             console.log('사용자 인증 안된 상태임.');
             res.redirect('/');
         } else {
-            console.log('사용자 인증된 상태임.');
-			
-			console.log(profile_img);
-			console.log(req.user.profile_img);
-			
-			if(flag == 0)
-				profile_photo = req.user.profile_img;
-			else{
-				profile_photo = req.user.profile_img;			
-				if(profile_img == null)
-					profile_img = req.user.profile_img;
-				if(profile_img != req.user.profile_img)
-					profile_photo = profile_img;
+			profile_photo = req.user.profile_img;	
+			if(profile_img.length > 0){
+				for(var i=0; i<profile_img.length; i++){
+					if(profile_img[i][0] == req.user.email)
+						profile_photo = profile_img[i][1];
+				}		
+			} else{
+				profile_img[imgi] = [req.user.email, req.user.profile_img];
 			}
-			
-			console.log(profile_img);
-			console.log(req.user.profile_img);
-
 			
 			var user_context = {
 				'email':req.user.email, 
@@ -526,17 +513,19 @@ module.exports = function(router, passport, upload) {
 				'introteam':req.user.introteam,
 				'profile_img':profile_photo
 			};
-						
-			flag=1;
+			
+			dbm.UserModel.update({email: req.user.email}, {$set: {'img_flag':1}}, function (err, res) {
+					if(err) throw err
+			});
+			
             res.render('upload_img.ejs', user_context);
 		}
 	});
 	
 	
 	router.route('/uploadimg').post(upload.array('photo'), function(req, res){		
-		try{			
+		try{		
 			var files = req.files;
-			console.log(req.files);
 
 			console.log('===== 업로드 된 사진 =====');
 			console.dir(files[0]);
@@ -562,30 +551,44 @@ module.exports = function(router, passport, upload) {
 			
 		
 			if(filename)
-				profile_img = filename;
+				profile_img[imgi] = [req.user.email, filename];
 			else
-				profile_img = req.user.profile_img;
-
-			dbm.UserModel.update({email: req.user.email}, {$set: {'profile_img':profile_img}}, function (err, res) {
+				profile_img[imgi] = [req.user.email, req.user.profile_img];
+		
+		
+			dbm.UserModel.update({email: req.user.email}, {$set: {'profile_img':profile_img[imgi][1]}}, function (err, result) {
 					if(err) throw err
-					console.log("======== set profile image =======");
-					console.dir(req.user.profile_img);
 			});
+			
+			imgi++;
 
+			
+			console.log("======== set profile image =======");
+			
+			/*
+			dbm.db.collection("users6").updateOne({email: req.user.email},  {$set: {'profile_img':profile_img}}, function(err, res) {
+				if (err) throw err;
+				console.log("======== set profile image =======");
+				console.dir(req.user.profile_img);
+			});
+			*/
 
 
 		}catch(err){
 			console.dir(err.stack);
 		}
 		
-		if(flag2 == 0){
-			flag2=1;
-			res.redirect('/login');
-		}		
-		else{
-			flag2=1;
-			res.redirect('/');
-		}
+		setTimeout(function(){
+			if(req.user.img_flag == 0){	//from 회원가입
+				dbm.UserModel.update({email: req.user.email}, {$set: {'img_flag':1}}, function (err, res) {
+					if(err) throw err
+				});
+				res.redirect('/login');
+			}		
+			else{	//from 프로필 이미지 수정
+				res.redirect('/');
+			}
+		}, 500);
 	});
 
 
@@ -599,16 +602,15 @@ module.exports = function(router, passport, upload) {
             console.log('사용자 인증 안된 상태임.');
             res.redirect('/login');
         } else {
-            console.log('사용자 인증된 상태임.');
-   
-			
-			profile_photo = req.user.profile_img;			
-			if(profile_img == null)
-				profile_img = req.user.profile_img;
-			if(profile_img != req.user.profile_img)
-				profile_photo = profile_img;
-			
-			
+			profile_photo = req.user.profile_img;	
+			if(profile_img.length > 0){
+				for(var i=0; i<profile_img.length; i++){
+					if(profile_img[i][0] == req.user.email)
+						profile_photo = profile_img[i][1];
+				}		
+			} else{
+				profile_img[imgi] = [req.user.email, req.user.profile_img];
+			}
 						
 			var user_context = {
 				'email':req.user.email, 
@@ -643,14 +645,15 @@ module.exports = function(router, passport, upload) {
             console.log('사용자 인증 안된 상태임.');
             res.redirect('/login');
         } else {
-			
-			profile_photo = req.user.profile_img;			
-			if(profile_img == null)
-				profile_img = req.user.profile_img;
-			if(profile_img != req.user.profile_img)
-				profile_photo = profile_img;
-			
-			
+			profile_photo = req.user.profile_img;	
+			if(profile_img.length > 0){
+				for(var i=0; i<profile_img.length; i++){
+					if(profile_img[i][0] == req.user.email)
+						profile_photo = profile_img[i][1];
+				}		
+			} else{
+				profile_img[imgi] = [req.user.email, req.user.profile_img];
+			}
 			
 			var user_context = {
 				'email':req.user.email, 
@@ -677,12 +680,15 @@ module.exports = function(router, passport, upload) {
     router.route('/teamprofileedit').post(function(req, res) {
         console.log('/teamprofileedit 패스 post 요청됨.');
 		
-		profile_photo = req.user.profile_img;			
-		if(profile_img == null)
-			profile_img = req.user.profile_img;
-		if(profile_img != req.user.profile_img)
-			profile_photo = profile_img;
-
+		profile_photo = req.user.profile_img;	
+		if(profile_img.length > 0){
+			for(var i=0; i<profile_img.length; i++){
+				if(profile_img[i][0] == req.user.email)
+					profile_photo = profile_img[i][1];
+			}		
+		} else{
+			profile_img[imgi] = [req.user.email, req.user.profile_img];
+		}
 
 		var user_context = {
 			'email':req.user.email, 
@@ -791,20 +797,17 @@ module.exports = function(router, passport, upload) {
             console.log('사용자 인증 안된 상태임.');
             res.redirect('/');
         }else{
-            
-			profile_photo = req.user.profile_img;			
-			if(profile_img == null)
-				profile_img = req.user.profile_img;
-			if(profile_img != req.user.profile_img)
-				profile_photo = profile_img;
+            profile_photo = req.user.profile_img;	
+			if(profile_img.length > 0){
+				for(var i=0; i<profile_img.length; i++){
+					if(profile_img[i][0] == req.user.email)
+						profile_photo = profile_img[i][1];
+				}		
+			} else{
+				profile_img[imgi] = [req.user.email, req.user.profile_img];
+			}
 			
 			
-			
-			
-			
-            var dbm = require('../database/database');
-            console.log('database 모듈 가져옴');
-
             var eventData = new Array();
             var j = 0;
 
@@ -880,14 +883,15 @@ module.exports = function(router, passport, upload) {
             console.log('사용자 인증 안된 상태임.');
             res.redirect('/login');
         }else{
-			
-			profile_photo = req.user.profile_img;			
-			if(profile_img == null)
-				profile_img = req.user.profile_img;
-			if(profile_img != req.user.profile_img)
-				profile_photo = profile_img;
-			
-			
+			profile_photo = req.user.profile_img;	
+			if(profile_img.length > 0){
+				for(var i=0; i<profile_img.length; i++){
+					if(profile_img[i][0] == req.user.email)
+						profile_photo = profile_img[i][1];
+				}		
+			} else{
+				profile_img[imgi] = [req.user.email, req.user.profile_img];
+			}
 			
 			var user_context = {
 				'email':req.user.email, 
@@ -964,13 +968,15 @@ module.exports = function(router, passport, upload) {
             console.log('사용자 인증 안된 상태임.');
             res.redirect('/');
         }else {
-            
-			profile_photo = req.user.profile_img;			
-			if(profile_img == null)
-				profile_img = req.user.profile_img;
-			if(profile_img != req.user.profile_img)
-				profile_photo = profile_img;
-			
+           profile_photo = req.user.profile_img;	
+			if(profile_img.length > 0){
+				for(var i=0; i<profile_img.length; i++){
+					if(profile_img[i][0] == req.user.email)
+						profile_photo = profile_img[i][1];
+				}		
+			} else{
+				profile_img[imgi] = [req.user.email, req.user.profile_img];
+			}
 			
             var eventData = new Array();
             var j = 0;
@@ -1184,6 +1190,8 @@ module.exports = function(router, passport, upload) {
 		
         res.redirect('/chatroommessage');
     });
+	
+	
     
     router.route('/chat').get(function(req, res){
         console.log('/chat 패스 get으로 요청됨.');
@@ -1193,18 +1201,15 @@ module.exports = function(router, passport, upload) {
             console.log('사용자 인증 안된 상태임.');
             res.redirect('/login');
         }else{
-         
-         
-			profile_photo = req.user.profile_img;			
-			if(profile_img == null)
-				profile_img = req.user.profile_img;
-			if(profile_img != req.user.profile_img)
-				profile_photo = profile_img;
-			
-			
-            
-            var dbm = require('../database/database');
-            console.log('database 모듈 가져옴');
+			profile_photo = req.user.profile_img;	
+			if(profile_img.length > 0){
+				for(var i=0; i<profile_img.length; i++){
+					if(profile_img[i][0] == req.user.email)
+						profile_photo = profile_img[i][1];
+				}		
+			} else{
+				profile_img[imgi] = [req.user.email, req.user.profile_img];
+			}
             
             var eventData = new Array();
             var j = 0;
@@ -1254,23 +1259,24 @@ module.exports = function(router, passport, upload) {
 
         };
     });
-		
+	
+	
 	router.route('/chatappointment').get(function(req, res){
         console.log('/chatappointment 패스 get으로 요청됨.');
-
         
         if (!req.user) {
             console.log('사용자 인증 안된 상태임.');
             res.redirect('/login');
         }else{
-			
-			profile_photo = req.user.profile_img;			
-			if(profile_img == null)
-				profile_img = req.user.profile_img;
-			if(profile_img != req.user.profile_img)
-				profile_photo = profile_img;
-			
-			
+			profile_photo = req.user.profile_img;	
+			if(profile_img.length > 0){
+				for(var i=0; i<profile_img.length; i++){
+					if(profile_img[i][0] == req.user.email)
+						profile_photo = profile_img[i][1];
+				}		
+			} else{
+				profile_img[imgi] = [req.user.email, req.user.profile_img];
+			}
 			
 			var user_context = {
 				'email':req.user.email, 
@@ -1353,15 +1359,15 @@ module.exports = function(router, passport, upload) {
 			res.redirect('/login');
 		}
 		else{
-			
-			
-			profile_photo = req.user.profile_img;			
-			if(profile_img == null)
-				profile_img = req.user.profile_img;
-			if(profile_img != req.user.profile_img)
-				profile_photo = profile_img;
-			
-			
+			profile_photo = req.user.profile_img;	
+			if(profile_img.length > 0){
+				for(var i=0; i<profile_img.length; i++){
+					if(profile_img[i][0] == req.user.email)
+						profile_photo = profile_img[i][1];
+				}		
+			} else{
+				profile_img[imgi] = [req.user.email, req.user.profile_img];
+			}
 			
 			var user_context = {
 				'email':req.user.email, 
@@ -1392,6 +1398,7 @@ module.exports = function(router, passport, upload) {
 			'add': req.body.add || req.query.add,
 			'gender': req.body.gender || req.query.gender,
 			'age': req.body.age || req.query.age,
+	//     'event_date': req.body.event_date || req.query.event_date,
 			'event_time': req.body.event_time || req.query.event_time,
 			'event_day': req.body.event_day || req.query.event_day
 		};
@@ -1410,14 +1417,15 @@ module.exports = function(router, passport, upload) {
 			res.redirect('/login');
 		}
 		else{
-			
-			profile_photo = req.user.profile_img;			
-			if(profile_img == null)
-				profile_img = req.user.profile_img;
-			if(profile_img != req.user.profile_img)
-				profile_photo = profile_img;
-			
-			
+			profile_photo = req.user.profile_img;	
+			if(profile_img.length > 0){
+				for(var i=0; i<profile_img.length; i++){
+					if(profile_img[i][0] == req.user.email)
+						profile_photo = profile_img[i][1];
+				}		
+			} else{
+				profile_img[imgi] = [req.user.email, req.user.profile_img];
+			}
 
 			var eventData = new Array();			
 				
@@ -1576,14 +1584,15 @@ module.exports = function(router, passport, upload) {
             console.log('사용자 인증 안된 상태임.');
             res.redirect('/');
         } else {
-            
-			profile_photo = req.user.profile_img;			
-			if(profile_img == null)
-				profile_img = req.user.profile_img;
-			if(profile_img != req.user.profile_img)
-				profile_photo = profile_img;
-			
-			
+			profile_photo = req.user.profile_img;	
+			if(profile_img.length > 0){
+				for(var i=0; i<profile_img.length; i++){
+					if(profile_img[i][0] == req.user.email)
+						profile_photo = profile_img[i][1];
+				}		
+			} else{
+				profile_img[imgi] = [req.user.email, req.user.profile_img];
+			}
 			
             var eventData = new Array(); // 나한테 신청한
             var j = 0;
@@ -1738,14 +1747,15 @@ module.exports = function(router, passport, upload) {
             res.redirect('/');
         }
         else{
-            
-			profile_photo = req.user.profile_img;			
-			if(profile_img == null)
-				profile_img = req.user.profile_img;
-			if(profile_img != req.user.profile_img)
-				profile_photo = profile_img;
-			
-			
+            profile_photo = req.user.profile_img;	
+			if(profile_img.length > 0){
+				for(var i=0; i<profile_img.length; i++){
+					if(profile_img[i][0] == req.user.email)
+						profile_photo = profile_img[i][1];
+				}		
+			} else{
+				profile_img[imgi] = [req.user.email, req.user.profile_img];
+			}
 
             var reviewerTeamEmail = req.user.email;
             var reviewedTeamEmail = req.query.reviewedTeamEmail;
@@ -1838,14 +1848,15 @@ module.exports = function(router, passport, upload) {
             console.log('사용자 인증 안된 상태임.');
             res.redirect('/');
         } else {
-            
-			profile_photo = req.user.profile_img;			
-			if(profile_img == null)
-				profile_img = req.user.profile_img;
-			if(profile_img != req.user.profile_img)
-				profile_photo = profile_img;
-			
-			
+			profile_photo = req.user.profile_img;	
+			if(profile_img.length > 0){
+				for(var i=0; i<profile_img.length; i++){
+					if(profile_img[i][0] == req.user.email)
+						profile_photo = profile_img[i][1];
+				}		
+			} else{
+				profile_img[imgi] = [req.user.email, req.user.profile_img];
+			}
 
             var eventData = new Array();
             var j = 0;
@@ -1913,14 +1924,15 @@ module.exports = function(router, passport, upload) {
             console.log('사용자 인증 안된 상태임.');
             res.redirect('/login');
         }else{
-			
-			profile_photo = req.user.profile_img;			
-			if(profile_img == null)
-				profile_img = req.user.profile_img;
-			if(profile_img != req.user.profile_img)
-				profile_photo = profile_img;
-			
-			
+			profile_photo = req.user.profile_img;	
+			if(profile_img.length > 0){
+				for(var i=0; i<profile_img.length; i++){
+					if(profile_img[i][0] == req.user.email)
+						profile_photo = profile_img[i][1];
+				}		
+			} else{
+				profile_img[imgi] = [req.user.email, req.user.profile_img];
+			}
 			
 			var user_context = {
 				'email':req.user.email, 
@@ -2014,15 +2026,16 @@ module.exports = function(router, passport, upload) {
         if (!req.user) {
             console.log('사용자 인증 안된 상태임.');
             res.redirect('/login');
-        }else{			
-			
-			profile_photo = req.user.profile_img;			
-			if(profile_img == null)
-				profile_img = req.user.profile_img;
-			if(profile_img != req.user.profile_img)
-				profile_photo = profile_img;
-			
-			
+        }else{	
+			profile_photo = req.user.profile_img;	
+			if(profile_img.length > 0){
+				for(var i=0; i<profile_img.length; i++){
+					if(profile_img[i][0] == req.user.email)
+						profile_photo = profile_img[i][1];
+				}		
+			} else{
+				profile_img[imgi] = [req.user.email, req.user.profile_img];
+			}
 			
 			var eventData = new Array();	
 
@@ -2115,15 +2128,15 @@ module.exports = function(router, passport, upload) {
             console.log('사용자 인증 안된 상태임.');
             res.redirect('/login');
         }else{
-			
-			
-			profile_photo = req.user.profile_img;			
-			if(profile_img == null)
-				profile_img = req.user.profile_img;
-			if(profile_img != req.user.profile_img)
-				profile_photo = profile_img;
-			
-			
+			profile_photo = req.user.profile_img;	
+			if(profile_img.length > 0){
+				for(var i=0; i<profile_img.length; i++){
+					if(profile_img[i][0] == req.user.email)
+						profile_photo = profile_img[i][1];
+				}		
+			} else{
+				profile_img[imgi] = [req.user.email, req.user.profile_img];
+			}
 		
 			
 			var eventData = new Array();			
@@ -2260,15 +2273,15 @@ module.exports = function(router, passport, upload) {
 			res.redirect('/login');
 		}
 		else{
-			
-			
-			profile_photo = req.user.profile_img;			
-			if(profile_img == null)
-				profile_img = req.user.profile_img;
-			if(profile_img != req.user.profile_img)
-				profile_photo = profile_img;
-			
-			
+			profile_photo = req.user.profile_img;	
+			if(profile_img.length > 0){
+				for(var i=0; i<profile_img.length; i++){
+					if(profile_img[i][0] == req.user.email)
+						profile_photo = profile_img[i][1];
+				}		
+			} else{
+				profile_img[imgi] = [req.user.email, req.user.profile_img];
+			}
 			
 			var user_context = {
 				'email':req.user.email, 
@@ -2294,8 +2307,7 @@ module.exports = function(router, passport, upload) {
     // 로그아웃
     router.route('/logout').get(function(req, res) {
         console.log('/logout 패스 get 요청됨.');
-		profile_img=null;
-		profile_photo=null;
+		profile_photo = null;
         req.logout();
         res.redirect('/login');
     });
