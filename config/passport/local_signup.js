@@ -27,6 +27,7 @@ module.exports = new LocalStrategy({
 	var career_count = req.body.career_count || req.query.career_count;
 	var introteam = req.body.introteam || req.query.introteam;
 	var profile_img = "profile_basic.png";
+	var img_flag = 0;
 	
 	
 	if(!add){		//도로명주소 없는 경우 지번 주소
@@ -76,6 +77,7 @@ module.exports = new LocalStrategy({
 					'career_count':career_count,
 					'introteam':introteam,
 					'profile_img':profile_img,
+					'img_flag':img_flag,
 					'geoLat':geoLat,
 					'geoLng':geoLng
                 });
