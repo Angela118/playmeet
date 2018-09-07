@@ -218,11 +218,13 @@ module.exports = function(router, passport, upload) {
 			.fromFile('recOutput.csv')
 			.then(function(output){
 
+				
 				profile_photo = req.user.profile_img;			
 				if(profile_img == null)
 					profile_img = req.user.profile_img;
 				if(profile_img != req.user.profile_img)
 					profile_photo = profile_img;
+				
 
 				var user_context = {
 					'email':req.user.email, 
@@ -306,7 +308,7 @@ module.exports = function(router, passport, upload) {
 		
 		dbm.ApplicationModel.update({email:others.sEmail, application_number:others.sApplicationNumber}, {$set: {match: 1}}, function (err, result) {
 				if(err) throw err
-			});
+		});
 		
         res.redirect('/');
 
@@ -564,12 +566,12 @@ module.exports = function(router, passport, upload) {
 			else
 				profile_img = req.user.profile_img;
 
-
-			dbm.db.collection("users6").updateOne({email: req.user.email},  {$set: {'profile_img':profile_img}}, function(err, res) {
-				if (err) throw err;
-				console.log("======== set profile image =======");
-				console.dir(req.user.profile_img);
+			dbm.UserModel.update({email: req.user.email}, {$set: {'profile_img':profile_img}}, function (err, res) {
+					if(err) throw err
+					console.log("======== set profile image =======");
+					console.dir(req.user.profile_img);
 			});
+
 
 
 		}catch(err){
@@ -599,6 +601,7 @@ module.exports = function(router, passport, upload) {
         } else {
             console.log('사용자 인증된 상태임.');
    
+			
 			profile_photo = req.user.profile_img;			
 			if(profile_img == null)
 				profile_img = req.user.profile_img;
@@ -646,7 +649,8 @@ module.exports = function(router, passport, upload) {
 				profile_img = req.user.profile_img;
 			if(profile_img != req.user.profile_img)
 				profile_photo = profile_img;
-
+			
+			
 			
 			var user_context = {
 				'email':req.user.email, 
@@ -780,43 +784,6 @@ module.exports = function(router, passport, upload) {
     
     
     //채팅
-    router.route('/chatroom').get(function(req, res){
-       console.log('/chatrooom 패스 get으로 요청됨.');
-        
-        if (!req.user) {
-            console.log('사용자 인증 안된 상태임.');
-            res.redirect('/login');
-        }else{
-			
-			
-			profile_photo = req.user.profile_img;			
-			if(profile_img == null)
-				profile_img = req.user.profile_img;
-			if(profile_img != req.user.profile_img)
-				profile_photo = profile_img;
-
-			
-			var user_context = {
-				'email':req.user.email, 
-				'password':req.user.password, 
-				'teamname':req.user.teamname, 
-				'gender':req.user.gender, 
-				'age':req.user.age,
-				'region':req.user.region,
-				'add':req.user.add,
-				'move':req.user.move,
-				'nofteam':req.user.nofteam,
-				'career_year':req.user.career_year,
-				'career_count':req.user.career_count,
-				'introteam':req.user.introteam,
-				'profile_img':profile_photo
-			};
-			
-  //          res.render('chat_room.ejs', user_context);
-			res.redirect('/chatroomchat');
-        }
-    });
-	
 	router.route('/chatroomchat').get(function(req, res){
         console.log('/chatrooomchat 패스 get으로 요청됨.');
 
@@ -824,12 +791,17 @@ module.exports = function(router, passport, upload) {
             console.log('사용자 인증 안된 상태임.');
             res.redirect('/');
         }else{
-            profile_photo = req.user.profile_img;
-            if(profile_img == null)
-                profile_img = req.user.profile_img;
-            if(profile_img != req.user.profile_img)
-                profile_photo = profile_img;
-
+            
+			profile_photo = req.user.profile_img;			
+			if(profile_img == null)
+				profile_img = req.user.profile_img;
+			if(profile_img != req.user.profile_img)
+				profile_photo = profile_img;
+			
+			
+			
+			
+			
             var dbm = require('../database/database');
             console.log('database 모듈 가져옴');
 
@@ -908,12 +880,14 @@ module.exports = function(router, passport, upload) {
             console.log('사용자 인증 안된 상태임.');
             res.redirect('/login');
         }else{
-         profile_photo = req.user.profile_img;			
+			
+			profile_photo = req.user.profile_img;			
 			if(profile_img == null)
 				profile_img = req.user.profile_img;
 			if(profile_img != req.user.profile_img)
 				profile_photo = profile_img;
-
+			
+			
 			
 			var user_context = {
 				'email':req.user.email, 
@@ -990,12 +964,14 @@ module.exports = function(router, passport, upload) {
             console.log('사용자 인증 안된 상태임.');
             res.redirect('/');
         }else {
-            profile_photo = req.user.profile_img;
-            if (profile_img == null)
-                profile_img = req.user.profile_img;
-            if (profile_img != req.user.profile_img)
-                profile_photo = profile_img;
-
+            
+			profile_photo = req.user.profile_img;			
+			if(profile_img == null)
+				profile_img = req.user.profile_img;
+			if(profile_img != req.user.profile_img)
+				profile_photo = profile_img;
+			
+			
             var eventData = new Array();
             var j = 0;
 
@@ -1123,7 +1099,6 @@ module.exports = function(router, passport, upload) {
 
             console.log('chatmessagepostend----------------------');
             res.render('message.ejs', user_context);
-            console.log('render 함');
         });
     });
 
@@ -1141,65 +1116,74 @@ module.exports = function(router, passport, upload) {
         // 걔 동일 이메일 인덱스 있는지 확인
         var sSameEmailIndex = req.body.sSameEmailIndex;
         console.log('sSameEmailIndex : ' + sSameEmailIndex);
-
+		
         var eventData = new Array();
         var j = 0;
 
-        // 나한테 신청한 사람 이메일 받아온거로 matches에서 email 찾아서
-        dbm.MatchModel.find({email: otherEmail}, function (err, result) {
-            console.log('result.length : ' + result.length);
+		
+		
+		// 나한테 신청한 사람 이메일 받아온거로 matches에서 email 찾아서
+		dbm.MatchModel.find({email: otherEmail}, function (err, result) {
+			console.log('result.length : ' + result.length);
 
-            for (var i = 0; i < result.length; i++) {
-                console.log('result[' + i + '].doc_others.email : ' + result[i]._doc.others.sEmail);
-                console.log('req.user.email : ' + req.user.email);
+			for (var i = 0; i < result.length; i++) {
+				console.log('result[' + i + '].doc_others.email : ' + result[i]._doc.others.sEmail);
+				console.log('req.user.email : ' + req.user.email);
 
-                // 그 사람이 올린 것 중 신청자가 나일 경우
-                if (result[i]._doc.others.sEmail === req.user.email) {
+				// 그 사람이 올린 것 중 신청자가 나일 경우
+				if (result[i]._doc.others.sEmail === req.user.email) {
 
-                    // 나한테 신청한 사람 정보
-                    var data = {
-                        'email': result[i]._doc.email,
-                        'teamname': result[i]._doc.teamname,
-                        'others': result[i]._doc.others //내가 등록한 매칭 정보
-                    };
-                    console.log(i + '번째 data.others : ');
-                    console.dir(data.others);
-                    console.log('j : ' + j);
-                    eventData[j++] = data;
-                    console.log('eventData: ');
-                    console.log(eventData);
-                }
-            }
+					// 나한테 신청한 사람 정보
+					var data = {
+						'email': result[i]._doc.email,
+						'teamname': result[i]._doc.teamname,
+						'others': result[i]._doc.others //내가 등록한 매칭 정보
+					};
+					console.log(i + '번째 data.others : ');
+					console.dir(data.others);
+					console.log('j : ' + j);
+					eventData[j++] = data;
+					console.log('eventData: ');
+					console.log(eventData);
+				}
+			}
 
-            console.log('00000000000000000000000000000000000000000000');
-            console.log('eventData : ');
-            console.log(eventData);
+			var teamname = eventData[sSameEmailIndex].teamname;
+			console.log('teamname : ' + teamname);
 
-            var teamname = eventData[sSameEmailIndex].teamname;
-            console.log('teamname : ' + teamname);
+			var findEventDate = eventData[sSameEmailIndex].others.sEvent_date;
+			console.log('findEventDate : ' + findEventDate);
 
-            var findEventDate = eventData[sSameEmailIndex].others.sEvent_date;
-            console.log('findEventDate : ' + findEventDate);
+			var findEventTime = eventData[sSameEmailIndex].others.sEvent_time;
 
-            var findEventTime = eventData[sSameEmailIndex].others.sEvent_time;
-
-            console.log('findEventTime ; ' + findEventTime);
-
-            dbm.MatchModel.update(
-                {email: otherEmail, "others.sEvent_date": findEventDate, "others.sEvent_time": findEventTime},
-                {$set: {match_success: match}}, function (err, result) {
-                    if (err) {
-                        console.log(err.message);
-                    } else {
-                        console.dir(result);
-                    }
-                });
-
-        });
+			console.log('findEventTime ; ' + findEventTime);
+				
+				
+			if(match == 1){
+				dbm.MatchModel.update(
+					{email: otherEmail, "others.sEvent_date": findEventDate, "others.sEvent_time": findEventTime},
+					{$set: {match_success: match}}, function (err, result) {
+						if (err) {
+							console.log(err.message);
+						} else {
+							console.dir(result);
+						}
+				});
+			}else if(match == 2){
+				dbm.ApplicationModel.update({email:req.user.email, event_date:findEventDate, event_time:findEventTime}, {$set: {match:0}}, function (err, result) {
+					if(err) throw err
+				});
+				
+				setTimeout(function(){
+					dbm.MatchModel.remove({email: otherEmail, "others.sEvent_date": findEventDate, "others.sEvent_time": findEventTime}, function(err){
+						if(err) throw err
+					});
+				}, 500);
+			}
+		});
+		
         res.redirect('/chatroommessage');
     });
-	
-	
     
     router.route('/chat').get(function(req, res){
         console.log('/chat 패스 get으로 요청됨.');
@@ -1210,12 +1194,14 @@ module.exports = function(router, passport, upload) {
             res.redirect('/login');
         }else{
          
-         profile_photo = req.user.profile_img;         
-         if(profile_img == null)
-            profile_img = req.user.profile_img;
-         if(profile_img != req.user.profile_img)
-            profile_photo = profile_img;
-            
+         
+			profile_photo = req.user.profile_img;			
+			if(profile_img == null)
+				profile_img = req.user.profile_img;
+			if(profile_img != req.user.profile_img)
+				profile_photo = profile_img;
+			
+			
             
             var dbm = require('../database/database');
             console.log('database 모듈 가져옴');
@@ -1268,47 +1254,7 @@ module.exports = function(router, passport, upload) {
 
         };
     });
-	
-/*	
-	router.route('/chat').post(function(req, res){
-		console.log('/chat appointment 패스 post 요청됨.');
 		
-		var dbm = require('../database/database');
-		console.log('database 모듈 가져옴');
-		
-		
-		var event = {
-			'email':req.user.email,
-			'teamname':req.user.teamname,
-			'event_date': '',
-			'event_time': '',
-			'event_place': ''
-		};
-		
-		
-		
-		event.event_date = req.body.event_date || req.query.event_date;
-		event.event_time = req.body.event_time || req.query.event_time;
-		event.event_place = req.body.event_place || req.query.event_place;
-		event.event_nofteam = req.body.event_nofteam || req.query.event_nofteam;
-		
-		
-		console.dir(event);
-		
-		
-		var event_appointment = new dbm.AppointmentModel(event);
- 
-        event_appointment.save(function (err, data) {
-          if (err) {// TODO handle the error
-              console.log("appointment save error");
-          }
-          console.log('New appointment inserted');
-        });
-		
-		
-	});
-	*/
-	
 	router.route('/chatappointment').get(function(req, res){
         console.log('/chatappointment 패스 get으로 요청됨.');
 
@@ -1317,12 +1263,14 @@ module.exports = function(router, passport, upload) {
             console.log('사용자 인증 안된 상태임.');
             res.redirect('/login');
         }else{
-         profile_photo = req.user.profile_img;			
+			
+			profile_photo = req.user.profile_img;			
 			if(profile_img == null)
 				profile_img = req.user.profile_img;
 			if(profile_img != req.user.profile_img)
 				profile_photo = profile_img;
-
+			
+			
 			
 			var user_context = {
 				'email':req.user.email, 
@@ -1406,12 +1354,14 @@ module.exports = function(router, passport, upload) {
 		}
 		else{
 			
+			
 			profile_photo = req.user.profile_img;			
 			if(profile_img == null)
 				profile_img = req.user.profile_img;
 			if(profile_img != req.user.profile_img)
 				profile_photo = profile_img;
-
+			
+			
 			
 			var user_context = {
 				'email':req.user.email, 
@@ -1442,7 +1392,6 @@ module.exports = function(router, passport, upload) {
 			'add': req.body.add || req.query.add,
 			'gender': req.body.gender || req.query.gender,
 			'age': req.body.age || req.query.age,
-	//     'event_date': req.body.event_date || req.query.event_date,
 			'event_time': req.body.event_time || req.query.event_time,
 			'event_day': req.body.event_day || req.query.event_day
 		};
@@ -1461,12 +1410,14 @@ module.exports = function(router, passport, upload) {
 			res.redirect('/login');
 		}
 		else{
-			profile_photo = req.user.profile_img;         
+			
+			profile_photo = req.user.profile_img;			
 			if(profile_img == null)
 				profile_img = req.user.profile_img;
 			if(profile_img != req.user.profile_img)
 				profile_photo = profile_img;
-
+			
+			
 
 			var eventData = new Array();			
 				
@@ -1625,12 +1576,15 @@ module.exports = function(router, passport, upload) {
             console.log('사용자 인증 안된 상태임.');
             res.redirect('/');
         } else {
-            profile_photo = req.user.profile_img;
-            if (profile_img == null)
-                profile_img = req.user.profile_img;
-            if (profile_img != req.user.profile_img)
-                profile_photo = profile_img;
-
+            
+			profile_photo = req.user.profile_img;			
+			if(profile_img == null)
+				profile_img = req.user.profile_img;
+			if(profile_img != req.user.profile_img)
+				profile_photo = profile_img;
+			
+			
+			
             var eventData = new Array(); // 나한테 신청한
             var j = 0;
 
@@ -1661,7 +1615,7 @@ module.exports = function(router, passport, upload) {
                 }
 
                 // 내가 매칭 신청한 팀 찾기
-                dbm.MatchModel.find({email: req.user.email} ,function (err, result) {
+                dbm.MatchModel.find({email: req.user.email}, function (err, result) {
                     for (var i = 0; i < result.length; i++) {
                         if (result[i]._doc.email === req.user.email) {
                             var data = {
@@ -1784,11 +1738,14 @@ module.exports = function(router, passport, upload) {
             res.redirect('/');
         }
         else{
-            profile_photo = req.user.profile_img;
-            if(profile_img == null)
-                profile_img = req.user.profile_img;
-            if(profile_img != req.user.profile_img)
-                profile_photo = profile_img;
+            
+			profile_photo = req.user.profile_img;			
+			if(profile_img == null)
+				profile_img = req.user.profile_img;
+			if(profile_img != req.user.profile_img)
+				profile_photo = profile_img;
+			
+			
 
             var reviewerTeamEmail = req.user.email;
             var reviewedTeamEmail = req.query.reviewedTeamEmail;
@@ -1881,12 +1838,14 @@ module.exports = function(router, passport, upload) {
             console.log('사용자 인증 안된 상태임.');
             res.redirect('/');
         } else {
-            profile_photo = req.user.profile_img;
-            if (profile_img == null)
-                profile_img = req.user.profile_img;
-            if (profile_img != req.user.profile_img)
-                profile_photo = profile_img;
-
+            
+			profile_photo = req.user.profile_img;			
+			if(profile_img == null)
+				profile_img = req.user.profile_img;
+			if(profile_img != req.user.profile_img)
+				profile_photo = profile_img;
+			
+			
 
             var eventData = new Array();
             var j = 0;
@@ -1960,7 +1919,8 @@ module.exports = function(router, passport, upload) {
 				profile_img = req.user.profile_img;
 			if(profile_img != req.user.profile_img)
 				profile_photo = profile_img;
-
+			
+			
 			
 			var user_context = {
 				'email':req.user.email, 
@@ -2055,11 +2015,13 @@ module.exports = function(router, passport, upload) {
             console.log('사용자 인증 안된 상태임.');
             res.redirect('/login');
         }else{			
+			
 			profile_photo = req.user.profile_img;			
 			if(profile_img == null)
 				profile_img = req.user.profile_img;
 			if(profile_img != req.user.profile_img)
 				profile_photo = profile_img;
+			
 			
 			
 			var eventData = new Array();	
@@ -2160,6 +2122,8 @@ module.exports = function(router, passport, upload) {
 				profile_img = req.user.profile_img;
 			if(profile_img != req.user.profile_img)
 				profile_photo = profile_img;
+			
+			
 		
 			
 			var eventData = new Array();			
@@ -2297,12 +2261,14 @@ module.exports = function(router, passport, upload) {
 		}
 		else{
 			
+			
 			profile_photo = req.user.profile_img;			
 			if(profile_img == null)
 				profile_img = req.user.profile_img;
 			if(profile_img != req.user.profile_img)
 				profile_photo = profile_img;
-
+			
+			
 			
 			var user_context = {
 				'email':req.user.email, 
