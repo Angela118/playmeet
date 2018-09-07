@@ -87,8 +87,6 @@ var upload = multer({
 
 
 
-
-
 //===== Passport 사용 =====//
 
 var passport = require('passport');
@@ -96,9 +94,6 @@ var passport = require('passport');
 var flash = require('connect-flash');
 
  
-
- 
-
  
 
 //===== socket.io 사용 =====//
@@ -142,7 +137,6 @@ app.set('port', process.env.PORT || 3000);
 
  
 
- 
 
 // body-parser를 이용해 application/x-www-form-urlencoded 파싱
 
@@ -187,23 +181,9 @@ app.use(expressSession({
 
  
 
- 
-
- 
-
- 
-
 //===== cors 초기화 =====//
 
 app.use(cors());
-
- 
-
- 
-
- 
-
- 
 
  
 
@@ -346,9 +326,6 @@ var server = http.createServer(app).listen(app.get('port'), function(){
 
 
 
-
- 
-
 //===== socket.io 서버 시작 =====//
 
 //socket.io는 이벤트 기반 
@@ -359,109 +336,127 @@ console.log('socket.io 요청을 받아들일 준비가 되었습니다.');
 
  
 
-var login_ids = {};	//socket id와 login id를 매칭
+var login_ids = {};   //socket id와 login id를 매칭
 
  
 
 
 io.sockets.on('connection', function(socket){
 
-	//연결 되었을때 호출 되는 콜백함수
+   //연결 되었을때 호출 되는 콜백함수
 
-	console.log('connection info -> ' + JSON.stringify(socket.request.connection._peername));
-
-
-	//client의 접속 정보
-
-	socket.remoteAddress = socket.request.connection._peername.address;
-
-	socket.remotePort = socket.request.connection._peername.port;
-	
+   console.log('connection info -> ' + JSON.stringify(socket.request.connection._peername));
 
 
-	socket.on('login', function(input){
+   //client의 접속 정보
 
-		console.log('login 받음 -> ' + JSON.stringify(input));
+   socket.remoteAddress = socket.request.connection._peername.address;
 
-		
-
-		//socket의 id를 가지고 login id를 찾아낼 수 있다. (반대로도 가능)		
-
-		login_ids[input.id] = socket.id;
-
-		socket.login_id = input.id;
-		
-			
-
-/*
-		// receives message from DB
-	database.ChatModel.findByEmail({email:input.id}, function (err, result) {
-        for(var i = 0 ; i < result.length ; i++) {
-            var dbData = {teamname : result[i].teamname, message : result[i].message};
-            io.sockets.sockets[socket.id].emit('preload', dbData);
-        }
-	});
-*/		
-		// receives message from DB
-    	database.ChatModel.find(function (err, result) {
-			for(var i = 0 ; i < result.length ; i++) {
-				if(result[i]._doc.email === input.id){
-            		var dbData = {email : result[i].email, teamname : result[i].teamname, message : result[i].message };
-           			io.sockets.sockets[socket.id].emit('preload', dbData);
-				}
-        	}
-		});
-
-		
-
-		sendResponse(socket, 'login', 200, 'OK');	//로그인이 정상적으로 되었다는 뜻
+   socket.remotePort = socket.request.connection._peername.port;
+   
 
 
-	});
+   socket.on('login', function(input){
+
+      console.log('login 받음 -> ' + JSON.stringify(input));
+
+      
+
+      //socket의 id를 가지고 login id를 찾아낼 수 있다. (반대로도 가능)      
+
+      login_ids[input.id] = socket.id;
+
+      socket.login_id = input.id;
+   
+       
+        // receives message from DB
+       database.ChatModel.find({$or:[{"email":input.id}, {"recipient":input.id}]}, function (err, result) {
+         for(var i = 0 ; i < result.length ; i++) {
+            if(result[i]._doc.email === input.id){
+                  var dbData = {email : result[i].email,
+                                  teamname : result[i].teamname,
+                                  message : result[i].message,
+                                  recipient:
+                                  result[i].recipient
+                                 };
+                    io.sockets.sockets[socket.id].emit('preload', dbData);
+            }
+                if(result[i]._doc.recipient === input.id){
+                       var dbData = {email : result[i].email,
+                                  teamname : result[i].teamname,
+                                  message : result[i].message,
+                                  recipient:
+                                  result[i].recipient
+                                 };
+                    io.sockets.sockets[socket.id].emit('preload', dbData);
+                   }
+            }
+           }
+       );
+       /*
+           database.ChatModel.find({"recipient":input.id}, function (err, result) {
+               for(var i = 0 ; i < result.length ; i++) {
+                   if(result[i]._doc.recipient === input.id){
+                       var dbData = {email : result[i].email,
+                                  teamname : result[i].teamname,
+                                  message : result[i].message,
+                                  recipient:
+                                  result[i].recipient
+                                 };
+                    io.sockets.sockets[socket.id].emit('preload', dbData);
+                   }
+               }
+           });
+      */
+
+      sendResponse(socket, 'login', 200, 'OK');   //로그인이 정상적으로 되었다는 뜻
 
 
-	
-	 
-	
+   });
 
-	socket.on('message', function(message){
 
-		console.log('message 받음 -> ' + JSON.stringify(message.data));
+   
+    
+   
 
-		
+   socket.on('message', function(message){
 
-		if(message.recepient == 'ALL'){
+      console.log('message 받음 -> ' + JSON.stringify(message.data));
 
-			console.log('모든 client에게 메세지 전송함.');
+      
 
-			
+      //if(message.recipient == 'ALL'){
 
-			//echo기능 : client가 보낸 메세지를 받아서 그대로 다시 보낸다
+        // console.log('모든 client에게 메세지 전송함.');
 
-			io.sockets.emit('message', message.data);	//io.sockets : 연결된 모든 client, emit : 그 쪽으로 전송하겠다.
+         
 
-			
+         //echo기능 : client가 보낸 메세지를 받아서 그대로 다시 보낸다
 
-		} else{		//특정 client에게 메세지 보내기
+     // io.sockets.emit('message', message.data);   //io.sockets : 연결된 모든 client, emit : 그 쪽으로 전송하겠다.
 
-			
+         
 
-			if(login_ids[message.recepient]){	
+     // } else{      //특정 client에게 메세지 보내기
 
-				io.sockets.connected[login_ids[message.recepient]].emit('message', message.data);
+         
 
-				sendResponse(socket, 'message', 200, 'OK');	
+         if(login_ids[message.recipient]){   
 
-			} else{
-				sendResponse(socket, 'message', 400, '수신자 ID를 찾을 수 없습니다.');
+            io.sockets.connected[login_ids[message.recipient]].emit('message', message);
 
-			}
+            sendResponse(socket, 'message', 200, 'OK');   
 
-		}
-		
-		
-		// add chat into the model
-        var chat = new database.ChatModel({ email:message.email, teamname: message.sender, message: message.data });
+         } else{
+            sendResponse(socket, 'message', 400, '수신자 ID를 찾을 수 없습니다.');
+
+         }
+
+      //}
+      
+      
+      // add chat into the model
+        var chat = new database.ChatModel({ email:message.email, teamname: message.sender, message: message.data, recipient: message.recipient });
  
         chat.save(function (err, data) {
           if (err) {// TODO handle the error
@@ -470,7 +465,7 @@ io.sockets.on('connection', function(socket){
           console.log('New message is inserted');
         });
 
-	});
+   });
 
 });
 
@@ -480,18 +475,13 @@ io.sockets.on('connection', function(socket){
 
 function sendResponse(socket, command, code, message){
 
-	var output = {
+   var output = {
 
-		command:command,
+      command:command,
 
-		code:code,
+      code:code,
 
-		message:message
+      message:message
 
-	};
-
-	
-
-
-}
-
+   };
+};
