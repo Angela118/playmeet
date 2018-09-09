@@ -1913,6 +1913,11 @@ module.exports = function(router, passport, upload) {
                             }
 
                             if(a>=eventData.length-1) {
+                                //내림차순 정렬
+                                eventData.sort(function (a, b) {
+                                    console.log('===sort===');
+                                    return a.event_date > b.event_date ? -1 : a.event_date < b.event_date ? 1 : 0;
+                                })
 
                                 callback();
                             }else{
@@ -1972,26 +1977,6 @@ module.exports = function(router, passport, upload) {
                         console.dir(eventData);
                         res.render('team_schedule.ejs', user_context);
                     }
-
-                    /*var user_context = {
-                        'email': req.user.email,
-                        'password': req.user.password,
-                        'teamname': req.user.teamname,
-                        'add' : req.user.add,
-                        'region': req.user.region,
-                        'move': req.user.move,
-                        'gender': req.user.gender,
-                        'age': req.user.age,
-                        'nofteam': req.user.nofteam,
-                        'career_year': req.user.career_year,
-                        'career_count': req.user.career_count,
-                        'introteam': req.user.introteam,
-                        'profile_img': profile_photo,
-                        'event_data':eventData
-                    }; // user_context
-                    console.dir(eventData);
-                    res.render('team_schedule.ejs', user_context);*/
-
                 }); // dbm event_data2 end
             }); // dbm event_data end
         } // 인증 else문 end
@@ -2008,6 +1993,10 @@ module.exports = function(router, passport, upload) {
         // 신청이 온 경우 firstScore : 내 점수 / 내가 신청한 경우 firstScore : 남 점수
         var firstScore = req.body.firstScore;
         var secondScore = req.body.secondScore;
+
+        console.log('111');
+        console.log('firstScore : ' + firstScore);
+        console.log('secondScore : ' + secondScore);
 
         // 대기 상태에서 취소
         var cCallTeamEmail = req.body.cCallTeamEmail;
@@ -2028,7 +2017,11 @@ module.exports = function(router, passport, upload) {
             secondScore = k;
         }
 
+        console.log('222');
+        console.log('firstScore : ' + firstScore);
+        console.log('secondScore : ' + secondScore);
         console.log('scoreCallTeamEmail : ' + scoreCallTeamEmail);
+        console.log('scoreReceiveTeamEmail : ' + scoreReceiveTeamEmail);
 
         if(scoreCallTeamEmail) {
             // score update
