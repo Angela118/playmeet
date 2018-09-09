@@ -8,7 +8,8 @@ module.exports = {
 		modelName:'ChatModel'},
 		{file:'./appointment_schema', collection:'appointment', schemaName:'AppointmentSchema', modelName:'AppointmentModel'},
 		{file:'./application_schema', collection:'application', schemaName:'ApplicationSchema', modelName:'ApplicationModel'},
-		{file:'./match_schema', collection:'match', schemaName:'MatchSchema', modelName:'MatchModel'}
+		{file:'./match_schema', collection:'match', schemaName:'MatchSchema', modelName:'MatchModel'},
+		{file:'./search_schema', collection:'search', schemaName:'SearchSchema', modelName:'SearchModel'}
 	],
 	route_info: [
 		
