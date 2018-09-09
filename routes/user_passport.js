@@ -13,14 +13,15 @@ module.exports = function(router, passport, upload) {
 	var profile_img=[];
 	var profile_photo;
 	
-	var event_search = {
+/*	var event_search = {
         'teamname':'',
         'add': '',
         'gender': '',
         'age': '',
         'event_time': '',
         'event_day': ''
-    };	
+    };	*/
+	var sn=0;
 	
 	var selectone = {
 			user:'',
@@ -1307,16 +1308,33 @@ module.exports = function(router, passport, upload) {
 	
 	router.route('/mainsearch').post(function(req, res){
 		console.log('/mainsearch 패스 post 요청됨.');
+		
 
-		event_search = {
-			'teamname':req.body.search_team || req.query.search_team,
-			'add': req.body.add || req.query.add,
-			'gender': req.body.gender || req.query.gender,
-			'age': req.body.age || req.query.age,
-	//     'event_date': req.body.event_date || req.query.event_date,
-			'event_time': req.body.event_time || req.query.event_time,
-			'event_day': req.body.event_day || req.query.event_day
+		var event_search = {
+			'email':req.user.email,
+			'search_teamname':req.body.search_team,
+			'search_add0': req.body.add[0],
+			'search_add1': req.body.add[1],
+			'search_gender': req.body.gender,
+			'search_age': req.body.age,
+			'search_event_date': req.body.event_date,
+			'search_event_time': req.body.event_time,
+			'search_event_day': req.body.event_day,
+			'search_number' : sn
 		};
+		
+		console.log(sn);
+		console.dir(event_search);
+		
+		var search = new dbm.SearchModel(event_search);
+
+        search.save(function (err, data) {
+            if (err) {// TODO handle the error
+                console.log("search save error");
+				throw err
+            }
+            console.log('New search inserted');
+        });
 
 		res.redirect('/mainsearchresult');
       
@@ -1342,88 +1360,113 @@ module.exports = function(router, passport, upload) {
 				profile_img[imgi] = [req.user.email, req.user.profile_img];
 			}
 
-			var eventData = new Array();			
 				
-			console.dir(event_search);
+			dbm.SearchModel.find({$and:[{email:req.user.email}, {search_number:sn}]}, function(err, sResult){
+				if(err) throw err				
 			
-			if(event_search.teamname == 'none')
-				delete event_search.teamname;
-			if(event_search.add[0] && event_search.add[1]){
-				if(event_search.add[0] == 'none')
-                	delete event_search.add;	
-			}
-			if(event_search.gender == 0)
-				delete event_search.gender;
-			if(event_search.age == 0)
-				delete event_search.age;
-			if(event_search.event_time == 'none')
-				delete event_search.event_time;
-			if(event_search.event_day == 'none')
-				delete event_search.event_day;
-			
-			var search = [];
-			
-			if(event_search){
-				for(var key in event_search) {
-					var testobj = new Object();
-					var testkey = event_search;
-					console.log(key)
-					testobj[key] = event_search[key];
-					search.push(testobj);
-				}
-			}
-			
-			search.push({email : {"$ne" : req.user.email}});
-			
-			console.dir(search);
-
-			dbm.ApplicationModel.find({$and: search}, function (err, result) {
-				for (var i = 0; i < result.length; i++) {
-					var data = {
-						'email' : result[i]._doc.email, 
-						'teamname' : result[i]._doc.teamname,
-						'career_year' : result[i]._doc.career_year,
-						'career_count' : result[i]._doc.career_count,
-						'region' : result[i]._doc.region,
-						'add' : result[i]._doc.add,
-						'move' : result[i]._doc.move,
-						'age' : result[i]._doc.age,	
-						'gender' : result[i]._doc.gender,
-						'event_date' : result[i]._doc.event_date,
-						'event_time' : result[i]._doc.event_time,
-						'event_day' : result[i]._doc.event_day,
-						'mention' : result[i]._doc.mention,	
-						'nofteam' : result[i]._doc.nofteam,
-						'geoLng' : result[i]._doc.geoLng,
-						'geoLat' : result[i]._doc.geoLat,
-						'created_month' : result[i]._doc.created_month,
-						'created_day' : result[i]._doc.created_day,
-						'application_number' : result[i]._doc.application_number
-					};
-					eventData[i] = data;
-				}			
-				
-				var user_context = {
-					'email':req.user.email, 
-					'password':req.user.password, 
-					'teamname':req.user.teamname, 
-					'gender':req.user.gender, 
-					'age':req.user.age,
-					'region':req.user.region,
-					'add':req.user.add,
-					'move':req.user.move,
-					'nofteam':req.user.nofteam,
-					'career_year':req.user.career_year,
-					'career_count':req.user.career_count,
-					'introteam':req.user.introteam,
-					'profile_img':profile_photo,
-					'event_data':eventData
+				var searchResult = {
+					'teamname':sResult[0]._doc.search_teamname,
+					'add':[sResult[0]._doc.search_add0, sResult[0]._doc.search_add1],
+					'gender':sResult[0]._doc.search_gender,
+					'age':sResult[0]._doc.search_age,
+					'event_date':sResult[0]._doc.search_event_date,
+					'event_time':sResult[0]._doc.search_event_time,
+					'event_day':sResult[0]._doc.search_event_day
 				};
 				
-				console.dir(eventData);
+				console.dir(searchResult);
+				console.log('///////////////////////////////////');
+				
+				
+				if(searchResult.teamname == '')
+						delete searchResult.teamname;
+				if(searchResult.add[0] && searchResult.add[1]){
+					if(searchResult.add[0] == 'none')
+						delete searchResult.add;	
+				}
+				if(searchResult.gender == 0)
+					delete searchResult.gender;
+				if(searchResult.age == 0)
+					delete searchResult.age;
+				if(searchResult.event_date == '')
+					delete searchResult.event_date;
+				if(searchResult.event_time == 'none')
+					delete searchResult.event_time;
+				if(searchResult.event_day == 'none')
+					delete searchResult.event_day;
+				
+				
+				console.dir(searchResult);
+				
+				console.log('///////////////////////////////////');
+				
+							
+				var search = [];
+			
+				if(searchResult){
+					for(var key in searchResult) {
+						var testobj = new Object();
+						var testkey = searchResult;
+						testobj[key] = searchResult[key];
+						search.push(testobj);
+					}
+				}
 
-				res.render('main_search_result.ejs', user_context);                
-			});
+				search.push({email : {"$ne" : req.user.email}});
+
+				var eventData = new Array();			
+
+				dbm.ApplicationModel.find({$and: search}, function (err, result) {
+					for (var i = 0; i < result.length; i++) {
+						var data = {
+							'email' : result[i]._doc.email, 
+							'teamname' : result[i]._doc.teamname,
+							'career_year' : result[i]._doc.career_year,
+							'career_count' : result[i]._doc.career_count,
+							'region' : result[i]._doc.region,
+							'add' : [result[i]._doc.add[0], result[i]._doc.add[1]],
+							'move' : result[i]._doc.move,
+							'age' : result[i]._doc.age,	
+							'gender' : result[i]._doc.gender,
+							'event_date' : result[i]._doc.event_date,
+							'event_time' : result[i]._doc.event_time,
+							'event_day' : result[i]._doc.event_day,
+							'mention' : result[i]._doc.mention,	
+							'nofteam' : result[i]._doc.nofteam,
+							'geoLng' : result[i]._doc.geoLng,
+							'geoLat' : result[i]._doc.geoLat,
+							'created_month' : result[i]._doc.created_month,
+							'created_day' : result[i]._doc.created_day,
+							'application_number' : result[i]._doc.application_number
+						};
+						eventData[i] = data;
+					}			
+
+					var user_context = {
+						'email':req.user.email, 
+						'password':req.user.password, 
+						'teamname':req.user.teamname, 
+						'gender':req.user.gender, 
+						'age':req.user.age,
+						'region':req.user.region,
+						'add':req.user.add,
+						'move':req.user.move,
+						'nofteam':req.user.nofteam,
+						'career_year':req.user.career_year,
+						'career_count':req.user.career_count,
+						'introteam':req.user.introteam,
+						'profile_img':profile_photo,
+						'event_data':eventData
+					};
+
+					console.dir(eventData);
+					sn++;
+					
+					res.render('main_search_result.ejs', user_context);                
+				});
+				
+			});					
+			
         }
     });
 	
@@ -2180,8 +2223,7 @@ module.exports = function(router, passport, upload) {
 	
 	
 	router.route('/contact').get(function(req, res){
-		console.log('/contact 패스 get 요청됨.');
-		
+		console.log('/contact 패스 get 요청됨.');		
 		
 		if(!req.user){
 			console.log('사용자 인증 안된 상태임.');
