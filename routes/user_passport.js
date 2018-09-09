@@ -1818,11 +1818,18 @@ module.exports = function(router, passport, upload) {
 
                     var repeatFunction = function (a, callback) {
 
+                        console.log(a + '번째 eventData[' + a + '].event_date : ' + eventData[a].event_date);
                         console.log(a + '번째 eventData[' + a + '].email : ' + eventData[a].email);
-                        console.log(a + '번째 eventData[' + a + '].region : ' + eventData[a].region);
+                        console.log(a + '번째 eventData[' + a + '].otherEmail : ' + eventData[a].otherEmail);
 
+                        var findEmail;
+                        if(eventData[a].otherEmail){
+                            findEmail = eventData[a].otherEmail;
+                        }else {
+                            findEmail = eventData[a].email;
+                        }
 
-                        dbm.MatchModel.find({$or: [{"email": eventData[a].email}, {"others.sEmail": eventData[a].email}]}, function (err, result) {
+                        dbm.MatchModel.find({$or: [{"email": findEmail}, {"others.sEmail": findEmail}]}, function (err, result) {
                             var sum = 0;
                             var count = 0;
 
@@ -1830,7 +1837,7 @@ module.exports = function(router, passport, upload) {
                                 console.log('a : ' + a + ', b : ' + b);
                                 console.log('result.length : ' + result.length);
 
-                                if ((result[b]._doc.email === eventData[a].email) && (result[b]._doc.others.sEmail !== eventData[a].email)) {
+                                if ((result[b]._doc.email === findEmail) && (result[b]._doc.others.sEmail !== findEmail)) {
                                     console.log('if');
                                     console.log('result['+b+']._doc.review_date : ' + result[b]._doc.review_date);
 
@@ -1841,7 +1848,7 @@ module.exports = function(router, passport, upload) {
                                     }
                                     console.log('if count : ' + count);
 
-                                } else if ((result[b]._doc.email !== eventData[a].email) && (result[b]._doc.others.sEmail === eventData[a].email)) {
+                                } else if ((result[b]._doc.email !== findEmail) && (result[b]._doc.others.sEmail === findEmail)) {
                                     console.log('elseif');
                                     console.log('result['+b+']._doc.review_date : ' + result[b]._doc.review_date);
 
@@ -1994,10 +2001,6 @@ module.exports = function(router, passport, upload) {
         var firstScore = req.body.firstScore;
         var secondScore = req.body.secondScore;
 
-        console.log('111');
-        console.log('firstScore : ' + firstScore);
-        console.log('secondScore : ' + secondScore);
-
         // 대기 상태에서 취소
         var cCallTeamEmail = req.body.cCallTeamEmail;
         var cReceiveTeamName = req.body.cReceiveTeamName;
@@ -2017,11 +2020,11 @@ module.exports = function(router, passport, upload) {
             secondScore = k;
         }
 
-        console.log('222');
-        console.log('firstScore : ' + firstScore);
-        console.log('secondScore : ' + secondScore);
-        console.log('scoreCallTeamEmail : ' + scoreCallTeamEmail);
-        console.log('scoreReceiveTeamEmail : ' + scoreReceiveTeamEmail);
+        // console.log('222');
+        // console.log('firstScore : ' + firstScore);
+        // console.log('secondScore : ' + secondScore);
+        // console.log('scoreCallTeamEmail : ' + scoreCallTeamEmail);
+        // console.log('scoreReceiveTeamEmail : ' + scoreReceiveTeamEmail);
 
         if(scoreCallTeamEmail) {
             // score update
