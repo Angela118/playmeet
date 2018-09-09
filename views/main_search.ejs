@@ -108,7 +108,7 @@
 	  <form action="/mainsearch" method="post" class="search_team">
 		  <div class="wrapper zero">
               <label for="search_team" class="one">팀명</label>
-           <input type="text" class="search_team form-control two" name="search_team" value="none">
+           <input type="text" class="search_team form-control two" name="search_team">
         </div>
 		  <!--<div class="wrapper">
         	<select class="mr-sm-2 form-control" name="city" style="width:9.5rem">
@@ -172,10 +172,11 @@
 			<option value="80">80대 이상</option>
         </select>
     </div>
-<!--
+
     <div class="wrapper">
+		<label for="search_team" class="one">날짜</label>
       <input type="date" id="theDate" name="event_date" class="form-control">
-        
+ <!--      
         <script>
 				
             $(document).ready(function() {
@@ -188,8 +189,10 @@
                 var today = year + "-" + month + "-" + day;       
                 $("#theDate").attr("value", today);
             });
-        </script>
+        </script>	-->
     </div>
+		  
+		  <!--
     <div class="wrapper">
       <input class="form-control" id="theTime" name="event_time" type="time" value="00:00:00">
       <!--모바일에서 터치해서 바꾸는 것 안 나오면 다른 방법 찾기..-->
