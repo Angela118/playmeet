@@ -25,14 +25,14 @@ public class MainActivity extends AppCompatActivity {
 
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
-//        mWebView.setWebChromeClient(new WebChromeClient() {
-//            @Override
-//            public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
-//                return super.onJsAlert(view, url, message, result);
-//            }
-//        });
-//        webSettings.setLoadWithOverviewMode(true);
-//        webSettings.setDefaultZoom(WebSettings.ZoomDensity.FAR);
+        mWebView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
+                return super.onJsAlert(view, url, message, result);
+            }
+        });
+        webSettings.setLoadWithOverviewMode(true);
+        webSettings.setDefaultZoom(WebSettings.ZoomDensity.FAR);
 
         mWebView.setWebViewClient(new WebViewClient() {
 
