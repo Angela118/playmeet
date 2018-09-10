@@ -37,7 +37,7 @@
     </div>
 
     <div>
-      <a href="/chatroom"><img src="../img/envelope.png" class="menu_img" width="20rem" height="20rem" style="margin-right:1rem"></a>
+      <a href="/chatroomchat"><img src="../img/envelope.png" class="menu_img" width="20rem" height="20rem" style="margin-right:1rem"></a>
 
       <img src="../img/menu.png" width="20rem" height="20rem" class="navbar-toggler" data-toggle="collapse" data-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
     </div>
@@ -85,34 +85,42 @@
 
 <div class="container" style="padding-top:1rem">
   <div class="reco">
-
-    <% for(var i = 0; i < event_data.length; i++) {
-      var curEmail = event_data[i].email;
-      var curCreatedMonth = event_data[i].created_month;
-      var curCreatedDay = event_data[i].created_day;
-      var curTeamname = event_data[i].teamname;
-      var curAdd = event_data[i].add[0] +' '+ event_data[i].add[1];
-      var curRegion = event_data[i].region;
-      var curMove = event_data[i].move;
-      var curAge = event_data[i].age;
-      var curDate = event_data[i].event_date;
-      var curTime = event_data[i].event_time;
-      var curMention = event_data[i].mention;
-	  var curApplicationNumber = event_data[i].application_number;
-    
-    if(curMove == 100){
-        curMove = 'O';
-    }else if(curMove == 50){
-        curMove = 'X';
-    }
+	  
+	 <% if(event_data[0] == null) { %>
+       <p style="font-weight: bold">등록된 매칭이 없습니다.</p>
+     <%} else{ %>
+	  
+		<% for(var i = 0; i < event_data.length; i++) {
+		  var curEmail = event_data[i].email;
+		  var curCreatedMonth = event_data[i].created_month;
+		  var curCreatedDay = event_data[i].created_day;
+		  var curTeamname = event_data[i].teamname;
+		  var curAdd = event_data[i].add[0] +' '+ event_data[i].add[1];
+		  var curRegion = event_data[i].region;
+		  var curMove = event_data[i].move;
+		  var curAge = event_data[i].age;
+		  var curDate = event_data[i].event_date;
+		  var curTime = event_data[i].event_time;
+		  var curMention = event_data[i].mention;
+		  var curApplicationNumber = event_data[i].application_number;
 		  
-	if(curTime == 'none'){
-        curTime = '시간 무관';
-    }
-    %>
+		  var matchYear = curDate.substring(0,4);
+		  var matchMonth = curDate.substring(5,7);
+		  var matchDay = curDate.substring(8,10);
+
+		if(curMove == 100){
+			curMove = 'O';
+		}else if(curMove == 50){
+			curMove = 'X';
+		}
+
+		if(curTime == 'none'){
+			curTime = '시간 무관';
+		}
+		%>
     <div class="content mb-3"> <!--content-->
       <div class="date">
-        <h3 style="font-weight: bold"><%= curCreatedMonth %>.<%= curCreatedDay %></h3>
+        <h3 style="font-weight: bold"><%= matchMonth %> / <%= matchDay %></h3>
       </div>
       <div class= "events mb-3">
         <div class="score_content">
@@ -131,12 +139,16 @@
             </p>
             <p class="schedule-detail-content">
               <span class="bold">연령대 | </span>
-              <span><%= curAge %></span>
+              <span><%= curAge %> 대</span>
             </p>
+			  
+			  <!--
             <p class="schedule-detail-content">
-              <span class="bold">날짜 | </span>
-              <span><%= curDate %></span>
+              <span class="bold">등록한 날짜 | </span>
+              <span><%= curCreatedMonth %>월 <%= curCreatedDay %>일</span>
             </p>
+-->
+			  
             <p class="schedule-detail-content">
               <span class="bold">시간 | </span>
               <span><%= curTime %></span>
@@ -162,6 +174,7 @@
       </div>
     </div> <!--content-->
     <%} %>
+	  <%} %>
   </div> <!--reco-->
 
 </div><!--container-->

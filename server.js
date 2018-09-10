@@ -1,4 +1,3 @@
-
 // Express 기본 모듈 불러오기
 
 var express = require('express')
@@ -87,8 +86,6 @@ var upload = multer({
 
 
 
-
-
 //===== Passport 사용 =====//
 
 var passport = require('passport');
@@ -96,9 +93,6 @@ var passport = require('passport');
 var flash = require('connect-flash');
 
  
-
- 
-
  
 
 //===== socket.io 사용 =====//
@@ -142,7 +136,6 @@ app.set('port', process.env.PORT || 3000);
 
  
 
- 
 
 // body-parser를 이용해 application/x-www-form-urlencoded 파싱
 
@@ -187,23 +180,9 @@ app.use(expressSession({
 
  
 
- 
-
- 
-
- 
-
 //===== cors 초기화 =====//
 
 app.use(cors());
-
- 
-
- 
-
- 
-
- 
 
  
 
@@ -258,7 +237,7 @@ var errorHandler = expressErrorHandler({
 
  static: {
 
-   '404': './public/404.html'
+   '404': './public/404.ejs'
 
  }
 
@@ -285,9 +264,7 @@ process.on('uncaughtException', function (err) {
 	console.log('uncaughtException 발생함 : ' + err);
 
 	console.log('서버 프로세스 종료하지 않고 유지함.');
-
 	
-
 	console.log(err.stack);
 
 });
@@ -336,9 +313,7 @@ var server = http.createServer(app).listen(app.get('port'), function(){
 
 });
 
-
-
-
+ 
 
 
 
@@ -352,159 +327,160 @@ var server = http.createServer(app).listen(app.get('port'), function(){
 
 //===== socket.io 서버 시작 =====//
 
-//socket.io는 이벤트 기반
+//socket.io는 이벤트 기반 
 
 var io = socketio.listen(server);
 
 console.log('socket.io 요청을 받아들일 준비가 되었습니다.');
 
-
+ 
 
 var login_ids = {};   //socket id와 login id를 매칭
 
-
+ 
 
 
 io.sockets.on('connection', function(socket){
 
-    //연결 되었을때 호출 되는 콜백함수
+   //연결 되었을때 호출 되는 콜백함수
 
-    console.log('connection info -> ' + JSON.stringify(socket.request.connection._peername));
-
-
-    //client의 접속 정보
-
-    socket.remoteAddress = socket.request.connection._peername.address;
-
-    socket.remotePort = socket.request.connection._peername.port;
+   console.log('connection info -> ' + JSON.stringify(socket.request.connection._peername));
 
 
+   //client의 접속 정보
 
-    socket.on('login', function(input){
+   socket.remoteAddress = socket.request.connection._peername.address;
 
-        console.log('login 받음 -> ' + JSON.stringify(input));
+   socket.remotePort = socket.request.connection._peername.port;
+   
 
 
+   socket.on('login', function(input){
 
-        //socket의 id를 가지고 login id를 찾아낼 수 있다. (반대로도 가능)
+      console.log('login 받음 -> ' + JSON.stringify(input));
 
-        login_ids[input.id] = socket.id;
+      
 
-        socket.login_id = input.id;
+      //socket의 id를 가지고 login id를 찾아낼 수 있다. (반대로도 가능)      
 
+      login_ids[input.id] = socket.id;
+
+      socket.login_id = input.id;
+   
+       
         // receives message from DB
-        database.ChatModel.find({$or:[{"email":input.id}, {"recipient":input.id}]}, function (err, result) {
-                for(var i = 0 ; i < result.length ; i++) {
-                    if(result[i]._doc.email === input.id){
-                        var dbData = {email : result[i].email,
-                            teamname : result[i].teamname,
-                            message : result[i].message,
-                            recipient:
-                            result[i].recipient
-                        };
-                        io.sockets.sockets[socket.id].emit('preload', dbData);
-                    }
-                    if(result[i]._doc.recipient === input.id){
-                        var dbData = {email : result[i].email,
-                            teamname : result[i].teamname,
-                            message : result[i].message,
-                            recipient:
-                            result[i].recipient
-                        };
-                        io.sockets.sockets[socket.id].emit('preload', dbData);
-                    }
-                }
+       database.ChatModel.find({$or:[{"email":input.id}, {"recipient":input.id}]}, function (err, result) {
+         for(var i = 0 ; i < result.length ; i++) {
+            if(result[i]._doc.email === input.id){
+                  var dbData = {email : result[i].email,
+                                  teamname : result[i].teamname,
+                                  message : result[i].message,
+                                  recipient:
+                                  result[i].recipient
+                                 };
+                    io.sockets.sockets[socket.id].emit('preload', dbData);
             }
-        );
-        /*
-            database.ChatModel.find({"recipient":input.id}, function (err, result) {
-                for(var i = 0 ; i < result.length ; i++) {
-                    if(result[i]._doc.recipient === input.id){
-                        var dbData = {email : result[i].email,
-                                   teamname : result[i].teamname,
-                                   message : result[i].message,
-                                   recipient:
-                                   result[i].recipient
-                                  };
-                     io.sockets.sockets[socket.id].emit('preload', dbData);
-                    }
-                }
-            });
-       */
+                if(result[i]._doc.recipient === input.id){
+                       var dbData = {email : result[i].email,
+                                  teamname : result[i].teamname,
+                                  message : result[i].message,
+                                  recipient:
+                                  result[i].recipient
+                                 };
+                    io.sockets.sockets[socket.id].emit('preload', dbData);
+                   }
+            }
+           }
+       );
+       /*
+           database.ChatModel.find({"recipient":input.id}, function (err, result) {
+               for(var i = 0 ; i < result.length ; i++) {
+                   if(result[i]._doc.recipient === input.id){
+                       var dbData = {email : result[i].email,
+                                  teamname : result[i].teamname,
+                                  message : result[i].message,
+                                  recipient:
+                                  result[i].recipient
+                                 };
+                    io.sockets.sockets[socket.id].emit('preload', dbData);
+                   }
+               }
+           });
+      */
 
-        sendResponse(socket, 'login', 200, 'OK');   //로그인이 정상적으로 되었다는 뜻
-
-
-    });
-
-
-
-
-
-
-    socket.on('message', function(message){
-
-        console.log('message 받음 -> ' + JSON.stringify(message.data));
-
+      sendResponse(socket, 'login', 200, 'OK');   //로그인이 정상적으로 되었다는 뜻
 
 
-        // if(message.recipient == 'ALL'){
+   });
+
+
+   
+    
+   
+
+   socket.on('message', function(message){
+
+      console.log('message 받음 -> ' + JSON.stringify(message.data));
+
+      
+
+      //if(message.recipient == 'ALL'){
 
         // console.log('모든 client에게 메세지 전송함.');
 
+         
 
+         //echo기능 : client가 보낸 메세지를 받아서 그대로 다시 보낸다
 
-        //echo기능 : client가 보낸 메세지를 받아서 그대로 다시 보낸다
+     // io.sockets.emit('message', message.data);   //io.sockets : 연결된 모든 client, emit : 그 쪽으로 전송하겠다.
 
-        //  io.sockets.emit('message', message.data);   //io.sockets : 연결된 모든 client, emit : 그 쪽으로 전송하겠다.
+         
 
+     // } else{      //특정 client에게 메세지 보내기
 
+         
 
-        // } else{      //특정 client에게 메세지 보내기
-
-
-
-        if(login_ids[message.recipient]){
+         if(login_ids[message.recipient]){   
 
             io.sockets.connected[login_ids[message.recipient]].emit('message', message);
 
-            sendResponse(socket, 'message', 200, 'OK');
+            sendResponse(socket, 'message', 200, 'OK');   
 
-        } else{
+         } else{
             sendResponse(socket, 'message', 400, '수신자 ID를 찾을 수 없습니다.');
 
-            // }
+         }
 
-        }
-
-
-        // add chat into the model
+      //}
+      
+      
+      // add chat into the model
         var chat = new database.ChatModel({ email:message.email, teamname: message.sender, message: message.data, recipient: message.recipient });
-
+ 
         chat.save(function (err, data) {
-            if (err) {// TODO handle the error
-                console.log("chat save error");
-            }
-            console.log('New message is inserted');
+          if (err) {// TODO handle the error
+              console.log("chat save error");
+          }
+          console.log('New message is inserted');
         });
 
-    });
+   });
 
 });
 
+ 
 
-
-
+ 
 
 function sendResponse(socket, command, code, message){
 
-    var output = {
+   var output = {
 
-        command:command,
+      command:command,
 
-        code:code,
+      code:code,
 
-        message:message
+      message:message
 
-    };
+   };
 };

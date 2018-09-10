@@ -30,7 +30,6 @@
     "passport-google-oauth": "^1.0.0",
     "passport-local": "^1.0.0",
     "passport-twitter": "^1.0.4",
-    "promise": "^8.0.1",
     "python-shell": "^0.5.0",
     "serve-static": "^1.11.2",
     "socket.io": "^2.1.1"
@@ -39,13 +38,5 @@
   "main": ".eslintrc.js",
   "devDependencies": {},
   "author": "",
-  "license": "ISC",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Angela118/playmeet.git"
-  },
-  "bugs": {
-    "url": "https://github.com/Angela118/playmeet/issues"
-  },
-  "homepage": "https://github.com/Angela118/playmeet#readme"
+  "license": "ISC"
 }

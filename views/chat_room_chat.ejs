@@ -30,7 +30,6 @@
 
 
     <script>
-
         function createRoom(){
             var roomId = $('#roomIdInput').val();
             var roomName = $('#roomNameInput').val();
@@ -86,7 +85,6 @@
             console.log(data);
             $('#results').append('<p>' + data + '</p>');
         }
-
     </script>
 
 
@@ -157,7 +155,7 @@
     <div onclick="location='./chatroomchat'">채팅</div>
     <div onclick="location='./chatroommessage'">메시지</div>
 </div>
-
+    
 <!-- /////////////////chat코드로 수정하기//////////// -->
 <div class="container" style="padding-top:6rem">
     <div class="reco" style="margin-top: -1rem">
@@ -166,39 +164,47 @@
 
 
         <%
-        var count = 0; // 띄워지는 값 count
-
+            var count = 0; // 띄워지는 값 count
         for(var i = 0; i < event_data.length; i++) {
             var email = event_data[i].email;
-            var otherEmail = event_data[i].otherEmail; %>
-
+            var otherEmail = event_data[i].otherEmail;
+            var match_success = event_data[i].match_success;
+            var otherTeamname = event_data[i].otherTeamname;
+        %>
         <script>
-            function clicked(email, otherEmail, index) {
+            function clicked(email, otherEmail, match_success, otherTeamname, index) {
                 document.getElementsByName('email')[index].value = email;
                 document.getElementsByName('otherEmail')[index].value = otherEmail;
-                alert('email : ' + email + ', otherEmail : ' + otherEmail + ', index : ' + index);
-                // document.getElementsByName('formPost')[index].submit();
-                location.href="/chat";
+                document.getElementsByName('match_success')[index].value = match_success;
+                document.getElementsByName('otherTeamname')[index].value = otherTeamname;
+                
+                alert('email : ' + email + ', otherEmail : ' + otherEmail + ', index : ' + index + ', match_success : ' + match_success);
+                
+                if(match_success == 0) {
+                    alert("아직 매칭이 완료되지 않았습니다.");
+                    location.href="/chatroomchat";
+                } else
+                    location.href="/chat";
             }
         </script>
-
         <form action="/chatroomchat" method="get">
             <input type="hidden" name="email" id="email">
             <input type="hidden" name="otherEmail" id="otherEmail">
+            <input type="hidden" name="match_success" id="match_success">
+            <input type="hidden" name="otherTeamname" id="otherTeamname">
         </form>
-        <div class="message" onclick="clicked( '<%= event_data[i].email %>','<%=event_data[i].otherEmail%>', '<%= count%>')">
-            <div class="chat_room_content">채팅방 /  <br>email : <%=email%><br>otherEmail : <%=otherEmail%></div>
+        <div class="message" onclick="clicked( '<%= event_data[i].email %>','<%=event_data[i].otherEmail%>', '<%= event_data[i].match_success %>', <%= event_data[i].otherTeamname %>, '<%= count%>')">
+            <div class="chat_room_content">
+                <div><br>채팅 with " <%=otherTeamname%> "팀<br></div>       
+            </div>
         </div>
-
+        
         <hr class="mb-4">
-
         <%
             count++;
-        }%>
+            }
+        %>
     </div>
 </div>
-
-
-
 </body>
 </html>

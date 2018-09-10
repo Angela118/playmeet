@@ -11,7 +11,7 @@ module.exports = new LocalStrategy({
     usernameField : 'email',
 	passwordField : 'password',
 	passReqToCallback : true    // 이 옵션을 설정하면 아래 콜백 함수의 첫번째 파라미터로 req 객체 전달됨
-}, function(req, email, password, done) {
+}, function(req, email, password, done) {		//13개
     // 요청 파라미터 중 name 파라미터 확인
  // var name = req.body.name || req.query.name;
     var teamname = req.body.teamname || req.query.teamname;
@@ -27,11 +27,19 @@ module.exports = new LocalStrategy({
 	var career_count = req.body.career_count || req.query.career_count;
 	var introteam = req.body.introteam || req.query.introteam;
 	var profile_img = "profile_basic.png";
+	var img_flag = 0;
 	
 	
+	if(!add){		//도로명주소 없는 경우 지번 주소
+		add = req.body.add2 || req.query.add2;
+	}		
 	var addr = [];
 	addr= add.split(' ');
-	add = [addr[0], addr[1]];
+
+	if(addr[0] == '제주특별자치도'){
+		add = [addr[1], addr[2]];
+	}else
+		add = [addr[0], addr[1]];
 	
 
 
@@ -69,6 +77,7 @@ module.exports = new LocalStrategy({
 					'career_count':career_count,
 					'introteam':introteam,
 					'profile_img':profile_img,
+					'img_flag':img_flag,
 					'geoLat':geoLat,
 					'geoLng':geoLng
                 });

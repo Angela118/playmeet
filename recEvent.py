@@ -4,25 +4,24 @@ from numpy import array
 from scipy.spatial import distance
 import warnings
 import sys
-
 warnings.filterwarnings('always')
 warnings.filterwarnings('ignore')
-
-
 
 
 def swap(x, i, j):
     x[i], x[j] = x[j], x[i]
 
 
-#파일 불러오기
+
+
+#파일 불러오기 
 file = open('D:/coding test/javascriptTest/playmeet/recEvent.csv', 'r', encoding='UTF8')
 reader = csv.reader(file)
 
 data=[]
 for row_list in reader:
     data.append(row_list)
-
+  
 file.close()
 
 print(data)
@@ -39,11 +38,11 @@ del data[0]
 for i in range(0, len(data)):
     data[i][4] = data[i][4] + '0'
 
-
+        
 dat = data[:]
-
-
-#data의 id값
+    
+    
+#data의 id값 
 idArray = []
 del data[0][0]
 for i in range(1, len(data)):
@@ -82,12 +81,12 @@ print()
 
 
 
-#sorting
+#sorting    
 for size in reversed(range(len(ar_euc))):
     for i in range(size):
         if ar_euc[i][1]>ar_euc[i+1][1]:
             swap(ar_euc, i, i+1)
-
+                
 
 result_data = []
 for i in range(0, len(ar_euc)):
@@ -109,15 +108,16 @@ print()
 
 
 
-#recOutput.csv에 저장
+#recOutput.csv에 저장 
 with open('D:/coding test/javascriptTest/playmeet/recOutput.csv','w', encoding='UTF8', newline='') as output:
     writer = csv.writer(output)
     for val in result_data:
         writer.writerow(val)
 
-
+          
 print()
 
+    
 
-
+    
 

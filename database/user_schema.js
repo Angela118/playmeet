@@ -1,8 +1,6 @@
 /**
  * 데이터베이스 스키마를 정의하는 모듈
  *
- * @date 2016-11-10
- * @author Mike
  */
 
 var crypto = require('crypto');
@@ -21,13 +19,16 @@ Schema.createSchema = function(mongoose) {
         gender: {type:String, 'default':''},
         age: {type:Number, 'default':''},
 		region: {type:String, 'default':''},
-		add: {type:String, 'default':''},
+		add: [{type:String, 'default':''}],
 		move: {type:String, 'default':''},
 		nofteam: {type:Number, 'default':''},
 		career_year: {type:Number, 'default':''},
 		career_count: {type:Number, 'default':''},
 		introteam: {type:String, default:''},
 		profile_img: {type:String, 'default':'profile_basic.png'},
+		img_flag: {type:Number, 'default':0},
+		//img_flag[0]: get,	0:from 회원가입, 1:from 프로필 이미지 수정
+		//img_flag[1]:post,	0:회원가입, 1:로그인, 2:프로필 이미지 수정
 		geoLng:{type:Number, 'default':''},
 		geoLat:{type:Number, 'default':''},
 		created_at: {type: Date, index: {unique: false}, 'default': Date.now},

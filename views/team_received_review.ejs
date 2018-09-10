@@ -83,9 +83,9 @@
             <div class="team_inform" style="">
 
                 <div class="img_div" style="margin-left: 0rem; margin-right: 0; margin-bottom: 1rem">
-					
-					<img class="profile_img" src="../profile_img/<%= profile_img %>" id="profile_pic"/>
-				</div>
+
+                    <img class="profile_img" src="../profile_img/<%= profile_img %>" id="profile_pic"/>
+                </div>
 
 
                 <h6 style="font-weight: bold"><%= teamname %> 팀</h6>
@@ -112,20 +112,20 @@
                 <div class="stars mb-3">
 
                     <% if((result >= 1) && (result <1.5)) {%>
-                        <img src="../img/star.png" width="20" height="20">
+                    <img src="../img/star.png" width="20" height="20">
                     <%}else if((result >= 0.5) && (result < 1)){%>
-                        <img src="../img/star-half.png" width="20" height="20">
+                    <img src="../img/star-half.png" width="20" height="20">
                     <%}%>
 
                     <% for(var i = 0; i < Math.round(result)-1; i++) {%>
-                        <img src="../img/star.png" width="20" height="20">
-                        <% if(i == Math.round(result)-2){%>
-                            <%if ((result % 1) < 0.5) { %>
-                                <img src="../img/star.png" width="20" height="20">
-                        <%} else {%>
-                            <img src="../img/star-half.png" width="20" height="20">
-                            <%}%>
-                        <%}%>
+                    <img src="../img/star.png" width="20" height="20">
+                    <% if(i == Math.round(result)-2){%>
+                    <%if ((result % 1) < 0.5) { %>
+                    <img src="../img/star.png" width="20" height="20">
+                    <%} else {%>
+                    <img src="../img/star-half.png" width="20" height="20">
+                    <%}%>
+                    <%}%>
                     <%}%>
 
                     <%for(var i = 1; i < 5 - Math.round(result - 1); i++) {%>
