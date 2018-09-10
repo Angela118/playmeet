@@ -1374,12 +1374,9 @@ module.exports = function(router, passport, upload) {
 					'event_day':sResult[0]._doc.search_event_day
 				};
 				
-				console.dir(searchResult);
-				console.log('///////////////////////////////////');
 				
-				
-				if(searchResult.teamname == '')
-						delete searchResult.teamname;
+				if(searchResult.teamname == 'none')
+					delete searchResult.teamname;
 				if(searchResult.add[0] && searchResult.add[1]){
 					if(searchResult.add[0] == 'none')
 						delete searchResult.add;	
@@ -1396,10 +1393,6 @@ module.exports = function(router, passport, upload) {
 					delete searchResult.event_day;
 				
 				
-				console.dir(searchResult);
-				
-				console.log('///////////////////////////////////');
-				
 							
 				var search = [];
 			
@@ -1411,6 +1404,8 @@ module.exports = function(router, passport, upload) {
 						search.push(testobj);
 					}
 				}
+				
+				console.dir(search);
 
 				search.push({email : {"$ne" : req.user.email}});
 
@@ -1440,7 +1435,13 @@ module.exports = function(router, passport, upload) {
 							'application_number' : result[i]._doc.application_number
 						};
 						eventData[i] = data;
-					}			
+					}
+					
+					eventData.sort(function(a, b) { // 오름차순 sorting
+						return a.event_date < b.event_date ? -1 : a.event_date > b.event_date ? 1 : 0;
+					});
+
+					
 
 					var user_context = {
 						'email':req.user.email, 
