@@ -1316,7 +1316,7 @@ module.exports = function(router, passport, upload) {
     });
 
     router.route('/chatroomchat').post(function(req, res){
-        console.log('/mainsearch 패스 post 요청됨.');
+        console.log('/chatroomchat 패스 post 요청됨.');
 
         var event = {
             'email':req.body.email || req.query.email,
@@ -1612,6 +1612,11 @@ module.exports = function(router, passport, upload) {
 
                         if(a>=eventData.length-1) {
                             console.log('##eventData['+a+']["allRating"] : ' + eventData[a]['allRating']);
+
+                            eventData.sort(function(a, b) { // 오름차순 sorting
+                                return a.event_date < b.event_date ? -1 : a.event_date > b.event_date ? 1 : 0;
+                            });
+
                             callback();
                         }else{
                             console.log('!!eventData[' + a + ']["allRating"] : ' + eventData[a]['allRating']);
@@ -1920,12 +1925,43 @@ module.exports = function(router, passport, upload) {
                             }
 
                             if(a>=eventData.length-1) {
-                                //내림차순 정렬
+                                //오름차순 정렬
                                 eventData.sort(function (a, b) {
-                                    console.log('===sort===');
-                                    return a.event_date > b.event_date ? -1 : a.event_date < b.event_date ? 1 : 0;
-                                })
+                                    console.log('===오름차순 sort===');
+                                    return a.event_date < b.event_date ? -1 : a.event_date > b.event_date ? 1 : 0;
+                                });
 
+                                //오늘 날짜만 가까운 거부터 하기
+                                var today = new Date();
+                                var dd = today.getDate();
+                                var mm = today.getMonth()+1; //January is 0!
+                                var yyyy = today.getFullYear();
+
+                                if(dd<10) {
+                                    dd='0'+dd
+                                }
+
+                                if(mm<10) {
+                                    mm='0'+mm
+                                }
+
+                                today = yyyy + '-' + mm + '-' + dd; // 오늘 날짜
+                                var n=0;
+
+                                for(var m=0; m<eventData.length-1; m++){
+                                    if(eventData[m].event_date < today){
+                                        eventData[eventData.length+n] = eventData[m];
+                                        n++;
+                                    }else{
+                                        break;
+                                    }
+                                }
+
+                                for(var m=0; m<eventData.length-1; m++){
+                                    eventData[m] = eventData[n+m];
+                                }
+
+                                eventData = eventData.slice(0,eventData.length-n);
                                 callback();
                             }else{
 

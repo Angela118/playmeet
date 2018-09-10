@@ -555,9 +555,7 @@
                                 <input type="hidden" name="cEvent_time" id="cEvent_time" value='<%=event_data[i].event_time%>'>
                                 <input type="hidden" name="cApplicationNumber" id="cApplicationNumber" value='<%=event_data[i].sApplicationNumber%>'>
 
-
-
-                                <button class="btn btn-block" style="color:black">신청 취소<br><span style="font-size: smaller">상대팀이 수락하기 전까지 가능</span></button>
+                                <button class="btn btn-block" style="color:black" onclick="alert('<%=event_data[i].otherTeam%> 팀에게 신청을 취소합니다.')">신청 취소<br><span style="font-size: smaller">상대팀이 수락하기 전까지 가능</span></button>
                             </div>
                         </div>
                     </form>
