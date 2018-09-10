@@ -7,6 +7,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.webkit.WebSettings;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,16 +24,28 @@ public class MainActivity extends AppCompatActivity {
 //        mWebView.goBack();
 //        mWebView.reload();
 
-        WebSettings webSettings = mWebView.getSettings();
-        webSettings.setJavaScriptEnabled(true);
-        mWebView.setWebChromeClient(new WebChromeClient() {
+/*        mWebView.setWebChromeClient(new WebChromeClient() {
             @Override
             public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
                 return super.onJsAlert(view, url, message, result);
             }
-        });
+        });*/
+
+        WebSettings webSettings = mWebView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
         webSettings.setLoadWithOverviewMode(true);
         webSettings.setDefaultZoom(WebSettings.ZoomDensity.FAR);
+
+        //alert 대응
+        mWebView.setWebChromeClient(new WebChromeClient(){
+            @Override
+            public boolean onJsAlert(WebView view, String url, String message, JsResult result)
+            {
+                Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+                result.confirm();
+                return true;
+            }
+        });
 
         mWebView.setWebViewClient(new WebViewClient() {
 
@@ -43,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mWebView.loadUrl("http://172.30.1.50:3000/login");
+        mWebView.loadUrl("http://192.168.19.168:3000/login");
     }
 }
 
