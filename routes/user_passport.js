@@ -788,8 +788,6 @@ module.exports = function(router, passport, upload) {
     });
 
 
-
-
     //채팅
     router.route('/chatroomchat').get(function(req, res){
         console.log('/chatrooomchat 패스 get으로 요청됨.');
@@ -808,6 +806,8 @@ module.exports = function(router, passport, upload) {
                 profile_img[imgi] = [req.user.email, req.user.profile_img];
             }
 
+            var dbm = require('../database/database');
+            console.log('database 모듈 가져옴');
 
             var eventData = new Array();
             var j = 0;
@@ -861,6 +861,7 @@ module.exports = function(router, passport, upload) {
         }
     });
 
+    // chat get역할 함
     router.route('/chatroomchat').post(function(req, res){
         console.log('/chatroomchat 패스 post 요청됨.');
 
@@ -868,12 +869,45 @@ module.exports = function(router, passport, upload) {
             'email':req.body.email || req.query.email,
             'otherEmail': req.body.otherEmail || req.query.otherEmail,
             'match_success': req.body.match_success || req.query.match_success,
-            'otherTeamname': req.body.otherTeamname || req.query.otherTeamname
+            'otherTeamname': req.body.otherTeamname || req.query.otherTeamname,
+            // 'chatIndex': req.body.chatIndex
+        };
+
+        if (!req.user) {
+            console.log('사용자 인증 안된 상태임.');
+            res.redirect('/login');
+        }else{
+            profile_photo = req.user.profile_img;
+            if(profile_img.length > 0){
+                for(var i=0; i<profile_img.length; i++){
+                    if(profile_img[i][0] == req.user.email)
+                        profile_photo = profile_img[i][1];
+                }
+            } else{
+                profile_img[imgi] = [req.user.email, req.user.profile_img];
+            }
+
+
+            var user_context = {
+                'email': req.user.email,
+                'password': req.user.password,
+                'teamname': req.user.teamname,
+                'gender': req.user.gender,
+                'age': req.user.age,
+                'region': req.user.region,
+                'move': req.user.move,
+                'nofteam': req.user.nofteam,
+                'career_year': req.user.career_year,
+                'career_count': req.user.career_count,
+                'introteam': req.user.introteam,
+                'profile_img': profile_photo,
+                'event_data': event
+            };
+            console.dir(event);
+            res.render('chat.ejs', user_context);
+
+            // res.redirect('/chat');
         }
-
-        console.dir(event);
-        res.redirect('/chat');
-
     });
 
 
@@ -1212,76 +1246,6 @@ module.exports = function(router, passport, upload) {
 
         res.redirect('/chatroommessage');
     });
-
-
-
-    router.route('/chat').get(function(req, res){
-        console.log('/chat 패스 get으로 요청됨.');
-
-
-        if (!req.user) {
-            console.log('사용자 인증 안된 상태임.');
-            res.redirect('/login');
-        }else{
-            profile_photo = req.user.profile_img;
-            if(profile_img.length > 0){
-                for(var i=0; i<profile_img.length; i++){
-                    if(profile_img[i][0] == req.user.email)
-                        profile_photo = profile_img[i][1];
-                }
-            } else{
-                profile_img[imgi] = [req.user.email, req.user.profile_img];
-            }
-
-            var eventData = new Array();
-            var j = 0;
-
-            // 나한테 매칭 신청한 팀 찾기
-            dbm.MatchModel.find({email : {"$ne" : req.user.email}} ,function (err, result) {
-                for (var i = 0; i < result.length; i++) {
-                    if (result[i]._doc.others.sEmail === req.user.email) {
-                        var data = {
-                            'email' : req.user.email, // 나
-                            'otherEmail': result[i]._doc.email//상대팀
-                        };
-                        eventData[j++] = data;
-                    }
-                }
-
-                // 내가 매칭 신청한 팀 찾기
-                dbm.MatchModel.find({email : req.user.email} ,function (err, result) {
-                    for (var i = 0; i < result.length; i++) {
-                        if (result[i]._doc.email === req.user.email) {
-                            var data = {
-                                'email': result[i]._doc.email,//나
-                                'otherEmail': result[i]._doc.others.sEmail // 상대팀
-                            };
-                            eventData[j++] = data;
-                        }
-                    }
-                    var user_context = {
-                        'email': req.user.email,
-                        'password': req.user.password,
-                        'teamname': req.user.teamname,
-                        'gender': req.user.gender,
-                        'age': req.user.age,
-                        'region': req.user.region,
-                        'move': req.user.move,
-                        'nofteam': req.user.nofteam,
-                        'career_year': req.user.career_year,
-                        'career_count': req.user.career_count,
-                        'introteam': req.user.introteam,
-                        'profile_img': profile_photo,
-                        'event_data': eventData
-                    };
-                    console.dir(eventData);
-                    res.render('chat.ejs', user_context);
-                });
-            });
-
-        };
-    });
-
 
     router.route('/chatappointment').get(function(req, res){
         console.log('/chatappointment 패스 get으로 요청됨.');

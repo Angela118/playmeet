@@ -337,81 +337,60 @@ console.log('socket.io 요청을 받아들일 준비가 되었습니다.');
 
 var login_ids = {};   //socket id와 login id를 매칭
 
- 
+
 
 
 io.sockets.on('connection', function(socket){
 
-   //연결 되었을때 호출 되는 콜백함수
+    //연결 되었을때 호출 되는 콜백함수
+    console.log('connection info -> ' + JSON.stringify(socket.request.connection._peername));
 
-   console.log('connection info -> ' + JSON.stringify(socket.request.connection._peername));
+    //client의 접속 정보
 
+    socket.remoteAddress = socket.request.connection._peername.address;
+    socket.remotePort = socket.request.connection._peername.port;
 
-   //client의 접속 정보
+    socket.on('login', function(input){
 
-   socket.remoteAddress = socket.request.connection._peername.address;
+        console.log('login 받음 -> ' + JSON.stringify(input));
 
-   socket.remotePort = socket.request.connection._peername.port;
-   
+        //socket의 id를 가지고 login id를 찾아낼 수 있다. (반대로도 가능)
 
+        login_ids[input.id] = socket.id;
+        socket.login_id = input.id;
 
-   socket.on('login', function(input){
+        console.log('input.id : ' + input.id);
+        console.log('input.otherId : ' + input.otherId);
 
-      console.log('login 받음 -> ' + JSON.stringify(input));
-
-      
-
-      //socket의 id를 가지고 login id를 찾아낼 수 있다. (반대로도 가능)      
-
-      login_ids[input.id] = socket.id;
-
-      socket.login_id = input.id;
-   
-       
         // receives message from DB
-       database.ChatModel.find({$or:[{"email":input.id}, {"recipient":input.id}]}, function (err, result) {
-         for(var i = 0 ; i < result.length ; i++) {
-            if(result[i]._doc.email === input.id){
-                  var dbData = {email : result[i].email,
-                                  teamname : result[i].teamname,
-                                  message : result[i].message,
-                                  recipient:
-                                  result[i].recipient
-                                 };
-                    io.sockets.sockets[socket.id].emit('preload', dbData);
+        database.ChatModel.find({$or:[{"email":input.id}, {"recipient":input.id}]}, function (err, result) {
+                for(var i = 0 ; i < result.length ; i++) {
+                    if((result[i]._doc.email === input.id) && (result[i]._doc.recipient === input.otherId)){
+                        var dbData = {email : result[i].email,
+                            teamname : result[i].teamname,
+                            message : result[i].message,
+                            recipient:
+                            result[i].recipient
+                        };
+                        io.sockets.sockets[socket.id].emit('preload', dbData);
+                    }
+                    if((result[i]._doc.recipient === input.id) && (result[i]._doc.email === input.otherId)){
+                        var dbData = {email : result[i].email,
+                            teamname : result[i].teamname,
+                            message : result[i].message,
+                            recipient:
+                            result[i].recipient
+                        };
+                        io.sockets.sockets[socket.id].emit('preload', dbData);
+                    }
+                }
             }
-                if(result[i]._doc.recipient === input.id){
-                       var dbData = {email : result[i].email,
-                                  teamname : result[i].teamname,
-                                  message : result[i].message,
-                                  recipient:
-                                  result[i].recipient
-                                 };
-                    io.sockets.sockets[socket.id].emit('preload', dbData);
-                   }
-            }
-           }
-       );
-       /*
-           database.ChatModel.find({"recipient":input.id}, function (err, result) {
-               for(var i = 0 ; i < result.length ; i++) {
-                   if(result[i]._doc.recipient === input.id){
-                       var dbData = {email : result[i].email,
-                                  teamname : result[i].teamname,
-                                  message : result[i].message,
-                                  recipient:
-                                  result[i].recipient
-                                 };
-                    io.sockets.sockets[socket.id].emit('preload', dbData);
-                   }
-               }
-           });
-      */
+        );
 
-      sendResponse(socket, 'login', 200, 'OK');   //로그인이 정상적으로 되었다는 뜻
+        sendResponse(socket, 'login', 200, 'OK');   //로그인이 정상적으로 되었다는 뜻
 
+    });
 
-   });
 
 
    
