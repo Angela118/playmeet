@@ -54,7 +54,7 @@ module.exports = function(router, passport, upload) {
             dbm.ApplicationModel.remove({'eventMonth_forExpire':{$lt:nowMonth}}, function(err){
                 if(err) throw err
             });
-
+/*
             dbm.ApplicationModel.remove({$and:[{'eventMonth_forExpire':nowMonth}, {'eventDate_forExpire':{$lt:nowDate}}]}, function(err){
                 if(err) throw err
             });
@@ -62,7 +62,7 @@ module.exports = function(router, passport, upload) {
 			dbm.ApplicationModel.remove({$and:[{'eventMonth_forExpire':nowMonth}, {'eventDate_forExpire':nowDate}, {'event_time':{$lt:nowHour}}]}, function(err){
                 if(err) throw err
             });
-
+*/
             var fs = require('fs');
 
             const Json2csvParser = require('json2csv').Parser;
@@ -1609,6 +1609,47 @@ module.exports = function(router, passport, upload) {
                             eventData[j++] = data;
                         }
                     }
+					
+					
+					//오름차순 정렬
+					eventData.sort(function (a, b) {
+						console.log('===오름차순 sort===');
+						return a.event_date < b.event_date ? -1 : a.event_date > b.event_date ? 1 : 0;
+					});
+
+					//오늘 날짜만 가까운 거부터 하기
+					var today = new Date();
+					var dd = today.getDate();
+					var mm = today.getMonth()+1; //January is 0!
+					var yyyy = today.getFullYear();
+
+					if(dd<10) {
+						dd='0'+dd;
+					}
+
+					if(mm<10) {
+						mm='0'+mm;
+					}
+
+					today = yyyy + '-' + mm + '-' + dd; // 오늘 날짜
+
+					var n=0;
+
+					for(var m=0; m<eventData.length-1; m++){
+						if(eventData[m].event_date < today){
+							eventData[eventData.length+n] = eventData[m];
+							n++;
+						}else{
+							break;
+						}
+					}
+
+					for(var m=0; m<eventData.length-1; m++){
+						eventData[m] = eventData[n+m];
+					}
+
+					eventData = eventData.slice(0,eventData.length-n);
+						
 
                     var user_context = {
                         'email': req.user.email,
@@ -1626,7 +1667,7 @@ module.exports = function(router, passport, upload) {
                         'profile_img': profile_photo,
                         'event_data':eventData
                     }; // user_context
-                    console.dir(eventData);
+             //       console.dir(eventData);
                     res.render('team_schedule.ejs', user_context);
 
                 }); // dbm event_data2 end
