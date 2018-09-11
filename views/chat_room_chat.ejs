@@ -162,25 +162,35 @@
         <!--event_data.others는 선택된 (내가 올렸던) 경기 날짜 & 시간 등 들어있음 -->
 
 
-        <%
+
+        <% if(event_data.length == 0) { %>
+        <p style="font-weight: bold">우리 팀에게 온 메시지가 없습니다.</p>
+        <%}else{
         var count = 0; // 띄워지는 값 count
 
         for(var i = 0; i < event_data.length; i++) {
-            var email = event_data[i].email;
-            var otherEmail = event_data[i].otherEmail;
-            var match_success = event_data[i].match_success;
-            var otherTeamname = event_data[i].otherTeamname;
+            // var email = event_data[i].email;
+            // var otherEmail = event_data[i].otherEmail;
+            // var match_success = event_data[i].match_success;
+            // var otherTeamname = event_data[i].otherTeamname;
+            // var event_date = event_data[i].event_date;
+            // var event_time = event_data[i].event_time;
+
+            // matchsuccess=0인것만 메시지함에서 띄우기
+        if(event_data[i].match_success != 0) {
         %>
 
         <script>
-            function clicked(email, otherEmail, match_success, otherTeamname, index) {
+            function clicked(email, otherEmail, match_success, otherTeamname, event_date, event_time, index) {
                 document.getElementsByName('email')[index].value = email;
                 document.getElementsByName('otherEmail')[index].value = otherEmail;
                 document.getElementsByName('match_success')[index].value = match_success;
                 document.getElementsByName('otherTeamname')[index].value = otherTeamname;
+                document.getElementsByName('event_date')[index].value = event_date;
+                document.getElementsByName('event_time')[index].value = event_time;
                 // document.getElementsByName('chatIndex')[index].value = index;
 
-                alert('email : ' + email + ', otherEmail : ' + otherEmail + ', index : ' + index + ', match_success : ' + match_success);
+                alert('email : ' + email + ', otherEmail : ' + otherEmail + ', index : ' + index + ', match_success : ' + match_success + ', event_date : ' + event_date + 'event_time : ' + event_time);
 
                 /*                if(match_success == 0) {
                                     alert("아직 매칭이 완료되지 않았습니다.");
@@ -195,11 +205,13 @@
             <input type="hidden" name="otherEmail" id="otherEmail">
             <input type="hidden" name="match_success" id="match_success">
             <input type="hidden" name="otherTeamname" id="otherTeamname">
+            <input type="hidden" name="event_date" id="event_date">
+            <input type="hidden" name="event_time" id="event_time">
             <!--<input type="hidden" name="chatIndex" id="chatIndex">-->
         </form>
-        <div class="message" onclick="clicked( '<%= event_data[i].email %>','<%=event_data[i].otherEmail%>', '<%= event_data[i].match_success %>', '<%= event_data[i].otherTeamname %>', '<%= count%>')">
+        <div class="message" onclick="clicked( '<%= event_data[i].email %>','<%=event_data[i].otherEmail%>', '<%= event_data[i].match_success %>', '<%= event_data[i].otherTeamname %>', '<%= event_data[i].event_date %>', '<%= event_data[i].event_time %>', '<%= count%>')">
             <div class="chat_room_content">
-                <div><br>채팅 with " <%=otherTeamname%> "팀<br></div>
+                <div><br> <b><%= event_data[i].event_date%></b> <%= event_data[i].event_time%>시 경기 with <%= event_data[i].otherTeamname%>팀<br></div>
             </div>
         </div>
 
@@ -207,6 +219,8 @@
 
         <%
             count++;
+        }
+        }
         }
         %>
     </div>

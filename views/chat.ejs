@@ -31,7 +31,7 @@
         });
 
         function connect(){
-            var host = '172.30.1.50';  // 아이피 바꾸기!!!!!!
+            var host = '10.100.109.169';  // 아이피 바꾸기!!!!!!
             $('#hostInput').val(); //203.153.146.124
             var port = 3000;  // $('#portInput').val();
             //서버에 접속
@@ -53,10 +53,12 @@
             socket.on('message', function(message){
                 //println('수신 -> ' + JSON.stringify(message));
                 //      $(output).prependTo('#content');
+                // alert('여기냐');
                 addToChatting(message.email, message.data);
             });
 
             socket.on('preload',function(dbData){
+                // alert('여기인가');
                 addToChatting(dbData.email, dbData.message);
             });
         }
@@ -66,12 +68,16 @@
             var teamname = '<%= teamname %>';
             var today = new Date();
             var otherId = '<%= event_data.otherEmail %>';
+            var event_date = '<%=event_data.event_date%>';
+            var event_time = '<%=event_data.event_time%>';
 
             var output = {
                 id:id,
                 teamname:teamname,
                 otherId:otherId,
-                today:today
+                today:today,
+                event_date:event_date,
+                event_time:event_time
             };
 
             socket.emit('login', output);
@@ -82,6 +88,8 @@
             var sender = '<%= teamname %>';   //senderInput 입력상자에서 입력 값 가져오기
 //          var recipient = $('#recipientInput').val();
             var recipient = '<%= event_data.otherEmail %>';
+            var event_date = '<%= event_data.event_date %>';
+            var event_time = '<%= event_data.event_time %>';
 
             var data = $('#dataInput').val();
             var chattype = $('#chattype option:selected').val();
@@ -89,16 +97,24 @@
                 email:email,
                 sender:sender,
                 recipient:recipient, //ALL
+                event_date:event_date,
+                event_time:event_time,
                 command:chattype,
                 data:data,
                 type:'text'
             };
+            alert('?');
             socket.emit('message', message);
-            addToChatting(message.email, message.data);
+            // alert('여기지');
+
+            // 13일에 보낸게 왜 15일 방에 상대방이 접속중이면 뜨지..
+
+            //addToChatting(message.email, message.data);
         }
 
 
         function addToChatting(writer, msg) {
+            // alert('여기 오긴 함?');
             var temp = '<%= email %>';
             if(writer == temp)
                 writer = 'me';

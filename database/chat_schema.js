@@ -9,9 +9,10 @@ Schema.createSchema = function(mongoose) {
         teamname: {type: String, index: 'hashed', 'default':''},
         message: {type: String},
         recipient: {type: String, 'default':''},
+		event_date: {type: String, 'default':''},
+		event_time: {type: String, 'default':''},
         created_at: {type: Date, index: {unique: false}, 'default': Date.now}		
 	});
-	
 
 	// 스키마에 static 메소드 추가
 	// 모델 객체에서 사용할 수 있는 메소드 정의

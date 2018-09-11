@@ -820,7 +820,9 @@ module.exports = function(router, passport, upload) {
                             'email' : req.user.email, // 나
                             'otherEmail': result[i]._doc.email, //상대팀
                             'match_success': result[i]._doc.match_success, //매치 수락 여부
-                            'otherTeamname': result[i]._doc.teamname // 상대팀 팀명
+                            'otherTeamname': result[i]._doc.teamname, // 상대팀 팀명
+                            'event_date': result[i]._doc.others.sEvent_date,
+                            'event_time': result[i]._doc.others.sEvent_time
                         };
                         eventData[j++] = data;
                     }
@@ -834,7 +836,9 @@ module.exports = function(router, passport, upload) {
                                 'email': result[i]._doc.email,//나
                                 'otherEmail': result[i]._doc.others.sEmail, // 상대팀
                                 'match_success': result[i]._doc.match_success, //매치 수락 여부
-                                'otherTeamname': result[i]._doc.others.sTeamname // 상대팀 팀명
+                                'otherTeamname': result[i]._doc.others.sTeamname, // 상대팀 팀명
+                                'event_date': result[i]._doc.others.sEvent_date,
+                                'event_time': result[i]._doc.others.sEvent_time
                             };
                             eventData[j++] = data;
                         }
@@ -870,6 +874,8 @@ module.exports = function(router, passport, upload) {
             'otherEmail': req.body.otherEmail || req.query.otherEmail,
             'match_success': req.body.match_success || req.query.match_success,
             'otherTeamname': req.body.otherTeamname || req.query.otherTeamname,
+            'event_date': req.body.event_date,
+            'event_time': req.body.event_time
             // 'chatIndex': req.body.chatIndex
         };
 
