@@ -1,65 +1,543 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
-<title>경기 스케줄</title>
-<style type="text/css">
-    body {
-        margin :40px 10px;
-        padding : 0;
-        font-family : "Lucida Grande", Helvetica, Arial, Verdana,sans-serif;
-        font-size : 14px;
-    }
-    #calendar {
-        max-width : 900px;
-        margin : 0 auto;
-    }
-</style>
-<link href="../css/fullcalendar.css" rel="stylesheet"/>
-<link href="../css/fullcalendar.print.css" rel="stylesheet" media="print"/>
-<script type="text/javascript" src="../js/moment.min.js"></script>
-<script type="text/javascript" src="../js/jquery.min.js"></script>
-<script type="text/javascript" src="../js/fullcalendar.js"></script>
-	
-<script type="text/javascript">
-		
-	$(function(){
-	
-		var today = new Date();
-		var dd = today.getDate();
-		var mm = today.getMonth()+1; //January is 0!
-		var yyyy = today.getFullYear();
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>경기 스케줄</title>
 
-		if(dd<10) {
-			dd='0'+dd;
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/team_schedule.css" rel="stylesheet">
+    <link href="../css/calendar.css" rel="stylesheet">
+    <link href="../css/common.css" rel="stylesheet">
+    <link href="../css/FRAME.css" rel="stylesheet">
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="../js/jquery.js"></script>
+    <script src="../js/bootstrap.bundle.min.js"></script>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!--<script src="http://code.jquery.com/jquery-latest.js"></script>-->
+	
+	
+	
+	
+	<!-- 달력-->	
+	<style type="text/css">
+		body {
+			margin :40px 10px;
+			padding : 0;
+			font-family : "Lucida Grande", Helvetica, Arial, Verdana,sans-serif;
+			font-size : 14px;
 		}
-
-		if(mm<10) {
-			mm='0'+mm;
+		#calendar {
+			max-width : 900px;
+			margin : 0 auto;
 		}
+	</style>
+	<link href="../css/fullcalendar.css" rel="stylesheet"/>
+	<link href="../css/fullcalendar.print.css" rel="stylesheet" media="print"/>
+	<script type="text/javascript" src="../js/moment.min.js"></script>
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
+	<script type="text/javascript" src="../js/fullcalendar.js"></script>
 
-		var pevent = '<%= pEvent %>';
-		var encoded = JSON.stringify(pevent).replace(/&#34;/g, "");
-		encoded = encoded.replace(/&#39;/g, "'");
-		var eventP = JSON.parse(encoded);
-
-		
-		jQuery("#calendar").fullCalendar({
-			  defaultDate : yyyy+"-"+mm+"-"+dd
-			, editable : false
-			, eventLimit : false
-			, events: eval(eventP)
-		});
-	
-	});
-	
-
-</script>
 </head>
-<body>
-	
-	
-	
-   <div id="calendar"></div>
+<body class="whiteB">
+
+<!--메뉴 영역 시작 : 나중에 파일로 따로 빼기 -->
+<!--여기선 메뉴명 경기 스케줄로 되어 있음-->
+
+<nav class="navbar blueB">
+
+    <div class="top">
+        <img src="../img/menu3.png" width="30rem" height="30rem" class="navbar-toggler" data-toggle="collapse" data-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
+
+        <p class="logo">경기 스케줄</p>
+
+        <a href="/chatroom"><img src="../img/envelope.png" class="menu_img" width="30rem" height="30rem" ></a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="navbarsExample01">
+        <div class="mypage">
+            <img src="../profile_img/<%= profile_img %>" id="profile_pic" style="margin-right: .2rem; width:3rem; height: 3rem">
+            <span id="name" style="font-weight: bold; font-size: 1.2rem; margin-left: .5rem"><%= teamname %> 팀</span>
+            <a href="/teamprofile"><button class="btn btn-sm btn-warning" type="submit" style="margin-right: .5rem">내 정보</button></a>
+            <a href="/uploadimg"><button class="btn btn-sm btn-warning" type="submit" style="margin-right: .5rem">프로필 사진 변경</button></a>
+            <a href="/logout"><button class="btn btn-sm btn-warning" type="submit">로그아웃</button></a>
+        </div>
+
+
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/">홈 (매칭 팀 검색)<span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item" style="display:flex; align-items:center">
+                <span style="margin-bottom: 0; padding: .5rem 0rem; color:white">우리 팀</span>
+                <!--<hr align="right" style="border: solid 0.1rem white; width: 70%;">-->
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="/teamreceivedreview" style="margin-left:2rem">우리 팀 평가 점수</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/teamschedule" style="margin-left:2rem">경기 스케줄</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/matchapplication">매칭 등록</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="/contact">개발자에게 연락</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="py-4 text-center"></div>
+
+<!--메뉴 영역 끝 : 나중에 파일로 따로 빼기 -->
+
+<div class="container">
+    <div class="reco">
+
+        <!--달력-->
+		<script type="text/javascript">
+			
+			$(function(){
+
+				var today = new Date();
+				var dd = today.getDate();
+				var mm = today.getMonth()+1; //January is 0!
+				var yyyy = today.getFullYear();
+
+				if(dd<10) {
+					dd='0'+dd;
+				}
+
+				if(mm<10) {
+					mm='0'+mm;
+				}
+				document.getElementById('calMonth').value = mm;
+
+				var pevent = '<%= pEvent %>';
+				var encoded = JSON.stringify(pevent).replace(/&#34;/g, "");
+				encoded = encoded.replace(/&#39;/g, "'");
+				var eventP = JSON.parse(encoded);
+				
+				var ff = '<%= ff %>';
+				if(ff != 0){
+				   mm = calMonth;
+				}
+
+				var ww,view;
+				jQuery("#calendar").fullCalendar({
+					  defaultDate : yyyy+"-"+mm+"-"+dd
+					, defaultView : 'month'
+					, editable : false
+					, eventLimit : false
+					, events: eval(eventP)
+					, eventClick:function(event) {
+						if(event) {
+							alert("상대팀 : "+event.title + "\n" + "경기 장소 : " +event.description, "wicked", "width=700,height=600");
+							return false;
+						}
+					}
+					, windowResize: function(view) {
+							ww = getWindowWidth();
+							view = getView();
+							var currentView = $('#calendar').fullCalendar('getView');
+							if(view != currentView){
+								$('#calendar').fullCalendar('changeView',view);
+							}
+							if(ww <= 768){
+								$('.fc-header-right .fc-button').hide();
+							}else{
+								$('.fc-header-right .fc-button').show();
+							}
+					}
+				});
+				
+				
+				// 왼쪽 버튼을 클릭하였을 경우
+				jQuery("button.fc-prev-button").click(function() {
+					var date = jQuery("#calendar").fullCalendar("getDate");
+					convertDate(date);
+				});
+
+				// 오른쪽 버튼을 클릭하였을 경우
+				jQuery("button.fc-next-button").click(function() {
+					var date = jQuery("#calendar").fullCalendar("getDate");
+					convertDate(date);
+				});
+
+			});
+			
+			// 받은 날짜값을 date 형태로 형변환 해주어야 한다.
+			function convertDate(date) {
+				var date = new Date(date);
+				var calMonth = date.yyyymmdd();
+				document.getElementById('calMonth').value = calMonth;
+				ff++;
+				gopage();
+			}
+			// 받은 날짜값을 YYYY-MM-DD 형태로 출력하기위한 함수.
+			Date.prototype.yyyymmdd = function() {
+			//	var yyyy = this.getFullYear().toString();
+				var mm = (this.getMonth() + 1).toString();
+			//	var dd = this.getDate().toString();
+				return (mm[1] ? mm : "0" + mm[0])+"";
+			}
+			
+			function gopage(){
+				location.href="/teamcal";
+			}
+			
+			function getWindowWidth(){
+				return $(window).width();
+			}
+			function getView(){
+				return (ww <= 768) ? 'basicDay' : 'month';
+			}
+
+
+		</script>
+        <div class="calendar-wrapper">
+            <div id="calendar"></div>
+        </div>
+        <!--달력 끝-->
+
+        <div class="main">
+			<form action="/teamcal" id="calform" method="post">
+				<input type="" name="calMonth" id="calMonth" readonly/>월 일정
+				<br>
+				<button type="submit" id="openCal"> 보기 </button>
+			</form>
+			
+            <% if(event_data.length == 0) { %>
+            <p style="font-weight: bold">스케줄이 없습니다.</p>
+            <%}
+
+            var count = 0; // match success 0,2일 때 index++
+
+            for(var i = 0; i < event_data.length; i++) {
+                // 남이 매칭 신청한 경우 기준 변수
+                var curEmail = event_data[i].email; //상대팀 정보
+                var curDate = event_data[i].event_date;
+                var curTime = event_data[i].event_time;
+                var curAdd = event_data[i].event_add;
+                var curRegion = event_data[i].event_region;
+                var curTeamname = event_data[i].teamname; // 상대팀 정보
+                var curNofteam = event_data[i].event_nofteam; // 상대팀 정보
+                var curProfileImg = event_data[i].otherProfileImg; // 상대팀 프로필 이미지
+                var curRealAdd = event_data[i].otherRealAdd;
+                var curRealRegion = event_data[i].otherRealRegion;
+                var curScore = event_data[i].score; // 상대팀의 이 경기 score
+                var curReview = event_data[i].review; // 상대팀이 이 경기에서 받은 리뷰
+                var curReviewDate = event_data[i].review_date;
+                var score = event_data[i].sScore; // 내 이 경기 스코어
+                var review = event_data[i].sReceivedReview; // 내가 이 경기에서 받은 리뷰
+                var applicationNumber = event_data[i].sApplicationNumber;
+                var matchMonth = curDate.substring(5,7);
+                var matchDay = curDate.substring(8,10);
+
+            if(event_data[i].match_success == 1){
+
+                // 내가 매칭 신청한 경우 변수 반대로 넣음
+                if(curEmail == email) {
+                    curEmail = event_data[i].otherEmail; // 내가 신청한 상대팀 이메일
+                    curTeamname = event_data[i].otherTeam; // 내가 신청한 상대팀
+                    curNofteam = event_data[i].other_nofteam; // 상대팀 인원수
+                    curScore = event_data[i].sScore; // 상대팀 score
+                    curReview = event_data[i].sReceivedReview; // 상대팀 review
+                    curReviewDate = event_data[i].sReviewDate;
+                    score = event_data[i].score; // 내 score
+                    review = event_data[i].review; // 내 review
+                    applicationNumber = event_data[i].sApplicationNumber;
+                }
+				
+				if(calM == matchMonth){
+				%>
+					
+			
+
+
+            <div class="date">				
+                <h3 style="font-weight: bold"><%= matchMonth%>. <%= matchDay%></h3>
+				
+            </div>
+
+            <div class= "events">
+                <div class="events-detail">
+                    <div onclick="javascript:doShow()" class="event_content">
+                        <span class="event-time"><%= curTime %></span>
+                        <span class="event-name">Vs <%=curTeamname%>팀</span>
+                        <br>
+                        <span class="event-location"><%= curRegion %></span>
+                    </div>
+                </div>
+
+                <div class="score_content">
+                    <div class="match-teams mb-3">
+                        <div class="match-team">
+                            <div class="img_div" style="margin-left: 0rem; margin-right: 0; margin-bottom: 0.3rem"><img class="profile_img" src="../profile_img/<%= profile_img %>" id="profile_pic"/></div>
+
+                            <button class="btn btn-sm" style="color:black"><%= teamname %>팀</button>
+                        </div>
+
+                        <div class="score">
+                            <h3 id="team-1-score" class="match-team" style="font-weight: bold"><%=score%></h3>
+                            <h5 style="margin-bottom: 0; font-weight: bold">Vs</h5>
+                            <h3 id="team-2-score" class="match-team" style="font-weight: bold"><%=curScore%></h3>
+                        </div>
+
+                        <div class="match-team">
+                            <div class="img_div" style="margin-left: 0rem; margin-right: 0; margin-bottom: 0.3rem"><img class="profile_img" src="../profile_img/<%= curProfileImg %>" id="profile_pic"/></div>
+                            <button class="btn btn-sm" style="color:black" onclick="team_inform_clicked(
+                                    '<%= curEmail %>',
+                                    '<%= curTeamname %>',
+                                    '<%= event_data[i].otherRealAdd %>',
+                                    '<%= event_data[i].otherRealRegion %>',
+                                    '<%= event_data[i].otherMove %>',
+                                    '<%= event_data[i].otherAge %>',
+                                    '<%= event_data[i].otherGender %>',
+                                    '<%= event_data[i].otherCareerYear %>',
+                                    '<%= event_data[i].otherCareerCount %>',
+                                    '<%= event_data[i].otherNofteam %>',
+                                    '<%= event_data[i].allRating %>',
+                                    '<%=count%>'
+                                    )"> <%=curTeamname%>팀</button>
+                        </div>
+                    </div>
+
+                    <div class = "schedule-detail">
+                        <p class="schedule-detail-content">
+                            <span class="bold">인원수 | </span>
+                            <span><%= teamname%>팀 : <%= nofteam %>명 / <span><%=curTeamname%>팀 : <%=curNofteam%>명</span>
+</span>
+                        </p>
+
+
+                        <script>
+                            function clicked(callTeamEmail, receiveTeamEmail, event_date, event_time, count) {
+                                alert('callTeamEmail : ' + callTeamEmail + ', receiveTeamEmail : ' + receiveTeamEmail + ', event_date : ' + event_date + ', event_time : ' + event_time + ', count : ' + count);
+
+                                document.getElementsByName('callTeamEmail')[count].value = callTeamEmail;
+                                document.getElementsByName('receiveTeamEmail')[count].value = receiveTeamEmail;
+                                document.getElementsByName('event_date')[count].value = event_date;
+                                document.getElementsByName('event_time')[count].value = event_time;
+
+                                document.getElementsByName('formPost')[count].submit();
+                            }
+
+                            function reviewClicked(callTeamEmail, receiveTeamEmail, eventDate, eventTime, count) {
+                                alert('callTeamEmail : ' + callTeamEmail + ', receiveTeamEmail : ' + receiveTeamEmail + ', event_date : ' + eventDate + ', eventTime : ' + eventTime + ', count : ' + count);
+                                var reviewedTeamEmail;
+
+                                if(callTeamEmail === '<%=email%>') {
+                                    reviewedTeamEmail = receiveTeamEmail;
+                                }else {
+                                    reviewedTeamEmail = callTeamEmail;
+                                }
+
+                                alert('reviewedTeamEmail : ' + reviewedTeamEmail +  ', eventDate : ' + eventDate + ', eventTime : ' + eventTime + ', count : ' + count);
+
+                                document.getElementsByName('reviewedTeamEmail')[count].value = reviewedTeamEmail;
+                                document.getElementsByName('eventDate')[count].value = eventDate;
+                                document.getElementsByName('eventTime')[count].value = eventTime;
+
+                                document.getElementsByName('formPost2')[count].submit();
+                            }
+
+                            /*function cancelClicked(cCallTeamEmail, cReceiveTeamName, cReceiveTeamEmail, cEvent_date, cEvent_time, applicationNumber, count){
+                                alert('count : ' + count);
+                                alert('cCallTeamEmail : ' + cCallTeamEmail + 'cReceiveTeamName' + cReceiveTeamName + ', cReceiveTeamEmail : ' + cReceiveTeamEmail + ', cEvent_date : ' + cEvent_date + ', eventTime : ' + cEvent_time + ', count : ' + count);
+
+                                document.getElementsByName('cCallTeamEmail')[count].value = cCallTeamEmail;
+                                document.getElementsByName('cReceiveTeamName')[count].value = cReceiveTeamName;
+                                document.getElementsByName('cReceiveTeamEmail')[count].value = cReceiveTeamEmail;
+                                document.getElementsByName('cEvent_date')[count].value = cEvent_date;
+                                document.getElementsByName('cEvent_time')[count].value = cEvent_time;
+                                document.getElementsByName('applicationNumber')[count].value = applicationNumber;
+                                document.getElementsByName('formPost3').submit();
+                            }
+*/
+
+                            function team_inform_clicked(email, teamname, realAdd, realRegion, move, age, gender, careerYear, careerCount, nofteam, allRating, index) {
+                                // alert('email : ' + email + ', teamname : ' + teamname + ', allRating : ' + allRating + ', realAdd : ' + realAdd + ', realRegion : ' + realRegion + ' move : ' + move + ' age :' + age + ', gender : ' + gender + ', careerYear : ' + careerYear + ', careerCount : ' + careerCount + 'nofteam : ' + nofteam + ', index : ' + index);
+                                if(gender == 25) {
+                                    gender = '무관'
+                                }else if(gender == 50) {
+                                    gender = '남'
+                                }else{
+                                    gender = '여'
+                                }
+                                if(move == 100){
+                                    move = 'O';
+                                }else if(move == 50){
+                                    move = 'X';
+                                }
+
+
+                                $("div[name=email]").eq(index).text('주장 이메일 : ' + email);
+                                $("div[name=teamname]").eq(index).text('팀명: ' + teamname + '팀');
+                                $("div[name=realAdd]").eq(index).text('거주 지역 : ' + realAdd);
+                                $("div[name=realRegion]").eq(index).text('주 경기 장소 : ' + realRegion);
+                                $("div[name=move]").eq(index).text('원정가능여부 : ' + move);
+                                $("div[name=age]").eq(index).text('연령대 : ' + age +'대');
+                                $("div[name=gender]").eq(index).text('성별 : ' + gender);
+                                $("div[name=careerYear]").eq(index).text('경기 경력(년수) : ' + careerYear + '년');
+                                $("div[name=careerCount]").eq(index).text('경기 경력(횟수) : ' + careerCount + '번');
+                                $("div[name=nofteam]").eq(index).text('인원수 : ' + nofteam + '명');
+                                $("div[name=allRating]").eq(index).text('평점 : ' + allRating);
+                                $("div[name=myModal]").eq(index).modal();
+                            }
+
+                        </script>
+
+                        <!-- The Modal -->
+                        <div class="modal" name="myModal">
+                            <div class="modal-dialog modal-dialog-centered modal-sm">
+                                <div class="modal-content">
+
+                                    <!--&lt;!&ndash; Modal Header &ndash;&gt;-->
+                                    <div class="modal-header">
+                                        <h4 class="modal-title" style="text-align: center"><%=curTeamname%> 팀</h4>
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    </div>
+
+                                    <!--&lt;!&ndash; Modal body &ndash;&gt;-->
+                                    <div class="modal-body">
+                                        <div name="email" value='' class="modal_content"></div>
+                                        <div name="teamname" value='' class="modal_content"></div>
+                                        <div name="realAdd" value='' class="modal_content"></div>
+                                        <div name="realRegion" value='' class="modal_content"></div>
+                                        <div name="move" value='' class="modal_content"></div>
+                                        <div name="age" value='' class="modal_content"></div>
+                                        <div name="gender" value='' class="modal_content"></div>
+                                        <div name="careerYear" value='' class="modal_content"></div>
+                                        <div name="careerCount" value='' class="modal_content"></div>
+                                        <div name="nofteam" value='' class="modal_content"></div>
+                                        <div name="allRating" value='' class="modal_content"></div>
+                                    </div>
+
+                                    <!--&lt;!&ndash; Modal footer &ndash;&gt;-->
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger" data-dismiss="modal" >닫기</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <form action="/teamschedule" name="formPost" method="post">
+                            <input type="hidden" name="callTeamEmail" id="callTeamEmail" value=''>
+                            <input type="hidden" name="receiveTeamEmail" id="receiveTeamEmail" value=''>
+                            <input type="hidden" name="event_date" id="event_date" value=''>
+                            <input type="hidden" name="event_time" id="event_time" value=''>
+
+                            <div class="schedule-detail-content" >
+                                <div class="score_input_form">
+                                    <span class="bold" style="margin-top: .3rem">스코어 입력 | &nbsp</span>
+                                    <div class="score_input">
+                                        <div class="form-group"  style="display: flex; align-items: center">
+                                            <%= teamname %>팀 : &nbsp
+                                            <input type="text" class="form-control" style="height:1.8rem" placeholder=<%=score%> name="firstScore" value=''>
+                                        </div>
+                                        <div class="form-group"  style="display: flex; align-items: center">
+                                            <%= curTeamname %>팀 : &nbsp
+                                            <input type="text" class="form-control" style="height:1.8rem" placeholder=<%=curScore%> name="secondScore" value=''>&nbsp
+
+                                            <button class="btn btn-sm" style="color:black" onclick="clicked( `<%=event_data[i].email%>`, `<%=event_data[i].otherEmail%>`, `<%=event_data[i].event_date%>`,`<%=event_data[i].event_time%>`, `<%=count%>`)">제출</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                        <form action="/teamreview" method="get" name="formPost2">
+                            <input type="hidden" name="reviewedTeamEmail" id="reviewedTeamEmail" value=''>
+                            <input type="hidden" name="eventDate" id="eventDate" value=''>
+                            <input type="hidden" name="eventTime" id="eventTime" value=''>
+
+                            <div>
+                                <%if(curReviewDate == 0) {%>
+                                <button type="button" class="btn btn-block blueB" onclick="reviewClicked( `<%=event_data[i].email%>`, `<%=event_data[i].otherEmail%>`, `<%=event_data[i].event_date%>`,`<%=event_data[i].event_time%>`, `<%=count%>`)">상대팀 평가/채팅방 삭제하기</button>
+                                <%}else {%>
+                                <button type="button" class="btn btn-block blueB">상대팀 평가 완료</button>
+                                <%}%>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+
+            <!--내가 신청한 상대팀 승인 대기-->
+            <%
+                count++;
+            } else if((event_data[i].match_success == 0) && (event_data[i].email == email)){%>
+            <div>
+                <div class="date">
+                    <h3 style="font-weight: bold"><%= matchMonth%>. <%= matchDay%></h3>
+                </div>
+                <div class= "events">
+
+                    <form action="/teamschedule" method="post" name="formPost3">
+
+
+                        <div class="events-detail">
+                            <div>
+                                <!-- 내가 신청한 팀으로 해야 함-->
+                                <span class="event-name"><%=event_data[i].otherTeam%> 팀에게 매칭 신청 중...
+<p style="font-size: smaller; margin-top: .4rem">승낙하면 현재 란이 매칭 스케줄란으로 바뀝니다.
+거절시, 또는 경기 전날까지 승인이 안될 시에 현재 란이 삭제됩니다.</p>
+                        </span>
+
+
+
+                                <!--
+                                   <input type="" name="cCallTeamEmail" id="cCallTeamEmail">
+                                   <input type="" name="cReceiveTeamName" id="cReceiveTeamName" >
+                                   <input type="" name="cReceiveTeamEmail" id="cReceiveTeamEmail">
+                                   <input type="" name="cEvent_date" id="cEvent_date">
+                                   <input type="" name="cEvent_time" id="cEvent_time">
+      -->
+
+                                <input type="hidden" name="cCallTeamEmail" id="cCallTeamEmail" value='<%=event_data[i].email%>'>
+                                <input type="hidden" name="cReceiveTeamName" id="cReceiveTeamName" value='<%=event_data[i].otherTeam%>'>
+                                <input type="hidden" name="cReceiveTeamEmail" id="cReceiveTeamEmail" value='<%=event_data[i].otherEmail%>'>
+                                <input type="hidden" name="cEvent_date" id="cEvent_date" value='<%=event_data[i].event_date%>'>
+                                <input type="hidden" name="cEvent_time" id="cEvent_time" value='<%=event_data[i].event_time%>'>
+                                <input type="hidden" name="cApplicationNumber" id="cApplicationNumber" value='<%=event_data[i].sApplicationNumber%>'>
+
+                                <button class="btn btn-block" style="color:black" onclick="alert('<%=event_data[i].otherTeam%> 팀에게 신청을 취소합니다.')">신청 취소<br><span style="font-size: smaller">상대팀이 수락하기 전까지 가능</span></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <%
+                // count++;
+
+            } else{
+
+            }
+
+            }
+			}
+			
+            %>
+
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
 </body>
 </html>
