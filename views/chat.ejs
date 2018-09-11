@@ -31,7 +31,7 @@
         });
 
         function connect(){
-            var host = '10.100.109.169';  // 아이피 바꾸기!!!!!!
+            var host = '172.30.1.50';  // 아이피 바꾸기!!!!!!
             $('#hostInput').val(); //203.153.146.124
             var port = 3000;  // $('#portInput').val();
             //서버에 접속
@@ -103,13 +103,13 @@
                 data:data,
                 type:'text'
             };
-            alert('?');
+            // alert('?');
             socket.emit('message', message);
             // alert('여기지');
 
             // 13일에 보낸게 왜 15일 방에 상대방이 접속중이면 뜨지..
 
-            //addToChatting(message.email, message.data);
+            addToChatting(message.email, message.data);
         }
 
 
@@ -209,8 +209,8 @@
         // $(".add_button_content").hide();
         $("#add_button").click(function(){
             $("#add_button_content").toggle();
-            var add = '../img/add.png';
-            var close = '../img/close-button.png';
+            var add = '../css/img/add.png';
+            var close = '../css/img/close-button.png';
             if($('#add_button').attr('src') === add) {
                 $('#add_button').attr('src', close);
             } else {
@@ -226,15 +226,24 @@
     <!--팀원 하게 되면 경기 끝 넣기-->
     <!--주장만 - 경기 끝 버튼 없음. 아래 버튼 없이 + 누르면 바로 알림창 또는 하단에 입력창 뜨게 만들어도 됨-->
 
-    <button class="btn btn-block" style="color:black" onclick="movePage()">
+    <!--onclick="movePage()"-->
+
+    <form action="/chatappointment" method="get">
+
+        <input type="hidden" name="email" value="<%=event_data.email%>">
+        <input type="hidden" name="otherEmail" value="<%=event_data.otherEmail%>">
+        <input type="hidden" name="event_date" value="<%=event_data.event_date%>">
+        <input type="hidden" name="event_time" value="<%=event_data.event_time%>">
+
+    <button type="submit" class="btn btn-block" style="color:black">
         시간 장소 정하기
     </button>
-    <script>
+<!--    <script>
         function movePage() {
             location.href = "/chatappointment";
         }
-    </script>
-
+    </script>-->
+    </form>
 
 </div>
 

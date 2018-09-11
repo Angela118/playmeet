@@ -873,7 +873,7 @@ module.exports = function(router, passport, upload) {
             'email':req.body.email || req.query.email,
             'otherEmail': req.body.otherEmail || req.query.otherEmail,
             'match_success': req.body.match_success || req.query.match_success,
-            'otherTeamname': req.body.otherTeamname || req.query.otherTeamname,
+            'otherTeamname': req.body.otherTeamname || req.query.otherTeamname, //주석처리해도 o
             'event_date': req.body.event_date,
             'event_time': req.body.event_time
             // 'chatIndex': req.body.chatIndex
@@ -1270,26 +1270,78 @@ module.exports = function(router, passport, upload) {
                 profile_img[imgi] = [req.user.email, req.user.profile_img];
             }
 
-            var user_context = {
-                'email':req.user.email,
-                'password':req.user.password,
-                'teamname':req.user.teamname,
-                'gender':req.user.gender,
-                'age':req.user.age,
-                'region':req.user.region,
-                'add':req.user.add,
-                'move':req.user.move,
-                'nofteam':req.user.nofteam,
-                'career_year':req.user.career_year,
-                'career_count':req.user.career_count,
-                'introteam':req.user.introteam,
-                'profile_img':profile_photo
-            };
+            var email = req.query.email;
+            var otherEmail = req.query.otherEmail;
+            var event_date = req.query.event_date;
+            var event_time = req.query.event_time;
 
+            console.log('email : ' + email);
+            console.log('otherEmail : ' + otherEmail);
+            console.log('event_date : ' + event_date);
+            console.log('event_time : ' + event_time);
 
-            res.render('chat_appointment.ejs', user_context);
+            dbm.MatchModel.find({$and:[
+                    {$or:[
+                            {$and:[
+                                    {"email":email}, {"others.sEmail":otherEmail}
+                                ]},
+                            {$and:[
+                                    {"email":otherEmail}, {"others.sEmail":email}
+                                ]},
+                        ]},
+                    {$and:[
+                            {"others.sEvent_date":event_date}, {"others.sEvent_time":event_time}
+                        ]}
+                ]}, function (err, result) {
+                for (var i = 0; i < result.length; i++) {
+                    if (result[i]._doc.others.sEmail === req.user.email) {
+                        var data = {
+                            'otherEmail': otherEmail, // 상대팀
+                            'event_date': event_date,
+                            'event_time': event_time,
+                            'event_add': result[i]._doc.others.sAdd,
+                            'event_region': result[i]._doc.others.sRegion,
+                            'other_nofteam': result[i]._doc.nofteam, // 상대팀
+                            'match_success': result[i]._doc.match_success,
+                        }
+                    } else if (result[i]._doc.email === req.user.email) {
+                        var data = {
+                            'otherEmail': otherEmail,
+                            'event_date': event_date,
+                            'event_time': event_time,
+                            'event_add': result[i]._doc.others.sAdd,
+                            'event_region': result[i]._doc.others.sRegion,
+                            'other_nofteam': result[i]._doc.others.sNofteam, // 상대팀
+                            'match_success': result[i]._doc.match_success,
+                        }
+                    }
+                } //endfor
+
+                console.dir(data);
+
+                var user_context = {
+                    'email': req.user.email,
+                    'password': req.user.password,
+                    'teamname': req.user.teamname,
+                    'gender': req.user.gender,
+                    'age': req.user.age,
+                    'region': req.user.region,
+                    'add': req.user.add,
+                    'move': req.user.move,
+                    'nofteam': req.user.nofteam,
+                    'career_year': req.user.career_year,
+                    'career_count': req.user.career_count,
+                    'introteam': req.user.introteam,
+                    'profile_img': profile_photo,
+                    'event_data': data
+                };
+
+                res.render('chat_appointment.ejs', user_context);
+            });
         }
     });
+
+
 
     router.route('/chatappointment').post(function(req, res) {
         console.log('/chatappointment 패스 post 요청됨');
