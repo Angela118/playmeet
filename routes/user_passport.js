@@ -54,7 +54,7 @@ module.exports = function(router, passport, upload) {
             dbm.ApplicationModel.remove({'eventMonth_forExpire':{$lt:nowMonth}}, function(err){
                 if(err) throw err
             });
-/*
+
             dbm.ApplicationModel.remove({$and:[{'eventMonth_forExpire':nowMonth}, {'eventDate_forExpire':{$lt:nowDate}}]}, function(err){
                 if(err) throw err
             });
@@ -62,7 +62,7 @@ module.exports = function(router, passport, upload) {
 			dbm.ApplicationModel.remove({$and:[{'eventMonth_forExpire':nowMonth}, {'eventDate_forExpire':nowDate}, {'event_time':{$lt:nowHour}}]}, function(err){
                 if(err) throw err
             });
-*/
+
             var fs = require('fs');
 
             const Json2csvParser = require('json2csv').Parser;
@@ -1408,6 +1408,7 @@ module.exports = function(router, passport, upload) {
 				console.dir(search);
 
 				search.push({email : {"$ne" : req.user.email}});
+				search.push({match : 0});
 
 				var eventData = new Array();			
 
@@ -1649,7 +1650,25 @@ module.exports = function(router, passport, upload) {
 					}
 
 					eventData = eventData.slice(0,eventData.length-n);
+					
+					
+					var parr = [];
+					for(var i=0; i<eventData.length; i++){
+						var title = "\'"+eventData[i].event_region+"\'";
+						var start = "\'"+eventData[i].event_date+"\'";
 						
+						var pData = {
+							title: title,
+							start: start
+						};
+						
+						parr[i] = pData;
+					}
+					
+					var pEvent = JSON.stringify(parr);
+					
+					console.dir(pEvent);
+	
 
                     var user_context = {
                         'email': req.user.email,
@@ -1665,11 +1684,10 @@ module.exports = function(router, passport, upload) {
                         'career_count': req.user.career_count,
                         'introteam': req.user.introteam,
                         'profile_img': profile_photo,
-                        'event_data':eventData
+                        'event_data':eventData,
+						'pEvent' : pEvent
                     }; // user_context
-             //       console.dir(eventData);
                     res.render('team_schedule.ejs', user_context);
-
                 }); // dbm event_data2 end
             }); // dbm event_data end
         } // 인증 else문 end
