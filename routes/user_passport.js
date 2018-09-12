@@ -872,8 +872,7 @@ module.exports = function(router, passport, upload) {
         var event = {
             'email':req.body.email || req.query.email,
             'otherEmail': req.body.otherEmail || req.query.otherEmail,
-            'match_success': req.body.match_success || req.query.match_success,
-            'otherTeamname': req.body.otherTeamname || req.query.otherTeamname, //주석처리해도 o
+            'otherTeamname': req.body.otherTeamname || req.query.otherTeamname,
             'event_date': req.body.event_date,
             'event_time': req.body.event_time
             // 'chatIndex': req.body.chatIndex
@@ -892,7 +891,6 @@ module.exports = function(router, passport, upload) {
             } else{
                 profile_img[imgi] = [req.user.email, req.user.profile_img];
             }
-
 
             var user_context = {
                 'email': req.user.email,
@@ -1272,11 +1270,13 @@ module.exports = function(router, passport, upload) {
 
             var email = req.query.email;
             var otherEmail = req.query.otherEmail;
+            var otherTeamname = req.query.otherTeamname;
             var event_date = req.query.event_date;
             var event_time = req.query.event_time;
 
             console.log('email : ' + email);
             console.log('otherEmail : ' + otherEmail);
+            console.log('otherTeamname : ' + otherTeamname);
             console.log('event_date : ' + event_date);
             console.log('event_time : ' + event_time);
 
@@ -1297,6 +1297,7 @@ module.exports = function(router, passport, upload) {
                     if (result[i]._doc.others.sEmail === req.user.email) {
                         var data = {
                             'otherEmail': otherEmail, // 상대팀
+                            'otherTeamname': otherTeamname,
                             'event_date': event_date,
                             'event_time': event_time,
                             'event_add': result[i]._doc.others.sAdd,
@@ -1307,6 +1308,7 @@ module.exports = function(router, passport, upload) {
                     } else if (result[i]._doc.email === req.user.email) {
                         var data = {
                             'otherEmail': otherEmail,
+                            'otherTeamname': otherTeamname,
                             'event_date': event_date,
                             'event_time': event_time,
                             'event_add': result[i]._doc.others.sAdd,
@@ -1346,48 +1348,120 @@ module.exports = function(router, passport, upload) {
     router.route('/chatappointment').post(function(req, res) {
         console.log('/chatappointment 패스 post 요청됨');
 
+        var email = req.user.email;
+        var otherEmail = req.body.otherEmail;
+        var preEvent_date = req.body.preEvent_date;
+        var preEvent_time = req.body.preEvent_time;
+
+        console.log('email : ' + email);
+        console.log('otherEmail : ' + otherEmail);
+        console.log('preEvent_date : ' + preEvent_date);
+        console.log('preEvent_time : ' + preEvent_time);
+
+        var update = {
+            'sEvent_date' : req.body.event_date || req.query.event_date,
+            'sEvent_time' : req.body.event_time || req.query.event_time,
+            'sRegion' : req.body.region || req.query.region,
+            'sAdd' : req.body.add || req.query.add,
+            'nofteam' : req.body.event_nofteam || req.query.event_nofteam //우리팀꺼임
+        }
+
+        console.log('1. update');
+        console.dir(update);
+
+        /* if(!update.add){		//도로명주소 없는 경우 지번 주소
+             update.add = req.body.add2 || req.query.add2;
+         }
+         var addr = [];
+         addr= update.add.split(' ');
+
+         if(addr[0] == '제주특별자치도'){
+             event.add = [addr[1], addr[2]];
+         }else
+             event.add = [addr[0], addr[1]];*/
+
+        if(update.sEvent_date == undefined)
+            delete update.sEvent_date;
+
+        console.log('111111111111');
+        if(update.sEvent_time == undefined)
+            delete update.sEvent_time;
+        console.log('222222222222');
+        if(update.sRegion == undefined)
+            delete update.sRegion;
+        console.log('3333333333');
+        //배열로 안바뀌면0, 1 따로보내기
+        if(update.sAdd == undefined)
+            delete update.sAdd;
+        console.log('444444');
+        if(update.nofteam == undefined)
+            delete update.nofteam;
+
+        console.log('2. update');
+        console.dir(update);
+
+        // dbm.MatchModel.update({$and:[
+        //             {$or:[
+        //                     {$and:[
+        //                             {"email":email}, {"others.sEmail":otherEmail}
+        //                         ]},
+        //                     {$and:[
+        //                             {"email":otherEmail}, {"others.sEmail":email}
+        //                         ]},
+        //                 ]},
+        //             {$and:[
+        //                     {"others.sEvent_date":preEvent_date}, {"others.sEvent_time":preEvent_time}
+        //                 ]}
+        //         ]},
+        //     {$set : }, function () {
+        //         if (err) {
+        //             console.log(err.message);
+        //         } else {
+        //             console.log("chatAppointment -> Match db updated")
+        //         }
+        //     });
+
         var event = {
             'email':req.user.email,
-            'teamname':req.user.teamname,
-            'event_date': req.user.event_date,
-            'event_time': req.user.event_time,
-            'event_region': req.user.event_region,
-            'event_add': req.user.event_add,
-            'event_nofteam': req.user.event_nofteam
+            'otherEmail': otherEmail,
+            'otherTeamname': req.body.otherTeamname,
+            'event_date': req.body.event_date || req.body.preEvent_date,
+            'event_time': req.body.event_time || req.body.preEvent_time
         };
 
-
-        event.event_date = req.body.event_date || req.query.event_date;
-        event.event_time = req.body.event_time || req.query.event_time;
-        event.event_region = req.body.region || req.query.region;
-        event.event_add = req.body.add || req.query.add;
-        event.event_nofteam = req.body.event_nofteam || req.query.event_nofteam;
-
-
-        if(!event.add){		//도로명주소 없는 경우 지번 주소
-            event.add = req.body.add2 || req.query.add2;
-        }
-        var addr = [];
-        addr= event.add.split(' ');
-
-        if(addr[0] == '제주특별자치도'){
-            event.add = [addr[1], addr[2]];
-        }else
-            event.add = [addr[0], addr[1]];
-
-        console.dir(event);
-
-        var event_appointment = new dbm.AppointmentModel(event);
-
-        event_appointment.save(function (err, data) {
-            if (err) {// TODO handle the error
-                console.log("appointment save error");
+        if (!req.user) {
+            console.log('사용자 인증 안된 상태임.');
+            res.redirect('/login');
+        }else {
+            profile_photo = req.user.profile_img;
+            if (profile_img.length > 0) {
+                for (var i = 0; i < profile_img.length; i++) {
+                    if (profile_img[i][0] == req.user.email)
+                        profile_photo = profile_img[i][1];
+                }
+            } else {
+                profile_img[imgi] = [req.user.email, req.user.profile_img];
             }
-            console.log('New appointment inserted');
-        });
 
-        res.redirect('/chat');
-    })
+            var user_context = {
+                'email': req.user.email,
+                'password': req.user.password,
+                'teamname': req.user.teamname,
+                'gender': req.user.gender,
+                'age': req.user.age,
+                'region': req.user.region,
+                'move': req.user.move,
+                'nofteam': req.user.nofteam,
+                'career_year': req.user.career_year,
+                'career_count': req.user.career_count,
+                'introteam': req.user.introteam,
+                'profile_img': profile_photo,
+                'event_data': event
+            };
+            console.dir(event);
+            res.render('chat.ejs', user_context);
+        }
+    });
 
 
 

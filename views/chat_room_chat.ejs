@@ -174,12 +174,7 @@
             // var event_time = event_data[i].event_time;
 
 
-        // 다 돌았는데 표시할 게 없으면
-        if((i == event_data.length -1 ) && (count == 0)) {
-            %> <p style="font-weight: bold">성사된 매칭이 없습니다.</p> <%
-
-            // matchsuccess=0인것만 메시지함에서 띄우기
-        }else if(event_data[i].match_success != 0) {
+            if(event_data[i].match_success != 0) {
         %>
 
         <script>
