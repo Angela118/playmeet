@@ -56,6 +56,8 @@
         <input type="hidden" name="otherTeamname" value="<%=event_data.otherTeamname%>">
         <input type="hidden" name="preEvent_date" value="<%=event_data.event_date%>">
         <input type="hidden" name="preEvent_time" value="<%=event_data.event_time%>">
+        <!--flag=0은 신청 받음, flag=1은 내가 신청-->
+        <input type="hidden" name="flag" value="<%=event_data.flag%>">
 
         <div class="fit">
             <div>날짜</div>
@@ -211,17 +213,13 @@
 
         <div class="fit">
             <div>우리 팀 참여 인원 수</div>
-            <input type="text" name="event_nofteam" placeholder="<%= nofteam %>" class="form-control mt-2">
+            <input type="text" name="event_nofteam" placeholder="<%= event_data.nofteam %>" class="form-control mt-2">
         </div>
 
         <footer class="fit">
             <button type="submit" class="btn btn-secondary">저장</button>
-            <button type="button" class="btn btn-secondary" onclick="movePage();">취소</button>
-            <script>
-                function movePage() {
-                    location.href = "/chat";
-                }
-            </script>
+            <button type="button" class="btn btn-secondary" onclick="goBack();">취소</button>
+
         </footer>
 
 

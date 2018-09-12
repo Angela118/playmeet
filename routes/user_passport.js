@@ -1306,12 +1306,6 @@ module.exports = function(router, passport, upload) {
             var event_date = req.query.event_date;
             var event_time = req.query.event_time;
 
-            console.log('email : ' + email);
-            console.log('otherEmail : ' + otherEmail);
-            console.log('otherTeamname : ' + otherTeamname);
-            console.log('event_date : ' + event_date);
-            console.log('event_time : ' + event_time);
-
             dbm.MatchModel.find({$and:[
                     {$or:[
                             {$and:[
@@ -1326,6 +1320,7 @@ module.exports = function(router, passport, upload) {
                         ]}
                 ]}, function (err, result) {
                 for (var i = 0; i < result.length; i++) {
+                    // 신청 받음
                     if (result[i]._doc.others.sEmail === req.user.email) {
                         var data = {
                             'otherEmail': otherEmail, // 상대팀
@@ -1334,9 +1329,12 @@ module.exports = function(router, passport, upload) {
                             'event_time': event_time,
                             'event_add': result[i]._doc.others.sAdd,
                             'event_region': result[i]._doc.others.sRegion,
+                            'nofteam': result[i]._doc.others.sNofteam,
                             'other_nofteam': result[i]._doc.nofteam, // 상대팀
                             'match_success': result[i]._doc.match_success,
+                            'flag': 0
                         }
+                        // 신청함
                     } else if (result[i]._doc.email === req.user.email) {
                         var data = {
                             'otherEmail': otherEmail,
@@ -1345,8 +1343,10 @@ module.exports = function(router, passport, upload) {
                             'event_time': event_time,
                             'event_add': result[i]._doc.others.sAdd,
                             'event_region': result[i]._doc.others.sRegion,
+                            'nofteam': result[i]._doc.nofteam,
                             'other_nofteam': result[i]._doc.others.sNofteam, // 상대팀
                             'match_success': result[i]._doc.match_success,
+                            'flag': 1
                         }
                     }
                 } //endfor
@@ -1384,20 +1384,32 @@ module.exports = function(router, passport, upload) {
         var otherEmail = req.body.otherEmail;
         var preEvent_date = req.body.preEvent_date;
         var preEvent_time = req.body.preEvent_time;
+        var flag = req.body.flag;
 
         console.log('email : ' + email);
         console.log('otherEmail : ' + otherEmail);
         console.log('preEvent_date : ' + preEvent_date);
         console.log('preEvent_time : ' + preEvent_time);
+        console.log('flag : ' + flag);
 
-        console.log('sAdd : ' +  req.body.add[0] );
-
-        var update = {
-            'others.sEvent_date' : req.body.event_date || req.query.event_date,
-            'others.sEvent_time' : req.body.event_time || req.query.event_time,
-            'others.sRegion' : req.body.region || req.query.region,
-            'others.sAdd' : req.body.add[0],
-            'nofteam' : req.body.event_nofteam || req.query.event_nofteam //우리팀꺼임
+        // 신청 받음 / others.sNofteam이 내꺼
+        if (flag == 0) {
+            var update = {
+                'others.sEvent_date' : req.body.event_date || req.query.event_date,
+                'others.sEvent_time' : req.body.event_time || req.query.event_time,
+                'others.sRegion' : req.body.region || req.query.region,
+                'others.sAdd' : req.body.add[0],
+                'others.sNofteam' : req.body.event_nofteam || req.query.event_nofteam //우리팀꺼
+            }
+            // 신청함
+        }else {
+            var update = {
+                'others.sEvent_date' : req.body.event_date || req.query.event_date,
+                'others.sEvent_time' : req.body.event_time || req.query.event_time,
+                'others.sRegion' : req.body.region || req.query.region,
+                'others.sAdd' : req.body.add[0],
+                'nofteam' : req.body.event_nofteam || req.query.event_nofteam //우리팀꺼
+            }
         }
 
         console.log('1. update');
@@ -1424,29 +1436,39 @@ module.exports = function(router, passport, upload) {
         //배열로 안바뀌면0, 1 따로보내기
         if(update['others.sAdd'] == undefined)
             delete update['others.sAdd'];
-        if(update.nofteam == undefined)
-            delete update.nofteam;
+
+        if(flag == 0) {
+            if(update['others.sNofteam'] == undefined)
+                delete update['others.sNofteam'];
+        }else {
+            if(update.nofteam == undefined)
+                delete update.nofteam;
+        }
 
         console.log('2. update');
         console.dir(update);
 
-        dbm.MatchModel.update({$and:[
-                    {$or:[
-                            {$and:[
-                                    {"email":email}, {"others.sEmail":otherEmail}
-                                ]},
-                            {$and:[
-                                    {"email":otherEmail}, {"others.sEmail":email}
-                                ]},
-                        ]},
-                    {$and:[
-                            {"others.sEvent_date":preEvent_date}, {"others.sEvent_time":preEvent_time}
-                        ]}
-                ]},
-            {$set : update}, function () {
-                if(err) throw err
-                console.log("chatAppointment -> Match db updated")
-                // });
+        // 신청 받음
+        if(flag == 0) {
+            dbm.MatchModel.update({$and:[
+                {"email":otherEmail}, {"others.sEmail":email}, {"others.sEvent_date":preEvent_date}, {"others.sEvent_time":preEvent_time}
+                    ]},
+                {$set : update}, function () {
+                    // if(err) throw err
+                    console.log("chatAppointment -> Match db updated")
+                });
+            // 신청함
+        }else {
+            dbm.MatchModel.update({$and:[
+                        {"email":email}, {"others.sEmail":otherEmail}, {"others.sEvent_date":preEvent_date}, {"others.sEvent_time":preEvent_time}
+                    ]},
+                {$set : update}, function () {
+                    // if(err) throw err
+                    console.log("chatAppointment -> Match db updated")
+                });
+        }
+
+        console.log('before event');
 
                 var event = {
                     'email':req.user.email,
@@ -1488,7 +1510,7 @@ module.exports = function(router, passport, upload) {
                     console.dir(event);
                     res.render('chat.ejs', user_context);
                 }
-            });
+            // });
     });
 
 
