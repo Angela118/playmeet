@@ -1358,11 +1358,13 @@ module.exports = function(router, passport, upload) {
         console.log('preEvent_date : ' + preEvent_date);
         console.log('preEvent_time : ' + preEvent_time);
 
+        console.log('sAdd : ' +  req.body.add[0] );
+
         var update = {
-            'sEvent_date' : req.body.event_date || req.query.event_date,
-            'sEvent_time' : req.body.event_time || req.query.event_time,
-            'sRegion' : req.body.region || req.query.region,
-            'sAdd' : req.body.add || req.query.add,
+            'others.sEvent_date' : req.body.event_date || req.query.event_date,
+            'others.sEvent_time' : req.body.event_time || req.query.event_time,
+            'others.sRegion' : req.body.region || req.query.region,
+            'others.sAdd' : req.body.add[0],
             'nofteam' : req.body.event_nofteam || req.query.event_nofteam //우리팀꺼임
         }
 
@@ -1380,46 +1382,39 @@ module.exports = function(router, passport, upload) {
          }else
              event.add = [addr[0], addr[1]];*/
 
-        if(update.sEvent_date == undefined)
-            delete update.sEvent_date;
-
-        console.log('111111111111');
-        if(update.sEvent_time == undefined)
-            delete update.sEvent_time;
-        console.log('222222222222');
-        if(update.sRegion == undefined)
-            delete update.sRegion;
-        console.log('3333333333');
+        if(update['others.sEvent_date'] == undefined)
+            // delete update.sEvent_date;
+            delete update['others.sEvent_date'];
+        if(update['others.sEvent_time'] == undefined)
+            delete update['others.sEvent_time'];
+        if(update['others.sRegion'] == undefined)
+            delete update['others.sRegion'];
         //배열로 안바뀌면0, 1 따로보내기
-        if(update.sAdd == undefined)
-            delete update.sAdd;
-        console.log('444444');
+        if(update['others.sAdd'] == undefined)
+            delete update['others.sAdd'];
         if(update.nofteam == undefined)
             delete update.nofteam;
 
         console.log('2. update');
         console.dir(update);
 
-        // dbm.MatchModel.update({$and:[
-        //             {$or:[
-        //                     {$and:[
-        //                             {"email":email}, {"others.sEmail":otherEmail}
-        //                         ]},
-        //                     {$and:[
-        //                             {"email":otherEmail}, {"others.sEmail":email}
-        //                         ]},
-        //                 ]},
-        //             {$and:[
-        //                     {"others.sEvent_date":preEvent_date}, {"others.sEvent_time":preEvent_time}
-        //                 ]}
-        //         ]},
-        //     {$set : }, function () {
-        //         if (err) {
-        //             console.log(err.message);
-        //         } else {
-        //             console.log("chatAppointment -> Match db updated")
-        //         }
-        //     });
+        dbm.MatchModel.update({$and:[
+                    {$or:[
+                            {$and:[
+                                    {"email":email}, {"others.sEmail":otherEmail}
+                                ]},
+                            {$and:[
+                                    {"email":otherEmail}, {"others.sEmail":email}
+                                ]},
+                        ]},
+                    {$and:[
+                            {"others.sEvent_date":preEvent_date}, {"others.sEvent_time":preEvent_time}
+                        ]}
+                ]},
+            {$set : update}, function () {
+                if (err) throw err;
+                console.log("chatAppointment -> Match db updated")
+            });
 
         var event = {
             'email':req.user.email,
