@@ -3,6 +3,7 @@
  */
 
 module.exports = function(router, passport, upload) {
+	console.log('=== Server open! ===')
     console.log('user_passport 호출됨.');
 
     var an = 0;
@@ -28,7 +29,24 @@ module.exports = function(router, passport, upload) {
         date:'',
         time:'',
         region:''
-    }
+    };
+	
+	// 오늘
+	var nowDate = new Date();
+	var dd = nowDate.getDate();
+	var mm = nowDate.getMonth()+1; //January is 0!
+	var yyyy = nowDate.getFullYear();
+	var hh = nowDate.getHours();
+
+	if(dd<10) {
+		dd='0'+dd
+	}
+
+	if(mm<10) {
+		mm='0'+mm
+	}
+
+	var today = yyyy + '-' + mm + '-' + dd; // 오늘 날짜
 
 
     //홈 화면, 추천
@@ -41,25 +59,27 @@ module.exports = function(router, passport, upload) {
             res.redirect('/login');
         } else {
             // expire
+			/*
             var newDate = new Date();
             var nowYear = newDate.getFullYear();
             var nowMonth = (newDate.getMonth() + 1);
             var nowDate = newDate.getDate();
             var nowHour = newDate.getHours();
+			*/
 
-            dbm.ApplicationModel.remove({'eventYear_forExpire':{$lt:nowYear}}, function(err){
+            dbm.ApplicationModel.remove({'eventYear_forExpire':{$lt:yyyy}}, function(err){
                 if(err) throw err
             });
 
-            dbm.ApplicationModel.remove({'eventMonth_forExpire':{$lt:nowMonth}}, function(err){
+            dbm.ApplicationModel.remove({'eventMonth_forExpire':{$lt:mm}}, function(err){
                 if(err) throw err
             });
             
-			dbm.ApplicationModel.remove({$and:[{'eventMonth_forExpire':nowMonth}, {'eventDate_forExpire':{$lt:nowDate}}]}, function(err){
+			dbm.ApplicationModel.remove({$and:[{'eventMonth_forExpire':mm}, {'eventDate_forExpire':{$lt:dd}}]}, function(err){
 				if(err) throw err
 			});
 
-			dbm.ApplicationModel.remove({$and:[{'eventMonth_forExpire':nowMonth}, {'eventDate_forExpire':nowDate}, {'event_time':{$lt:nowHour}}]}, function(err){
+			dbm.ApplicationModel.remove({$and:[{'eventMonth_forExpire':mm}, {'eventDate_forExpire':dd}, {'event_time':{$lt:hh}}]}, function(err){
 				if(err) throw err
 			});
             
@@ -194,7 +214,6 @@ module.exports = function(router, passport, upload) {
                 if(err) throw err
 
                 console.log('Python run');
-                console.log('%j', results)
             });
 
             res.render('loading.ejs');
@@ -242,9 +261,6 @@ module.exports = function(router, passport, upload) {
                         'profile_img':profile_photo,
                         'event_data':output
                     };
-
-                    console.dir(user_context);
-
                     res.render('main.ejs', user_context);
                 });
         }
@@ -299,11 +315,8 @@ module.exports = function(router, passport, upload) {
         event_match.save(function (err, data) {
             if (err) {// TODO handle the error
                 console.log("match save error");
-                console.log('err : ' + err);
-                console.log('data : ' + data);
             }
             console.log('New match inserted');
-            console.log('data : ' + data);
         });
 
         dbm.ApplicationModel.update({email:others.sEmail, application_number:others.sApplicationNumber}, {$set: {match: 1}}, function (err, result) {
@@ -528,10 +541,6 @@ module.exports = function(router, passport, upload) {
         try{
             var files = req.files;
 
-            console.log('===== 업로드 된 사진 =====');
-            console.dir(files[0]);
-            console.log('===================================');
-
             var originalname = '',
                 filename = '',
                 mimetype = '',
@@ -547,8 +556,8 @@ module.exports = function(router, passport, upload) {
             }
 
 
-            console.log('파일 업로드 성공!');
-            console.log('현재 파일 정보 : ' + originalname + ', ' + filename + ', ' + mimetype + ', ' + size);
+            console.log('프로필 사진 업로드 성공!');
+    //        console.log('현재 파일 정보 : ' + originalname + ', ' + filename + ', ' + mimetype + ', ' + size);
 
 
             if(filename)
@@ -628,10 +637,6 @@ module.exports = function(router, passport, upload) {
                 'introteam':req.user.introteam,
                 'profile_img':profile_photo
             };
-
-            console.log(user_context.profile_img);
-
-
             res.render('team_profile.ejs', user_context);
         }
     });
@@ -751,8 +756,7 @@ module.exports = function(router, passport, upload) {
             user_context.introteam = req.body.introteam || req.query.introteam;
         }
 
-        console.log('=== Profile edit ===')
-        console.dir(user_context);
+        console.log('=== Profile edit ===');
 
         dbm.db.collection("users6").updateOne({email: user_context.email},  {$set: user_context}, function(err, res) {
             if (err) throw err;
@@ -806,8 +810,6 @@ module.exports = function(router, passport, upload) {
                 profile_img[imgi] = [req.user.email, req.user.profile_img];
             }
 
-            var dbm = require('../database/database');
-            console.log('database 모듈 가져옴');
 
             var eventData = new Array();
             var j = 0;
@@ -854,7 +856,6 @@ module.exports = function(router, passport, upload) {
                         'profile_img': profile_photo,
                         'event_data': eventData
                     };
-                    console.dir(eventData);
                     res.render('chat_room_chat.ejs', user_context);
                 });
             });
@@ -903,7 +904,6 @@ module.exports = function(router, passport, upload) {
                 'profile_img': profile_photo,
                 'event_data': event
             };
-            console.dir(event);
             res.render('chat.ejs', user_context);
 
             // res.redirect('/chat');
@@ -950,7 +950,6 @@ module.exports = function(router, passport, upload) {
                             'match_success' : result[i]._doc.match_success
                         };
                         eventData[j++] = data;
-                        console.log(data);
                     }
                 }
 
@@ -978,7 +977,6 @@ module.exports = function(router, passport, upload) {
                     'profile_img': profile_photo,
                     'event_data':eventData // 메시지 보낸 상대팀 정보
                 };
-                console.dir(eventData);
                 res.render('chat_room_message.ejs', user_context);
             });
         }
@@ -991,11 +989,9 @@ module.exports = function(router, passport, upload) {
 
         //나한테 신청한 사람 이메일
         var otherEmail = req.body.sEmail;
-        console.log('otherEmail : ' + req.body.sEmail);
 
         // 등록한 사람 나 : & 신청한 사람 : 그사람 중복되는 경우 index
         var sSameEmailIndex = req.body.sSameEmailIndex;
-        console.log('sSameEmailIndex : ' + req.body.sSameEmailIndex);
 
         var j = 0;
         var eventData = new Array();
@@ -1005,9 +1001,6 @@ module.exports = function(router, passport, upload) {
             console.log('result.length : ' + result.length);
 
             for (var i = 0; i < result.length; i++) {
-                console.log('result[' + i + '].doc_others.email : ' + result[i]._doc.others.sEmail);
-                console.log('req.user.email : ' + req.user.email);
-
                 // 그 사람이 올린 것 중 신청자가 나일 경우
                 if (result[i]._doc.others.sEmail === req.user.email) {
 
@@ -1039,50 +1032,28 @@ module.exports = function(router, passport, upload) {
                 }
             }
             var repeatFunction = function (a, callback) {
-
-                console.log(a + '번째 eventData[' + a + '].email : ' + eventData[a].email);
-                console.log(a + '번째 eventData[' + a + '].region : ' + eventData[a].region);
-
-
                 dbm.MatchModel.find({$or: [{"email": eventData[a].email}, {"others.sEmail": eventData[a].email}]}, function (err, result) {
                     var sum = 0;
                     var count = 0;
 
                     for (var b = 0; b < result.length; b++) {
-                        console.log('a : ' + a + ', b : ' + b);
-                        console.log('result.length : ' + result.length);
-
                         if ((result[b]._doc.email === eventData[a].email) && (result[b]._doc.others.sEmail !== eventData[a].email)) {
-                            console.log('if');
-                            console.log('result[' + b + ']._doc.review_date : ' + result[b]._doc.review_date);
 
                             // if(parseInt(result[b]._doc.received_review) != 0) {
                             if ((result[b]._doc.review_date) != 0) {
                                 sum += parseInt(result[b]._doc.received_review);
                                 count++;
                             }
-                            console.log('if count : ' + count);
-
                         } else if ((result[b]._doc.email !== eventData[a].email) && (result[b]._doc.others.sEmail === eventData[a].email)) {
-                            console.log('elseif');
-                            console.log('result[' + b + ']._doc.review_date : ' + result[b]._doc.review_date);
-
-                            // if(parseInt(result[b]._doc.others.sReceivedReview) != 0){
+                           	// if(parseInt(result[b]._doc.others.sReceivedReview) != 0){
                             if ((result[b]._doc.others.sReviewDate) != 0) {
                                 sum += parseInt(result[b]._doc.others.sReceivedReview);
                                 count++;
                             }
-                            console.log('elseif count : ' + count);
-
                         } else {
-                            console.log('else');
                             continue;
                         }
-                        console.log('*********');
                     } //end in match for
-
-                    console.log('sum : ' + sum);
-                    console.log('count : ' + count);
 
                     var aver;
 
@@ -1092,17 +1063,11 @@ module.exports = function(router, passport, upload) {
                         aver = (sum / count).toFixed(2);
                     }
 
-                    console.log('aver : ' + aver);
                     eventData[a]['allRating'] = aver;
 
-                    console.log('eventData[a]["allRating"] : ' + eventData[a]['allRating']);
-
-
                     if (a >= eventData.length - 1) {
-                        console.log('##eventData[' + a + ']["allRating"] : ' + eventData[a]['allRating']);
                         callback();
                     } else {
-                        console.log('!!eventData[' + a + ']["allRating"] : ' + eventData[a]['allRating']);
                         repeatFunction(a + 1, callback);
                     }
 
@@ -1130,13 +1095,7 @@ module.exports = function(router, passport, upload) {
                         'event_data': eventData,
                         'sSameEmailIndex': sSameEmailIndex // email 중복시 index
                     };
-                    console.log(eventData);
-
-                    console.log('chatmessagepostend----------------------');
                     res.render('message.ejs', user_context);
-                    console.log('render 함');
-
-
                 }); //end repeatfunction
             } else {
                 var user_context = {
@@ -1155,11 +1114,7 @@ module.exports = function(router, passport, upload) {
                     'event_data': eventData,
                     'sSameEmailIndex': sSameEmailIndex // email 중복시 index
                 };
-                console.log(eventData);
-
-                console.log('chatmessagepostend----------------------');
                 res.render('message.ejs', user_context);
-                console.log('render 함');
             }
         });
     });
@@ -1169,15 +1124,12 @@ module.exports = function(router, passport, upload) {
 
         // 매칭 여부 (1: 승인 / 2: 거절 / 0: 대기);
         var match = req.body.match;
-        console.log('match : ' + match);
 
         // 매칭 신청한 애
         var otherEmail = req.body.sEmail;
-        console.log('otherEmail : ' + otherEmail);
 
         // 걔 동일 이메일 인덱스 있는지 확인
         var sSameEmailIndex = req.body.sSameEmailIndex;
-        console.log('sSameEmailIndex : ' + sSameEmailIndex);
 		
         var eventData = new Array();
         var j = 0;
@@ -1186,12 +1138,7 @@ module.exports = function(router, passport, upload) {
 
         // 나한테 신청한 사람 이메일 받아온거로 matches에서 email 찾아서
         dbm.MatchModel.find({email: otherEmail}, function (err, result) {
-            console.log('result.length : ' + result.length);
-
             for (var i = 0; i < result.length; i++) {
-                console.log('result[' + i + '].doc_others.email : ' + result[i]._doc.others.sEmail);
-                console.log('req.user.email : ' + req.user.email);
-
                 // 그 사람이 올린 것 중 신청자가 나일 경우
                 if (result[i]._doc.others.sEmail === req.user.email) {
 
@@ -1201,30 +1148,22 @@ module.exports = function(router, passport, upload) {
                         'teamname': result[i]._doc.teamname,
                         'others': result[i]._doc.others //내가 등록한 매칭 정보
                     };
-                    console.log(i + '번째 data.others : ');
-                    console.dir(data.others);
-                    console.log('j : ' + j);
                     eventData[j++] = data;
-                    console.log('eventData: ');
-                    console.log(eventData);
                 }
             }
 
             var teamname = eventData[sSameEmailIndex].teamname;
-            console.log('teamname : ' + teamname);
 
             var findEventDate = eventData[sSameEmailIndex].others.sEvent_date;
-            console.log('findEventDate : ' + findEventDate);
 
             var findEventTime = eventData[sSameEmailIndex].others.sEvent_time;
 
-            console.log('findEventTime ; ' + findEventTime);
-
 
             if(match == 1){
-				dbm.ApplicationModel.update({email:req.user.email, event_date:findEventDate, event_time:findEventTime}, {$set: {match:1}}, function (err, result) {
+				dbm.ApplicationModel.update({email:req.user.email, event_date:findEventDate, event_time:findEventTime}, {$set: {match:2}}, function (err, result) {
                     if(err) throw err
                 });
+				
 				setTimeout(function(){
 					dbm.MatchModel.update(
 						{email: otherEmail, "others.sEvent_date": findEventDate, "others.sEvent_time": findEventTime},
@@ -1284,10 +1223,8 @@ module.exports = function(router, passport, upload) {
                 'introteam':req.user.introteam,
                 'profile_img':profile_photo
             };
-
-
-            res.render('chat_appointment.ejs', user_context);
-        }
+            res.render('chat_appointment.ejs', user_context);        
+		}
     });
 
     router.route('/chatappointment').post(function(req, res) {
@@ -1322,7 +1259,6 @@ module.exports = function(router, passport, upload) {
         }else
             event.add = [addr[0], addr[1]];
 
-        console.dir(event);
 
         var event_appointment = new dbm.AppointmentModel(event);
 
@@ -1397,9 +1333,6 @@ module.exports = function(router, passport, upload) {
             'search_event_day': req.body.event_day,
             'search_number' : sn
         };
-
-        console.log(sn);
-        console.dir(event_search);
 
         var search = new dbm.SearchModel(event_search);
 
@@ -1478,8 +1411,6 @@ module.exports = function(router, passport, upload) {
                     }
                 }
 
-                console.dir(search);
-
                 search.push({email : {"$ne" : req.user.email}});
                 search.push({match : 0});
 
@@ -1514,50 +1445,27 @@ module.exports = function(router, passport, upload) {
                     }
 
                     var repeatFunction = function (a, callback) {
-
-                        console.log(a + '번째 eventData[' + a + '].email : ' + eventData[a].email);
-                        console.log(a + '번째 eventData[' + a + '].region : ' + eventData[a].region);
-
-
                         dbm.MatchModel.find({$or: [{"email": eventData[a].email}, {"others.sEmail": eventData[a].email}]}, function (err, result) {
                             var sum = 0;
                             var count = 0;
 
                             for (var b = 0; b < result.length; b++) {
-                                console.log('a : ' + a + ', b : ' + b);
-                                console.log('result.length : ' + result.length);
-
                                 if ((result[b]._doc.email === eventData[a].email) && (result[b]._doc.others.sEmail !== eventData[a].email)) {
-                                    console.log('if');
-                                    console.log('result['+b+']._doc.review_date : ' + result[b]._doc.review_date);
-
                                     // if(parseInt(result[b]._doc.received_review) != 0) {
                                     if((result[b]._doc.review_date) != 0) {
                                         sum += parseInt(result[b]._doc.received_review);
                                         count++;
                                     }
-                                    console.log('if count : ' + count);
-
                                 } else if ((result[b]._doc.email !== eventData[a].email) && (result[b]._doc.others.sEmail === eventData[a].email)) {
-                                    console.log('elseif');
-                                    console.log('result['+b+']._doc.review_date : ' + result[b]._doc.review_date);
-
                                     // if(parseInt(result[b]._doc.others.sReceivedReview) != 0){
                                     if((result[b]._doc.others.sReviewDate) != 0){
                                         sum += parseInt(result[b]._doc.others.sReceivedReview);
                                         count++;
                                     }
-                                    console.log('elseif count : ' + count);
-
                                 } else {
-                                    console.log('else');
                                     continue;
                                 }
-                                console.log('*********');
                             } //end in match for
-
-                            console.log('sum : ' + sum);
-                            console.log('count : ' + count);
 
                             var aver;
 
@@ -1566,23 +1474,15 @@ module.exports = function(router, passport, upload) {
                             }else {
                                 aver = (sum / count).toFixed(2);
                             }
-
-                            console.log('aver : ' + aver);
+							
                             eventData[a]['allRating'] = aver;
 
-                            console.log('eventData[a]["allRating"] : ' + eventData[a]['allRating']);
-
-
                             if(a>=eventData.length-1) {
-                                console.log('##eventData['+a+']["allRating"] : ' + eventData[a]['allRating']);
-
                                 eventData.sort(function(a, b) { // 오름차순 sorting
                                     return a.event_date < b.event_date ? -1 : a.event_date > b.event_date ? 1 : 0;
                                 });
-
                                 callback();
                             }else{
-                                console.log('!!eventData[' + a + ']["allRating"] : ' + eventData[a]['allRating']);
                                 repeatFunction(a+1, callback);
                             }
 
@@ -1611,7 +1511,6 @@ module.exports = function(router, passport, upload) {
                                 'profile_img': profile_photo,
                                 'event_data': eventData
                             };
-                            console.dir(eventData);
                             sn++
                             res.render('main_search_result.ejs', user_context);
 
@@ -1634,8 +1533,6 @@ module.exports = function(router, passport, upload) {
                             'profile_img': profile_photo,
                             'event_data': eventData
                         };
-
-                        console.dir(eventData);
                         sn++;
 
                         res.render('main_search_result.ejs', user_context);
@@ -1702,7 +1599,7 @@ module.exports = function(router, passport, upload) {
             console.log('data : ' + data);
         });
 
-        dbm.ApplicationModel.update({email:others.sEmail, application_number:others.sApplicationNumber}, {$set: {match: 1}}, function (err, result) {
+        dbm.ApplicationModel.update({email:others.sEmail, application_number:others.sApplicationNumber}, {$set: {match: 2}}, function (err, result) {
             if(err) throw err
         });
 
@@ -1710,7 +1607,8 @@ module.exports = function(router, passport, upload) {
     });
 
     //경기 스케쥴
-	var flag=0;
+	var flag;	//처음 들어옴
+	var colors=[];
 	router.route('/teamcal').get(function(req, res) {
         console.log('/teamcal 패스 get 요청됨.');
 
@@ -1728,7 +1626,7 @@ module.exports = function(router, passport, upload) {
                 profile_img[imgi] = [req.user.email, req.user.profile_img];
             }
 			
-
+			flag=0;
             var eventData = new Array(); // 나한테 신청한
             var j = 0;
 
@@ -1787,7 +1685,7 @@ module.exports = function(router, passport, upload) {
                         }
                     }
 
-                    var repeatFunction = function (a, callback) {
+                    var repeatFunction = function (a, callback) {		//리뷰
                         var findEmail;
                         if(eventData[a].otherEmail){
                             findEmail = eventData[a].otherEmail;
@@ -1835,9 +1733,9 @@ module.exports = function(router, passport, upload) {
                         });
                     }
 
-                    var otherEmailforProfile;;
+                    var otherEmailforProfile;
 
-                    var profileFunction = function (a, callback) {
+                    var profileFunction = function (a, callback) {		//상대팀 프로필 사진
 
                         if(eventData[a].otherEmail){
                             otherEmailforProfile = eventData[a].otherEmail;
@@ -1863,9 +1761,9 @@ module.exports = function(router, passport, upload) {
                                 eventData.sort(function (a, b) {
                                     return a.event_date < b.event_date ? -1 : a.event_date > b.event_date ? 1 : 0;
                                 });
-
+/*
                                 //오늘 날짜만 가까운 거부터 하기
-                                var today = new Date();
+                                today = new Date();
                                 var dd = today.getDate();
                                 var mm = today.getMonth()+1; //January is 0!
                                 var yyyy = today.getFullYear();
@@ -1879,6 +1777,7 @@ module.exports = function(router, passport, upload) {
                                 }
 
                                 today = yyyy + '-' + mm + '-' + dd; // 오늘 날짜
+*/
                                 var n=0;
 
                                 for(var m=0; m<eventData.length-1; m++){
@@ -1905,11 +1804,11 @@ module.exports = function(router, passport, upload) {
                     }
 
                     if(eventData.length>0) {
-                        repeatFunction(0, function () {
-                            console.log('Rating done');
+               //         repeatFunction(0, function () {
+                  //          console.log('Rating done');
 
-                            profileFunction(0, function () {
-                                console.log('Profile done');
+                   //         profileFunction(0, function () {
+                    //            console.log('Profile done');
 								
 								
 								function get_random_hexColor () { 
@@ -1928,15 +1827,21 @@ module.exports = function(router, passport, upload) {
 								
 								console.log(get_random_hexColor());
 								
-								// 달력
+								// Calendar
 								var parr = [];
-								for(var i=0; i<eventData.length; i++){
+								parr[0] = {
+									title:"\' Today \'", 
+									start:"\'"+today+"\'"
+								};
+								
+								for(var i=1; i<eventData.length; i++){
 									if(eventData[i].otherTeam)
 										var title = "\'"+eventData[i].otherTeam+"\'";
 									else
 										var title = "\'"+eventData[i].teamname+"\'";
 									
 									var color = "\'"+get_random_hexColor()+"\'";
+									colors.push(color);
 									var description = "\'"+eventData[i].event_region+"\'";
 									var start = "\'"+eventData[i].event_date+" "+eventData[i].event_time+":"+"00"+"\'";
 									
@@ -1971,15 +1876,22 @@ module.exports = function(router, passport, upload) {
                                     'profile_img': profile_photo,
                                     'event_data':eventData,
 									'pEvent' : pEvent,
-									'flag' : flag,
-									'ff' : 0
+									'flag' : flag
                                 }; // user_context
+								flag++;
                                 res.render('team_cal.ejs', user_context);
-                            });
+                    //        });
 
-                        });
+                  //      });
 
                     } else{
+						var parr = [];
+						parr[0] = {
+							title:"\' Today \'", 
+							start:"\'"+today+"\'"
+						};
+						var pEvent = JSON.stringify(parr);
+						
                         var user_context = {
                             'email': req.user.email,
                             'password': req.user.password,
@@ -1994,11 +1906,12 @@ module.exports = function(router, passport, upload) {
                             'career_count': req.user.career_count,
                             'introteam': req.user.introteam,
                             'profile_img': profile_photo,
-                            'event_data':eventData
+                            'event_data':eventData,
+							'pEvent':pEvent,
+							'flag':flag
                         }; // user_context
                         res.render('team_cal.ejs', user_context);
                     }
-
                 }); // dbm event_data2 end
             }); // dbm event_data end
         } // 인증 else문 end
@@ -2009,30 +1922,25 @@ module.exports = function(router, passport, upload) {
 	var calM,
 		calOrigin;
 	router.route('/teamcal').post(function(req, res){
-		console.log('/teamcal 패스 post 요청됨.');
-		console.log(req.body.calMonth || req.query.calMonth);
-		
+		console.log('/teamcal 패스 post 요청됨.');		
 		
 		calM = req.body.calMonth;
 		
 		if(flag==0){
 			calOrigin = calM;
 			flag++;
-			res.redirect('/teamschedule');
 		}
 		else{
 			if(calOrigin == calM){
 				flag++;
-				res.redirect('/teamschedule');
 			}
 			else{
 				calOrigin = calM;
 				flag++;
-				res.redirect('/teamschedule');
 			}
 		}
 		
-		
+		res.redirect('/teamschedule');		
 	});
 	
 	
@@ -2043,6 +1951,8 @@ module.exports = function(router, passport, upload) {
             console.log('사용자 인증 안된 상태임.');
             res.redirect('/');
         } else {
+			if(flag==0)
+				res.redirect('/teamcal');
             profile_photo = req.user.profile_img;
             if(profile_img.length > 0){
                 for(var i=0; i<profile_img.length; i++){
@@ -2160,7 +2070,7 @@ module.exports = function(router, passport, upload) {
                         });
                     }
 
-                    var otherEmailforProfile;;
+                    var otherEmailforProfile;
 
                     var profileFunction = function (a, callback) {
 
@@ -2188,9 +2098,9 @@ module.exports = function(router, passport, upload) {
                                 eventData.sort(function (a, b) {
                                     return a.event_date < b.event_date ? -1 : a.event_date > b.event_date ? 1 : 0;
                                 });
-
+/*
                                 //오늘 날짜만 가까운 거부터 하기
-                                var today = new Date();
+                                today = new Date();
                                 var dd = today.getDate();
                                 var mm = today.getMonth()+1; //January is 0!
                                 var yyyy = today.getFullYear();
@@ -2204,6 +2114,7 @@ module.exports = function(router, passport, upload) {
                                 }
 
                                 today = yyyy + '-' + mm + '-' + dd; // 오늘 날짜
+*/
                                 var n=0;
 
                                 for(var m=0; m<eventData.length-1; m++){
@@ -2251,17 +2162,19 @@ module.exports = function(router, passport, upload) {
 									return color + random; 
 								} 
 								
-								console.log(get_random_hexColor());
-								
-								// 달력
+								// Calendar
 								var parr = [];
-								for(var i=0; i<eventData.length; i++){
+								parr[0] = {
+									title:"\' Today \'", 
+									start:"\'"+today+"\'"
+								};
+								for(var i=1; i<eventData.length; i++){
 									if(eventData[i].otherTeam)
 										var title = "\'"+eventData[i].otherTeam+"\'";
 									else
 										var title = "\'"+eventData[i].teamname+"\'";
 									
-									var color = "\'"+get_random_hexColor()+"\'";
+									var color = colors[i];
 									var description = "\'"+eventData[i].event_region+"\'";
 									var start = "\'"+eventData[i].event_date+" "+eventData[i].event_time+":"+"00"+"\'";
 									
@@ -2295,7 +2208,7 @@ module.exports = function(router, passport, upload) {
                                     'event_data':eventData,
 									'pEvent' : pEvent,
 									'calM' : calM,
-									'ff' : 0
+									'flag' : flag
                                 }; // user_context
                                 res.render('team_schedule.ejs', user_context);
                             });
@@ -2303,6 +2216,13 @@ module.exports = function(router, passport, upload) {
                         });
 
                     } else{
+						var parr = [];
+						parr[0] = {
+							title:"\' Today \'", 
+							start:"\'"+today+"\'"
+						};
+						var pEvent = JSON.stringify(parr);
+						
                         var user_context = {
                             'email': req.user.email,
                             'password': req.user.password,
@@ -2317,7 +2237,10 @@ module.exports = function(router, passport, upload) {
                             'career_count': req.user.career_count,
                             'introteam': req.user.introteam,
                             'profile_img': profile_photo,
-                            'event_data':eventData
+                            'event_data':eventData,
+							'pEvent' : pEvent,
+							'calM' : calM,
+							'flag' : flag
                         }; // user_context
                         res.render('team_schedule.ejs', user_context);
                     }
@@ -2366,9 +2289,9 @@ module.exports = function(router, passport, upload) {
                 {email: scoreCallTeamEmail, "others.sEvent_date": scoreEventDate, "others.sEvent_time": scoreEventTime},
                 {$set: {score: firstScore, "others.sScore": secondScore}}, function (err, result) {
                     if (err) {
-                        console.log(err.message);
+						throw err
                     } else {
-                        console.dir(result);
+                        console.log('=== Score updated ===');
                     }
                 });
 
@@ -2456,13 +2379,6 @@ module.exports = function(router, passport, upload) {
             rating = 0;
         }
 
-        console.log('email : ' + email);
-        console.log('reviewDate : ' + reviewDate);
-        console.log('reviewedTeamEmail : ' + reviewedTeamEmail);
-        console.log('rating : ' + rating);
-        console.log('review_comment : ' + review_comment);
-        console.log('eventDate : ' + eventDate);
-        console.log('eventTime : ' + eventTime);
 
         // 내가 신청했을 때
         dbm.MatchModel.update(
@@ -2472,7 +2388,6 @@ module.exports = function(router, passport, upload) {
                     console.log(err.message);
                 } else {
                     console.log('내가 신청했을 때 updated');
-                    console.dir(result);
                 }
             });
 
@@ -2484,7 +2399,6 @@ module.exports = function(router, passport, upload) {
                     console.log(err.message);
                 } else {
                     console.log('내가 신청받았을 때 updated');
-                    console.dir(result);
                 }
             });
 
@@ -2559,7 +2473,6 @@ module.exports = function(router, passport, upload) {
                         'profile_img': profile_photo,
                         'event_data': eventData
                     };
-                    console.dir(eventData);
                     res.render('team_received_review.ejs', user_context);
                 });
             });
@@ -2650,10 +2563,6 @@ module.exports = function(router, passport, upload) {
             event.add = [addr[1], addr[2]];
         }else
             event.add = [addr[0], addr[1]];
-
-
-        console.dir(event);
-
 
         var event_application = new dbm.ApplicationModel(event);
 
@@ -2792,9 +2701,6 @@ module.exports = function(router, passport, upload) {
 
             var eventData = new Array();
 
-
-            console.dir(selectone);
-
             dbm.ApplicationModel.find({$and:[{email:selectone.user}, /*{event_date:selectone.date}, {event_time:selectone.time}, {region:selectone.region}, */{application_number:selectone.application_number}]}, function (err, result) {
                 for(var i = 0 ; i < result.length ; i++) {
                     var data = {
@@ -2839,10 +2745,6 @@ module.exports = function(router, passport, upload) {
                     'profile_img':profile_photo,
                     'event_data':eventData
                 };
-
-
-                console.dir(user_context);
-
 
                 res.render('match_application_edit.ejs', user_context);
 
@@ -2903,8 +2805,7 @@ module.exports = function(router, passport, upload) {
         if(update.nofteam == undefined)
             delete update.nofteam;
 
-        console.dir(update);
-
+		
         dbm.ApplicationModel.updateOne({application_number:selectone.application_number},  {$set: update}, function(err, res) {
             if (err) throw err;
             console.log("=== Application updated ===");
