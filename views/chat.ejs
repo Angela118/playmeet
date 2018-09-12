@@ -198,12 +198,16 @@
                 <div class="modal-body">
                     <p style="color:black"></p>매칭을 중단하시겠습니까? 상대방과의 모든 매칭 정보가 삭제됩니다.
                 </div>
+                <input type="hidden" name="otherEmail" value="<%= event_data.otherEmail%>">
+                <input type="hidden" name="event_date" value="<%=event_data.event_date%>">
+                <input type="hidden" name="event_time" value="<%=event_data.event_time%>">
 
                 <!--&lt;!&ndash; Modal footer &ndash;&gt;-->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal" >닫기</button>
                     <button type="submit" class="btn">매칭 중단</button>
                 </div>
+
             </div>
         </div>
     </div>
