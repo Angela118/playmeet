@@ -96,7 +96,7 @@
             var message = {
                 email:email,
                 sender:sender,
-                recipient:recipient, //ALL
+                recipient:recipient,
                 event_date:event_date,
                 event_time:event_time,
                 command:chattype,
@@ -169,26 +169,47 @@
             <p class="logo ml-sm-3">채팅방</p>
         </div>
 
-        <div>
-            <img src="../img/menu.png" width="20rem" height="20rem" class="navbar-toggler" data-toggle="collapse" data-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
-        </div>
-
         <div class="collapse navbar-collapse" id="navbarsExample01">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="/chatroom">
+                    <a class="nav-link" href="" data-toggle="modal" data-target="#myModal">
                         <b>매칭 중단 / 채팅방 나가기</b><br>
-                        <span style="text-decoration: line-through">경기 스케줄란에서 평가를 안 하고 중간에 나갈 시, 우리 팀이 받은 평가를 볼 수 없습니다.</span>
                     </a>
                 </li>
             </ul>
+        </div>
+
+        <div>
+            <img src="../css/img/menu.png" width="20rem" height="20rem" class="navbar-toggler" data-toggle="collapse" data-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
         </div>
     </div>
 </nav>
 
 <div class="py-4 text-center"></div>
 
-<!--메뉴 영역 끝 : 나중에 파일로 따로 빼기 -->
+<!--메뉴 영역 끝 : -->
+
+<form action="/chat" method="post">
+    <!-- The Modal -->
+    <div class="modal" id="myModal">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content">
+                <!--&lt;!&ndash; Modal body &ndash;&gt;-->
+                <div class="modal-body">
+                    <p style="color:black"></p>매칭을 중단하시겠습니까? 상대방과의 모든 매칭 정보가 삭제됩니다.
+                </div>
+
+                <!--&lt;!&ndash; Modal footer &ndash;&gt;-->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" >닫기</button>
+                    <button type="submit" class="btn">매칭 중단</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Modal end-->
+</form>
+
 
 <style>
     #mydiv{
