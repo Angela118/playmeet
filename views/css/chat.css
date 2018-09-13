@@ -37,7 +37,7 @@
 */
 .me {
     justify-content: flex-end;
-    align-items: : flex-end;
+    align-items: flex-end;
     width: 100%;
 }
 
@@ -45,6 +45,7 @@
     order: 1;
     border-bottom-right-radius: 0;
 }
+
 /*
 .me .pic {
     order: 2;
@@ -75,6 +76,19 @@
 }
 
 
+.img_div{
+    overflow:hidden;
+    height: 5rem;
+    width: 5rem;
+    border-radius: 50%;
+    display: block;
+    margin: 0 auto;
+}
+
+.profile_img {
+    max-height: 100%;
+    margin: 0 auto;
+}
 
 /* chatappointment */
 .fit {

@@ -871,14 +871,25 @@ module.exports = function(router, passport, upload) {
     router.route('/chatroomchat').post(function(req, res){
         console.log('/chatroomchat 패스 post 요청됨.');
 
+        var otherEmail = req.body.otherEmail || req.query.otherEmail;
+
         var event = {
             'email':req.body.email || req.query.email,
-            'otherEmail': req.body.otherEmail || req.query.otherEmail,
+            'otherEmail': otherEmail,
             'otherTeamname': req.body.otherTeamname || req.query.otherTeamname,
+            'otherProfile': '',
             'event_date': req.body.event_date,
             'event_time': req.body.event_time,
             'application_number': req.body.application_number
         };
+
+        dbm.UserModel.find({email:otherEmail}, function (err, result) {
+            for (var i = 0; i < result.length; i++) {
+                event['otherProfile'] = result[i]._doc.profile_img;
+            }
+            console.log(event['otherProfile']);
+            console.log('otherProfile 끝');
+        });
 
         if (!req.user) {
             console.log('사용자 인증 안된 상태임.');
@@ -933,8 +944,8 @@ module.exports = function(router, passport, upload) {
 
         // application number 찾아서 삭제해야 함
         dbm.ApplicationModel.update({application_number:application_number}, {$set: {match:0}}, function (err) {
-            if(err) throw err;
-            console.log('application db match:1->0 update');
+                if(err) throw err;
+                console.log('application db match:1->0 update');
             }
         )
 
