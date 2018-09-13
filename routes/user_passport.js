@@ -86,7 +86,7 @@ module.exports = function(router, passport, upload) {
             var fs = require('fs');
 
             const Json2csvParser = require('json2csv').Parser;
-            const fields = ['email', 'age', 'gender', 'nofteam', 'career_year', 'career_count', 'geoLng', 'geoLat',/*여기까지*/ 'teamname', 'region', 'add', 'move', 'event_date', 'event_time', 'event_day', 'event_day', 'mention', 'created_month', 'created_day', 'application_number', 'eventYear_forExpire', 'eventMonth_forExpire', 'eventDate_forExpire', 'allRating'];
+            const fields = ['email', 'age', 'gender', 'nofteam', 'career_year', 'career_count', 'geoLng', 'geoLat', 'perRating', 'allRating',/*여기까지*/ 'teamname', 'region', 'add', 'move', 'event_date', 'event_time', 'event_day', 'event_day', 'mention', 'created_month', 'created_day', 'application_number', 'eventYear_forExpire', 'eventMonth_forExpire', 'eventDate_forExpire'];
 
             const eventData = [];
 
@@ -98,7 +98,9 @@ module.exports = function(router, passport, upload) {
                 'career_year':req.user.career_year,
                 'career_count':req.user.career_count,
                 'geoLng':req.user.geoLng,
-                'geoLat':req.user.geoLat
+                'geoLat':req.user.geoLat,
+				'perRating':5.00, 
+				'allRating':5.00
             };
             var j=1;
             eventData[0] = userdata;
@@ -126,15 +128,16 @@ module.exports = function(router, passport, upload) {
                         'created_month' : result[i]._doc.created_month,
                         'created_day' : result[i]._doc.created_day,
                         'application_number' : result[i]._doc.application_number,
-                        'allRating': ''
+                        'allRating': '',
+						'perRating': ''
                     };
                     eventData[j] = data;
                     j+=1;
                 }
 
 
-                var repeatFunction = function (a, callback) {
-                    dbm.MatchModel.find({$or: [{"email": eventData[a].email}, {"others.sEmail": eventData[a].email}]}, function (err, result) {
+                var repeatFunction = function (a, callback) {				
+                   dbm.MatchModel.find({$or: [{"email": eventData[a].email}, {"others.sEmail": eventData[a].email}]}, function (err, result) {
                         var sum = 0;
                         var count = 0;
 
@@ -164,10 +167,69 @@ module.exports = function(router, passport, upload) {
                         }else {
                             aver = (sum / count).toFixed(2);
                         }
+					   
+					    console.log("all : " + aver);
 
                         eventData[a]['allRating'] = aver;
 
 
+					   
+					   
+						dbm.MatchModel.find({$or:[ {$and:[{"email": eventData[a].email}, {"others.sEmail":req.user.email}]}, {$and:[{"others.sEmail": eventData[a].email}, {"email":req.user.email}]}]}, function (err, result) {
+							var sum = 0;
+							var count = 0;
+
+							for (var b = 0; b < result.length; b++) {
+								if ((result[b]._doc.email === eventData[a].email) && (result[b]._doc.others.sEmail !== eventData[a].email)) {
+
+									// if(parseInt(result[b]._doc.received_review) != 0) {
+									if((result[b]._doc.review_date) != 0) {
+										sum += parseInt(result[b]._doc.received_review);
+										count++;
+									}
+								} else if ((result[b]._doc.email !== eventData[a].email) && (result[b]._doc.others.sEmail === eventData[a].email)) {
+									// if(parseInt(result[b]._doc.others.sReceivedReview) != 0){
+									if((result[b]._doc.others.sReviewDate) != 0){
+										sum += parseInt(result[b]._doc.others.sReceivedReview);
+										count++;
+									}
+								} else {
+									continue;
+								}
+							} //end in match for
+
+							var aver;
+
+							if(count == 0) {
+								aver = "리뷰없음";
+							}else {
+								aver = (sum / count).toFixed(2);
+							}
+
+							console.log("per : " + aver);
+
+							eventData[a]['perRating'] = aver;
+
+
+							
+							if(a>=eventData.length-1) {	
+								const json2csvParser = new Json2csvParser({ fields });
+								const csv = json2csvParser.parse(eventData);
+
+								fs.writeFile('recEvent.csv', csv, 'utf8', function(err){
+									if(err) throw err
+									console.log('File Write.');
+								});
+
+								callback();
+							}else{
+								repeatFunction(a+1, callback);
+							}
+							
+							
+						});
+					   
+					   /*
 
                         if(a>=eventData.length-1) {
                             const json2csvParser = new Json2csvParser({ fields });
@@ -178,27 +240,34 @@ module.exports = function(router, passport, upload) {
                                 console.log('File Write.');
                             });
 
-                            callback();
+                            callback();	
                         }else{
                             repeatFunction(a+1, callback);
                         }
                     });
-                }
+					
+					*/
+					
+					
+					});
+				}
 
-                if(eventData.length>1){
-                    repeatFunction(1, function () {
-                        console.log('done');
-                    });
-                }else{
 
-                    const json2csvParser = new Json2csvParser({ fields });
-                    const csv = json2csvParser.parse(eventData);
+				if(eventData.length>1){
+					repeatFunction(1, function () {
+						console.log('=== rep1 is done ===');
 
-                    fs.writeFile('recEvent.csv', csv, 'utf8', function(err){
-                        if(err) throw err
-                        console.log('File Write.');
-                    });
-                }
+						console.dir(eventData);
+					});
+				}else{
+					const json2csvParser = new Json2csvParser({ fields });
+					const csv = json2csvParser.parse(eventData);
+
+					fs.writeFile('recEvent.csv', csv, 'utf8', function(err){
+						if(err) throw err
+						console.log('File Write.');
+					});
+				}                
 
             });
 
