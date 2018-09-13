@@ -120,10 +120,25 @@
             else
                 writer = 'you';
 
-            var contents = "<li class="+ writer +">"
+            if(writer == 'me') {
+                profile = '<%= profile_img%>';
+            }else {
+                profile = '<%= event_data.otherProfile %>';
+            }
+
+           alert('profile : ' + profile);
+
+            var contents =
+                "<li class="+ writer +">"
+                + "<div class='img_div'"+"style='margin-left: 0rem; margin-right: 0'>"+ "<img class='profile_img' src='../profile_img/"+profile+"'/>" + "</div>"
                 +"<div class='msg'"+"<p>"+msg+"</p>"
                 +"</li>";
             $(".chatting").append(contents);
+
+            /*var contents = "<li class="+ writer +">"
+                +"<div class='msg'"+"<p>"+msg+"</p>"
+                +"</li>";
+            $(".chatting").append(contents);*/
 
             var objDiv = document.getElementById("chatting");
             objDiv.scrollTop = objDiv.scrollHeight;
