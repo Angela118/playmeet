@@ -31,7 +31,7 @@
         });
 
         function connect(){
-            var host = '172.30.1.50';  // 아이피 바꾸기!!!!!!
+            var host = '10.100.109.169';  // 아이피 바꾸기!!!!!!
             $('#hostInput').val(); //203.153.146.124
             var port = 3000;  // $('#portInput').val();
             //서버에 접속
@@ -135,22 +135,15 @@
             $('#chatting').append('<p>' + data + '</p>');
         }
 
-
-
         function clearText(field) {
             field.value="";
         }
-
-
-
     </script>
 
-
-    <title>채팅방</title>
+    <title><%= event_data.otherTeamname %>팀과의 채팅방</title>
 </head>
 <!--메뉴 영역 시작 : 나중에 파일로 따로 빼기 -->
 <!--여기선 메뉴명 채팅방으로 되어 있음-->
-
 
 <body class="whiteB">
 
@@ -166,7 +159,7 @@
         <div>
             <img src="../img/left-arrow.png" alt="" width="20rem" height="20rem" style="margin-right:3rem" onclick="goBack()">
 
-            <p class="logo ml-sm-3">채팅방</p>
+            <p class="logo ml-sm-3"><%= event_data.otherTeamname %>팀과의 채팅방</p>
         </div>
 
         <div class="collapse navbar-collapse" id="navbarsExample01">

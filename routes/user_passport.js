@@ -1090,7 +1090,6 @@ module.exports = function(router, passport, upload) {
                 console.log(a + '번째 eventData[' + a + '].email : ' + eventData[a].email);
                 console.log(a + '번째 eventData[' + a + '].region : ' + eventData[a].region);
 
-
                 dbm.MatchModel.find({$or: [{"email": eventData[a].email}, {"others.sEmail": eventData[a].email}]}, function (err, result) {
                     var sum = 0;
                     var count = 0;
