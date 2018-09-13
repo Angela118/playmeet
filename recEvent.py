@@ -50,10 +50,12 @@ for i in range(1, len(data)):
     del data[i][0]
 
 
-
-data = np.array(data)
-
-data = data[:, 0:7]
+if(type(data[1][8]) == 'str'):
+    data = np.array(data)
+    data = data[:, 0:9]
+else:
+    data = np.array(data)
+    data = data[:, 0:7]
 
 print(data)
 print()
