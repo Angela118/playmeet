@@ -56,6 +56,7 @@
         <input type="hidden" name="otherTeamname" value="<%=event_data.otherTeamname%>">
         <input type="hidden" name="preEvent_date" value="<%=event_data.event_date%>">
         <input type="hidden" name="preEvent_time" value="<%=event_data.event_time%>">
+        <input type="hidden" name="application_number" value="<%=event_data.application_number%>">
         <!--flag=0은 신청 받음, flag=1은 내가 신청-->
         <input type="hidden" name="flag" value="<%=event_data.flag%>">
 
@@ -112,8 +113,8 @@
             <input placeholder="<%=event_data.event_region%>" id="keyword" size="15">
             <input type="button" onclick="searchPlaces()" value="검색하기">
 
-            <input type="hidden" name="resultLat" id="resultLat" placeholder="위도" class="form-control" readonly/ >
-            <input type="hidden" name="resultLng" id="resultLng" placeholder="경도" class="form-control" readonly/ >
+            <input type="hidden" name="resultLat" id="resultLat" placeholder="위도" class="form-control" readonly>
+            <input type="hidden" name="resultLng" id="resultLng" placeholder="경도" class="form-control" readonly>
             <input name="region" id="region" class="form-control" size="15" readonly/>
             <input name="add" id="add" class="form-control" readonly/>
             <input name="add2" id="add2" class="form-control" readonly/>

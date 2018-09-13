@@ -822,7 +822,8 @@ module.exports = function(router, passport, upload) {
                             'match_success': result[i]._doc.match_success, //매치 수락 여부
                             'otherTeamname': result[i]._doc.teamname, // 상대팀 팀명
                             'event_date': result[i]._doc.others.sEvent_date,
-                            'event_time': result[i]._doc.others.sEvent_time
+                            'event_time': result[i]._doc.others.sEvent_time,
+                            'application_number': result[i]._doc.others.sApplicationNumber
                         };
                         eventData[j++] = data;
                     }
@@ -838,7 +839,8 @@ module.exports = function(router, passport, upload) {
                                 'match_success': result[i]._doc.match_success, //매치 수락 여부
                                 'otherTeamname': result[i]._doc.others.sTeamname, // 상대팀 팀명
                                 'event_date': result[i]._doc.others.sEvent_date,
-                                'event_time': result[i]._doc.others.sEvent_time
+                                'event_time': result[i]._doc.others.sEvent_time,
+                                'application_number': result[i]._doc.others.sApplicationNumber
                             };
                             eventData[j++] = data;
                         }
@@ -874,8 +876,8 @@ module.exports = function(router, passport, upload) {
             'otherEmail': req.body.otherEmail || req.query.otherEmail,
             'otherTeamname': req.body.otherTeamname || req.query.otherTeamname,
             'event_date': req.body.event_date,
-            'event_time': req.body.event_time
-            // 'chatIndex': req.body.chatIndex
+            'event_time': req.body.event_time,
+            'application_number': req.body.application_number
         };
 
         if (!req.user) {
@@ -921,11 +923,20 @@ module.exports = function(router, passport, upload) {
         var otherEmail = req.body.otherEmail;
         var event_date = req.body.event_date;
         var event_time = req.body.event_time;
+        var application_number = req.body.application_number;
 
         console.log('email : ' + email);
         console.log('otherEmail : ' + otherEmail);
         console.log('event_date : ' + event_date);
         console.log('event_time : ' + event_time);
+        console.log('application_number : ' + application_number);
+
+        // application number 찾아서 삭제해야 함
+        dbm.ApplicationModel.update({application_number:application_number}, {$set: {match:0}}, function (err) {
+            if(err) throw err;
+            console.log('application db match:1->0 update');
+            }
+        )
 
         dbm.MatchModel.remove({$and:[
                 {$or:[
@@ -1279,7 +1290,6 @@ module.exports = function(router, passport, upload) {
                 }, 500);
             }
         });
-
         res.redirect('/chatroommessage');
     });
 
@@ -1305,6 +1315,7 @@ module.exports = function(router, passport, upload) {
             var otherTeamname = req.query.otherTeamname;
             var event_date = req.query.event_date;
             var event_time = req.query.event_time;
+            var application_number = req.query.application_number;
 
             dbm.MatchModel.find({$and:[
                     {$or:[
@@ -1332,6 +1343,7 @@ module.exports = function(router, passport, upload) {
                             'nofteam': result[i]._doc.others.sNofteam,
                             'other_nofteam': result[i]._doc.nofteam, // 상대팀
                             'match_success': result[i]._doc.match_success,
+                            'application_number': application_number,
                             'flag': 0
                         }
                         // 신청함
@@ -1346,6 +1358,7 @@ module.exports = function(router, passport, upload) {
                             'nofteam': result[i]._doc.nofteam,
                             'other_nofteam': result[i]._doc.others.sNofteam, // 상대팀
                             'match_success': result[i]._doc.match_success,
+                            'application_number': application_number,
                             'flag': 1
                         }
                     }
@@ -1376,7 +1389,7 @@ module.exports = function(router, passport, upload) {
     });
 
 
-
+    //얘도 chatappointment post & chat get 역할
     router.route('/chatappointment').post(function(req, res) {
         console.log('/chatappointment 패스 post 요청됨');
 
@@ -1384,13 +1397,8 @@ module.exports = function(router, passport, upload) {
         var otherEmail = req.body.otherEmail;
         var preEvent_date = req.body.preEvent_date;
         var preEvent_time = req.body.preEvent_time;
-        var flag = req.body.flag;
-
-        console.log('email : ' + email);
-        console.log('otherEmail : ' + otherEmail);
-        console.log('preEvent_date : ' + preEvent_date);
-        console.log('preEvent_time : ' + preEvent_time);
-        console.log('flag : ' + flag);
+        var application_number = req.body.application_number;
+        var flag = req.body.flag; // 신청한건지 받은건지 여부
 
         // 신청 받음 / others.sNofteam이 내꺼
         if (flag == 0) {
@@ -1427,7 +1435,6 @@ module.exports = function(router, passport, upload) {
              event.add = [addr[0], addr[1]];*/
 
         if(update['others.sEvent_date'] == undefined)
-        // delete update.sEvent_date;
             delete update['others.sEvent_date'];
         if(update['others.sEvent_time'] == undefined)
             delete update['others.sEvent_time'];
@@ -1451,66 +1458,64 @@ module.exports = function(router, passport, upload) {
         // 신청 받음
         if(flag == 0) {
             dbm.MatchModel.update({$and:[
-                {"email":otherEmail}, {"others.sEmail":email}, {"others.sEvent_date":preEvent_date}, {"others.sEvent_time":preEvent_time}
+                        {"email":otherEmail}, {"others.sEmail":email}, {"others.sEvent_date":preEvent_date}, {"others.sEvent_time":preEvent_time}
                     ]},
-                {$set : update}, function () {
-                    // if(err) throw err
-                    console.log("chatAppointment -> Match db updated")
+                {$set : update}, function (err) {
+                    if(err) throw err
+                    console.log("(flag=0)chatAppointment -> Match db updated")
                 });
             // 신청함
         }else {
             dbm.MatchModel.update({$and:[
                         {"email":email}, {"others.sEmail":otherEmail}, {"others.sEvent_date":preEvent_date}, {"others.sEvent_time":preEvent_time}
                     ]},
-                {$set : update}, function () {
-                    // if(err) throw err
-                    console.log("chatAppointment -> Match db updated")
+                {$set : update}, function (err) {
+                    if(err) throw err
+                    console.log("(flag=1)chatAppointment -> Match db updated")
                 });
         }
 
-        console.log('before event');
+        var event = {
+            'email':req.user.email,
+            'otherEmail': otherEmail,
+            'otherTeamname': req.body.otherTeamname,
+            'event_date': req.body.event_date || req.body.preEvent_date,
+            'event_time': req.body.event_time || req.body.preEvent_time,
+            'application_number': application_number
+        };
 
-                var event = {
-                    'email':req.user.email,
-                    'otherEmail': otherEmail,
-                    'otherTeamname': req.body.otherTeamname,
-                    'event_date': req.body.event_date || req.body.preEvent_date,
-                    'event_time': req.body.event_time || req.body.preEvent_time
-                };
-
-                if (!req.user) {
-                    console.log('사용자 인증 안된 상태임.');
-                    res.redirect('/login');
-                }else {
-                    profile_photo = req.user.profile_img;
-                    if (profile_img.length > 0) {
-                        for (var i = 0; i < profile_img.length; i++) {
-                            if (profile_img[i][0] == req.user.email)
-                                profile_photo = profile_img[i][1];
-                        }
-                    } else {
-                        profile_img[imgi] = [req.user.email, req.user.profile_img];
-                    }
-
-                    var user_context = {
-                        'email': req.user.email,
-                        'password': req.user.password,
-                        'teamname': req.user.teamname,
-                        'gender': req.user.gender,
-                        'age': req.user.age,
-                        'region': req.user.region,
-                        'move': req.user.move,
-                        'nofteam': req.user.nofteam,
-                        'career_year': req.user.career_year,
-                        'career_count': req.user.career_count,
-                        'introteam': req.user.introteam,
-                        'profile_img': profile_photo,
-                        'event_data': event
-                    };
-                    console.dir(event);
-                    res.render('chat.ejs', user_context);
+        if (!req.user) {
+            console.log('사용자 인증 안된 상태임.');
+            res.redirect('/login');
+        }else {
+            profile_photo = req.user.profile_img;
+            if (profile_img.length > 0) {
+                for (var i = 0; i < profile_img.length; i++) {
+                    if (profile_img[i][0] == req.user.email)
+                        profile_photo = profile_img[i][1];
                 }
-            // });
+            } else {
+                profile_img[imgi] = [req.user.email, req.user.profile_img];
+            }
+
+            var user_context = {
+                'email': req.user.email,
+                'password': req.user.password,
+                'teamname':req.user.teamname,
+                'gender': req.user.gender,
+                'age': req.user.age,
+                'region': req.user.region,
+                'move': req.user.move,
+                'nofteam': req.user.nofteam,
+                'career_year': req.user.career_year,
+                'career_count': req.user.career_count,
+                'introteam': req.user.introteam,
+                'profile_img': profile_photo,
+                'event_data': event
+            };
+            console.dir(event);
+            res.render('chat.ejs', user_context);
+        }
     });
 
 
