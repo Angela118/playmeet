@@ -1336,7 +1336,7 @@ module.exports = function(router, passport, upload) {
                                 ]},
                         ]},
                     {$and:[
-                            {"others.sEvent_date":event_date}, {"others.sEvent_time":event_time}
+                            {"others.sApplicationNumber": application_number}
                         ]}
                 ]}, function (err, result) {
                 for (var i = 0; i < result.length; i++) {
