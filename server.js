@@ -361,17 +361,15 @@ io.sockets.on('connection', function(socket){
 
         console.log('input.id : ' + input.id);
         console.log('input.otherId : ' + input.otherId);
-        console.log('input.event_date : ' + input.event_date);
-        console.log('input.event_time : ' + input.event_time);
+        console.log('input.application_number : ' + input.application_number);
 
         // receives message from DB
-        // database.ChatModel.find({$or:[{"email":input.id}, {"recipient":input.id}]}, function (err, result) {
         database.ChatModel.find({$and:[
                 {$or:[
                     {"email":input.id}, {"recipient":input.id}
                     ]},
                 {$and:[
-                    {"event_date":input.event_date}, {"event_time":input.event_time}
+                    {"application_number":input.application_number}
                     ]}
                 ]}, function (err, result) {
                 for(var i = 0 ; i < result.length ; i++) {
@@ -379,8 +377,7 @@ io.sockets.on('connection', function(socket){
                         var dbData = {email : result[i].email,
                             teamname : result[i].teamname,
                             message : result[i].message,
-                            // recipient:
-                            // result[i].recipient
+                            recipient: result[i].recipient
                         };
                         io.sockets.sockets[socket.id].emit('preload', dbData);
                     }
@@ -388,8 +385,7 @@ io.sockets.on('connection', function(socket){
                         var dbData = {email : result[i].email,
                             teamname : result[i].teamname,
                             message : result[i].message,
-                            // recipient:
-                            // result[i].recipient
+                            recipient: result[i].recipient
                         };
                         io.sockets.sockets[socket.id].emit('preload', dbData);
                     }
@@ -444,7 +440,7 @@ io.sockets.on('connection', function(socket){
       
       
       // add chat into the model
-        var chat = new database.ChatModel({ email:message.email, teamname: message.sender, message: message.data, recipient: message.recipient, event_date: message.event_date, event_time: message.event_time });
+        var chat = new database.ChatModel({ email:message.email, teamname: message.sender, message: message.data, recipient: message.recipient, application_number: message.application_number });
  
         chat.save(function (err, data) {
           if (err) {// TODO handle the error

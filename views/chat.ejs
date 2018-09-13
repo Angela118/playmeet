@@ -68,16 +68,14 @@
             var teamname = '<%= teamname %>';
             var today = new Date();
             var otherId = '<%= event_data.otherEmail %>';
-            var event_date = '<%=event_data.event_date%>';
-            var event_time = '<%=event_data.event_time%>';
+            var application_number = '<%=event_data.application_number%>';
 
             var output = {
                 id:id,
                 teamname:teamname,
                 otherId:otherId,
                 today:today,
-                event_date:event_date,
-                event_time:event_time
+                application_number:application_number
             };
 
             socket.emit('login', output);
@@ -88,8 +86,7 @@
             var sender = '<%= teamname %>';   //senderInput 입력상자에서 입력 값 가져오기
 //          var recipient = $('#recipientInput').val();
             var recipient = '<%= event_data.otherEmail %>';
-            var event_date = '<%= event_data.event_date %>';
-            var event_time = '<%= event_data.event_time %>';
+            var application_number = '<%=event_data.application_number%>';
 
             var data = $('#dataInput').val();
             var chattype = $('#chattype option:selected').val();
@@ -97,8 +94,7 @@
                 email:email,
                 sender:sender,
                 recipient:recipient,
-                event_date:event_date,
-                event_time:event_time,
+                application_number: application_number,
                 command:chattype,
                 data:data,
                 type:'text'
@@ -115,33 +111,34 @@
         function addToChatting(writer, msg) {
             // alert('여기 오긴 함?');
             var temp = '<%= email %>';
-            if(writer == temp)
+            if (writer == temp)
                 writer = 'me';
             else
                 writer = 'you';
 
-            if(writer == 'me') {
-                profile = '<%= profile_img%>';
-            }else {
+            if (writer == 'me') {
+                profile = '<%= profile_img %>';
+            } else {
                 profile = '<%= event_data.otherProfile %>';
             }
 
-           alert('profile : ' + profile);
-
             var contents =
-                "<li class="+ writer +">"
-                + "<div class='img_div'"+"style='margin-left: 0rem; margin-right: 0'>"+ "<img class='profile_img' src='../profile_img/"+profile+"'/>" + "</div>"
-                +"<div class='msg'"+"<p>"+msg+"</p>"
-                +"</li>";
-            $(".chatting").append(contents);
+                "<li class=" + writer + ">"
+                + "<div class='img_div'" + "style='margin-left: 0rem; margin-right: 0'>" + "<img class='profile_img' src='../profile_img/" + profile + "'/>" + "</div>"
+                + "<div class='msg'" + "<p>" + msg + "</p>"
+                + "</li>";
+
+            var otherEmail = '<%= event_data.otherEmail %>';
+
+                $(".chatting").append(contents);
+
+                var objDiv = document.getElementById("chatting");
+                objDiv.scrollTop = objDiv.scrollHeight;
 
             /*var contents = "<li class="+ writer +">"
                 +"<div class='msg'"+"<p>"+msg+"</p>"
                 +"</li>";
             $(".chatting").append(contents);*/
-
-            var objDiv = document.getElementById("chatting");
-            objDiv.scrollTop = objDiv.scrollHeight;
         }
 
         function println(data){      //상태 프린트
