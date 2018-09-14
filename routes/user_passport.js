@@ -948,24 +948,26 @@ module.exports = function(router, passport, upload) {
             }
         )
 
-        dbm.MatchModel.remove({$and:[
-                {$or:[
-                        {$and:[
-                                {"email":email}, {"others.sEmail":otherEmail}
-                            ]},
-                        {$and:[
-                                {"email":otherEmail}, {"others.sEmail":email}
-                            ]},
-                    ]},
-                {$and:[
-                        {"others.sEvent_date":event_date}, {"others.sEvent_time":event_time}
-                    ]}
-            ]}, function(err){
-            if(err) throw err
-            console.log('=== Match Deleted ===');
+        setTimeout(function () {
+            dbm.MatchModel.remove({$and:[
+                    {$or:[
+                            {$and:[
+                                    {"email":email}, {"others.sEmail":otherEmail}
+                                ]},
+                            {$and:[
+                                    {"email":otherEmail}, {"others.sEmail":email}
+                                ]},
+                        ]},
+                    {$and:[
+                            {"others.sEvent_date":event_date}, {"others.sEvent_time":event_time}
+                        ]}
+                ]}, function(err){
+                if(err) throw err
+                console.log('=== Match Deleted ===');
 
-            res.redirect('/chatroomchat');
-        });
+                res.redirect('/chatroomchat');
+            });
+        }, 500);
     })
 
     router.route('/chatroommessage').get(function(req, res){

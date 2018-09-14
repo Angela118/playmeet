@@ -373,7 +373,15 @@ io.sockets.on('connection', function(socket){
                     ]}
                 ]}, function (err, result) {
                 for(var i = 0 ; i < result.length ; i++) {
-                    if((result[i]._doc.email === input.id) && (result[i]._doc.recipient === input.otherId)){
+                    var dbData = {email : result[i].email,
+                        teamname : result[i].teamname,
+                        message : result[i].message,
+                        recipient: result[i].recipient,
+                        application_number: input.application_number,
+                        cancel: result[i]._doc.cancel
+                    };
+                    io.sockets.sockets[socket.id].emit('preload', dbData);
+                    /*if((result[i]._doc.email === input.id) && (result[i]._doc.recipient === input.otherId)){
                             var dbData = {email : result[i].email,
                                 teamname : result[i].teamname,
                                 message : result[i].message,
@@ -390,7 +398,7 @@ io.sockets.on('connection', function(socket){
                             application_number: input.application_number
                         };
                         io.sockets.sockets[socket.id].emit('preload', dbData);
-                    }
+                    }*/
                 }
             }
         );
