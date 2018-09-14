@@ -285,12 +285,12 @@
             }
         });
 
-        function cancel() {
-            var email = '<%= email %>';
-            var sender = '<%= teamname %>';
-            var recipient = '<%= event_data.otherEmail %>';
-            var application_number = '<%=event_data.application_number%>';
+        var email = '<%= email %>';
+        var sender = '<%= teamname %>';
+        var recipient = '<%= event_data.otherEmail %>';
+        var application_number = '<%=event_data.application_number%>';
 
+        function cancel() {
             var data = '매칭을 취소하였습니다.'
             var chattype = $('#chattype option:selected').val();
             var message = {
@@ -311,7 +311,25 @@
 
         function deleteClick() {
             alert('deleteClick');
-            document.getElementById('formPost').submit();
+
+            var data = '매칭이 취소되었습니다. 채팅방을 더 이상 사용할 수 없습니다.';
+            var chattype = $('#chattype option:selected').val();
+            var message = {
+                email:email,
+                sender:sender,
+                recipient:recipient,
+                application_number: application_number,
+                cancel:1,
+                command:chattype,
+                data:data,
+                type:'text'
+            };
+            socket.emit('message', message);
+            addToChatting(message.email, message.message, message.application_number, message.cancel);
+
+            setTimeout(function () {
+                document.getElementById('formPost').submit();
+            }, 500);
         }
     </script>
 </div>
