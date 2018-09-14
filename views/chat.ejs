@@ -116,17 +116,23 @@
             else
                 writer = 'you';
 
-            if (writer == 'me') {
-                profile = '<%= profile_img %>';
-            } else {
-                profile = '<%= event_data.otherProfile %>';
-            }
+            var contents;
 
-            var contents =
-                "<li class=" + writer + ">"
-                + "<div class='img_div'" + "style='margin-left: 0rem; margin-right: 0'>" + "<img class='profile_img' src='../profile_img/" + profile + "'/>" + "</div>"
-                + "<div class='msg'" + "<p>" + msg + "</p>"
-                + "</li>";
+            if (writer == 'me') {
+
+                contents =
+                    "<li class="+ writer +">"
+                    +"<div class='msg'"+"<p>"+msg+"</p>"
+                    +"</li>";
+            } else {
+                var profile = '<%= event_data.otherProfile %>';
+
+                contents =
+                    "<li class=" + writer + ">"
+                    + "<div class='img_div'" + "style='margin-left: 0rem; margin-right: 0'>" + "<img class='profile_img' src='../profile_img/" + profile + "'/>" + "</div>"
+                    + "<div class='msg'" + "<p>" + msg + "</p>"
+                    + "</li>";
+            }
 
             if(application_number == '<%= event_data.application_number%>') {
 
