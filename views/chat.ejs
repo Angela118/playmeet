@@ -136,7 +136,7 @@
             if(cancel == 1) {
                 if((writer == 'you') && (application_number == '<%= event_data.application_number%>')) {
 
-                    msg = '상대방이 ' + msg + '수락을 누르시면 매칭 정보가 삭제되며, 필요시 상대방 신고하기 버튼을 누르면 관리자에게 접수됩니다.';
+                    msg = '상대방이 ' + msg + ' 수락을 누르시면 매칭 정보가 삭제되며, 필요시 상대방 신고하기 버튼을 누르면 관리자에게 접수됩니다.';
                     contents =
                         "<li class=" + writer + ">"
                         + "<div class='img_div'" + "style='margin-left: 0rem; margin-right: 0'>" + "<img class='profile_img' src='../profile_img/" + profile + "'/>" + "</div>"
@@ -196,7 +196,6 @@
 </script>
 
 <nav class="navbar blueB">
-
     <div class="top">
         <div>
             <img src="../img/left-arrow.png" alt="" width="20rem" height="20rem" style="margin-right:3rem" onclick="goBack()">
@@ -204,22 +203,24 @@
             <p class="logo ml-sm-3"><%= event_data.otherTeamname %>팀과의 채팅방</p>
         </div>
 
-        <div class="collapse navbar-collapse" id="navbarsExample01">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="" data-toggle="modal" data-target="#myModal">
-                        <b>매칭 중단하기</b><br>
-                    </a>
-                    <a class="nav-link" href="/chatroomchat">
-                        <b>채팅방 목록으로 돌아가기</b><br>
-                    </a>
-                </li>
-            </ul>
-        </div>
-
         <div>
             <img src="../css/img/menu.png" width="20rem" height="20rem" class="navbar-toggler" data-toggle="collapse" data-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
         </div>
+    </div>
+
+    <div class="collapse navbar-collapse" id="navbarsExample01">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="" data-toggle="modal" data-target="#myModal">
+                    <b>매칭 중단하기</b><br>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/chatroomchat">
+                    <b>채팅방 목록으로 돌아가기</b><br>
+                </a>
+            </li>
+        </ul>
     </div>
 </nav>
 
@@ -351,6 +352,8 @@
         <button type="submit" class="btn" style="color:black">
             시간 장소 정하기
         </button>
+    </form>
+    <form action="">
         <button type="submit" class="btn" style="color:black">
             상대방 신고하기
         </button>
