@@ -109,7 +109,6 @@
         }
 
         function addToChatting(writer, msg, application_number, cancel) {
-            // alert('addToChatting cancel : ' + cancel);
             var temp = '<%= email %>';
             if (writer == temp)
                 writer = 'me';
@@ -123,14 +122,14 @@
                 contents =
                     "<li class="+ writer +">"
                     +"<div class='msg'"+"<p>"+msg+"</p>"
-                    +"</li>";
+                    +"</div></li>";
             } else {
                 var profile = '<%= event_data.otherProfile %>';
 
                 contents =
                     "<li class=" + writer + ">"
                     + "<div class='img_div'" + "style='margin-left: 0rem; margin-right: 0'>" + "<img class='profile_img' src='../profile_img/" + profile + "'/>" + "</div>"
-                    + "<div class='msg'" + "<p>" + msg + "</p>"
+                    + "<div class='msg'" + "<p>" + msg + "</p></div>"
                     + "</li>";
             }
 
@@ -141,7 +140,7 @@
                     contents =
                         "<li class=" + writer + ">"
                         + "<div class='img_div'" + "style='margin-left: 0rem; margin-right: 0'>" + "<img class='profile_img' src='../profile_img/" + profile + "'/>" + "</div>"
-                        + "<div class='msg'" + "<p>" + msg + "</p><button class='btn' onclick='deleteClick()'>수락" + "</button>"
+                        + "<div class='msg'" + "<p>" + msg + "</p><button class='btn' onclick='deleteClick()'>수락" + "</button></div>"
                         + "</li> ";
 
                     $(".chatting").append(contents);
@@ -163,7 +162,6 @@
                     objDiv.scrollTop = objDiv.scrollHeight;
                 }
             }else{
-
                 if(application_number == '<%= event_data.application_number%>') {
 
                     $(".chatting").append(contents);
@@ -319,13 +317,13 @@
                 sender:sender,
                 recipient:recipient,
                 application_number: application_number,
-                cancel:1,
+                cancel:0,
                 command:chattype,
                 data:data,
                 type:'text'
             };
             socket.emit('message', message);
-            addToChatting(message.email, message.message, message.application_number, message.cancel);
+            // addToChatting(message.email, message.message, message.application_number, message.cancel);
 
             setTimeout(function () {
                 document.getElementById('formPost').submit();
