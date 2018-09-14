@@ -10,6 +10,7 @@ Schema.createSchema = function(mongoose) {
         message: {type: String},
         recipient: {type: String, 'default':''},
         application_number: {type:Number, 'default':''},
+        cancel:{type:Number},
         created_at: {type: Date, index: {unique: false}, 'default': Date.now}
 	});
 

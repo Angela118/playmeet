@@ -374,14 +374,14 @@ io.sockets.on('connection', function(socket){
                 ]}, function (err, result) {
                 for(var i = 0 ; i < result.length ; i++) {
                     if((result[i]._doc.email === input.id) && (result[i]._doc.recipient === input.otherId)){
-                        var dbData = {email : result[i].email,
-                            teamname : result[i].teamname,
-                            message : result[i].message,
-                            recipient: result[i].recipient,
-                            application_number: input.application_number
-                        };
-                        io.sockets.sockets[socket.id].emit('preload', dbData);
-                    }
+                            var dbData = {email : result[i].email,
+                                teamname : result[i].teamname,
+                                message : result[i].message,
+                                recipient: result[i].recipient,
+                                application_number: input.application_number,
+                            };
+                            io.sockets.sockets[socket.id].emit('preload', dbData);
+                        }
                     if((result[i]._doc.recipient === input.id) && (result[i]._doc.email === input.otherId)){
                         var dbData = {email : result[i].email,
                             teamname : result[i].teamname,
@@ -394,9 +394,7 @@ io.sockets.on('connection', function(socket){
                 }
             }
         );
-
         sendResponse(socket, 'login', 200, 'OK');   //로그인이 정상적으로 되었다는 뜻
-
     });
 
 
@@ -409,40 +407,28 @@ io.sockets.on('connection', function(socket){
 
       console.log('message 받음 -> ' + JSON.stringify(message.data));
 
-      
 
       //if(message.recipient == 'ALL'){
-
         // console.log('모든 client에게 메세지 전송함.');
-
-         
-
          //echo기능 : client가 보낸 메세지를 받아서 그대로 다시 보낸다
-
      // io.sockets.emit('message', message.data);   //io.sockets : 연결된 모든 client, emit : 그 쪽으로 전송하겠다.
-
-         
 
      // } else{      //특정 client에게 메세지 보내기
 
          
 
-         if(login_ids[message.recipient]){   
-
+         if(login_ids[message.recipient]){
             io.sockets.connected[login_ids[message.recipient]].emit('message', message);
-
-            sendResponse(socket, 'message', 200, 'OK');   
-
+            sendResponse(socket, 'message', 200, 'OK');
          } else{
             sendResponse(socket, 'message', 400, '수신자 ID를 찾을 수 없습니다.');
-
          }
 
       //}
       
       
       // add chat into the model
-        var chat = new database.ChatModel({ email:message.email, teamname: message.sender, message: message.data, recipient: message.recipient, application_number: message.application_number });
+        var chat = new database.ChatModel({ email:message.email, teamname: message.sender, message: message.data, recipient: message.recipient, application_number: message.application_number, cancel:message.cancel});
  
         chat.save(function (err, data) {
           if (err) {// TODO handle the error
