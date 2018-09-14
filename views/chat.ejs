@@ -31,7 +31,7 @@
         });
 
         function connect(){
-            var host = '192.168.19.203';  // 아이피 바꾸기!!!!!!
+            var host = '172.30.1.50';  // 아이피 바꾸기!!!!!!
             $('#hostInput').val(); //203.153.146.124
             var port = 3000;  // $('#portInput').val();
             //서버에 접속
@@ -109,7 +109,7 @@
         }
 
         function addToChatting(writer, msg, application_number, cancel) {
-            alert('addToChatting cancel : ' + cancel);
+            // alert('addToChatting cancel : ' + cancel);
             var temp = '<%= email %>';
             if (writer == temp)
                 writer = 'me';
@@ -141,8 +141,8 @@
                     contents =
                         "<li class=" + writer + ">"
                         + "<div class='img_div'" + "style='margin-left: 0rem; margin-right: 0'>" + "<img class='profile_img' src='../profile_img/" + profile + "'/>" + "</div>"
-                        + "<div class='msg'" + "<p>" + msg + "</p>"
-                        + "</li>";
+                        + "<div class='msg'" + "<p>" + msg + "</p><button class='btn' onclick='deleteClick()'>수락" + "</button>"
+                        + "</li> ";
 
                     $(".chatting").append(contents);
 
@@ -154,7 +154,6 @@
 
                     contents =
                         "<li class=" + writer + ">"
-                        + "<div class='img_div'" + "style='margin-left: 0rem; margin-right: 0'>" + "<img class='profile_img' src='../profile_img/" + profile + "'/>" + "</div>"
                         + "<div class='msg'" + "<p>" + msg + "</p>"
                         + "</li>";
 
@@ -230,7 +229,7 @@
 
 <!--메뉴 영역 끝 : -->
 
-<form action="/chat" method="post">
+<form action="/chat" method="post" id="formPost">
     <!-- The Modal -->
     <div class="modal" id="myModal">
         <div class="modal-dialog modal-dialog-centered modal-sm">
@@ -239,6 +238,7 @@
                 <div class="modal-body">
                     <p style="color:black"></p>매칭을 중단하시겠습니까? 상대방과의 모든 매칭 정보가 삭제됩니다.
                 </div>
+
                 <input type="hidden" name="otherEmail" value="<%= event_data.otherEmail%>">
                 <input type="hidden" name="event_date" value="<%=event_data.event_date%>">
                 <input type="hidden" name="event_time" value="<%=event_data.event_time%>">
@@ -304,11 +304,15 @@
                 type:'text'
             };
             socket.emit('message', message);
-            alert('cancel 함수' );
+            // alert('cancel 함수' );
             addToChatting(message.email, message.message, message.application_number, message.cancel);
-            alert('addToChatting 보냄');
+            // alert('addToChatting 보냄');
         }
 
+        function deleteClick() {
+            alert('deleteClick');
+            document.getElementById('formPost').submit();
+        }
     </script>
 </div>
 
