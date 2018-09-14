@@ -788,7 +788,7 @@ module.exports = function(router, passport, upload) {
     });
 
 
-    //채팅
+    //===== 채팅
     router.route('/chatroomchat').get(function(req, res){
         console.log('/chatrooomchat 패스 get으로 요청됨.');
 
@@ -1304,6 +1304,7 @@ module.exports = function(router, passport, upload) {
         res.redirect('/chatroommessage');
     });
 
+
     router.route('/chatappointment').get(function(req, res){
         console.log('/chatappointment 패스 get으로 요청됨.');
 
@@ -1398,7 +1399,6 @@ module.exports = function(router, passport, upload) {
             });
         }
     });
-
 
     //얘도 chatappointment post & chat get 역할
     router.route('/chatappointment').post(function(req, res) {
@@ -1540,6 +1540,17 @@ module.exports = function(router, passport, upload) {
         }, 500);
     });
 
+    // 채팅방 내 상대팀 신고(개발자에게 메일보내기)
+    router.route('/reportdeveloper').post(function(req, res){
+        console.log('/reportdeveloper 패스 post 요청됨');
+
+        var email = req.user.email;
+        var otherEmail = req.body.otherEmail;
+        var application_number = req.body.application_number;
+
+        
+
+    }
 
 
     // ===== 메뉴

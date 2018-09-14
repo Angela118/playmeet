@@ -189,12 +189,6 @@
 
 <body class="whiteB">
 
-<script type="text/javascript">
-    function goBack(){
-        window.history.back();
-    }
-</script>
-
 <nav class="navbar blueB">
     <div class="top">
         <div>
@@ -272,6 +266,10 @@
     <button type="submit" class="btn btn-warning" id="text_button" onclick="send();">전송</button>
 
     <script>
+        function goBack(){
+            window.history.back();
+        }
+
         // $(".add_button_content").hide();
         $("#add_button").click(function(){
             $("#add_button_content").toggle();
@@ -309,8 +307,6 @@
         }
 
         function deleteClick() {
-            alert('deleteClick');
-
             var data = '매칭이 취소되었습니다. 채팅방을 더 이상 사용할 수 없습니다.';
             var chattype = $('#chattype option:selected').val();
             var message = {
@@ -324,22 +320,23 @@
                 type:'text'
             };
             socket.emit('message', message);
-            // addToChatting(message.email, message.message, message.application_number, message.cancel);
 
-            setTimeout(function () {
-                document.getElementById('formPost').submit();
-            }, 500);
+            // setTimeout(function () {
+            document.getElementById('formPost').submit();
+            // }, 500);
         }
+
+        function report() {
+
+            goBack();
+            // chat post로 보냄
+            document.getElementById('formPost').submit();        }
     </script>
 </div>
 
 <div id="add_button_content" style="display: flex; margin-left: .5rem; margin-right: .5rem; justify-content: space-around;">
 
 
-    <!--팀원 하게 되면 경기 끝 넣기-->
-    <!--주장만 - 경기 끝 버튼 없음. 아래 버튼 없이 + 누르면 바로 알림창 또는 하단에 입력창 뜨게 만들어도 됨-->
-
-    <!--onclick="movePage()"-->
 
     <form action="/chatappointment" method="get">
         <input type="hidden" name="email" value="<%=event_data.email%>">
@@ -353,10 +350,36 @@
             시간 장소 정하기
         </button>
     </form>
-    <form action="">
-        <button type="submit" class="btn" style="color:black">
+
+    <form action="/reportdeveloper" method="post">
+        <input type="hidden" name="otherEmail" value="<%=event_data.otherEmail%>">
+        <input type="hidden" name="application_number" value="<%=event_data.application_number%>">
+
+        <button type="button" class="btn" style="color:black" data-toggle="modal" data-target="#reportModal">
             상대방 신고하기
         </button>
+
+        <!-- The report Modal -->
+        <div class="modal" id="reportModal">
+            <div class="modal-dialog modal-dialog-centered modal-sm">
+                <div class="modal-content">
+                    <div class="modal-body" style="border-top:1px solid black">
+                        개발자에게 신고할 내용을 입력<br>
+                        신고할 팀 : <b><%=event_data.otherTeamname%>팀</b> <br>(id : <%=event_data.otherEmail%>)
+                    </div>
+
+                    <textarea name="report_content" id="" cols="7" rows="4" placeholder="여기 입력"></textarea>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal" >닫기</button>
+                        <button type="submit" class="btn">제출</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!--reportModal end-->
+
     </form>
 
 </div>
