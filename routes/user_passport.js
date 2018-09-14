@@ -58,15 +58,8 @@ module.exports = function(router, passport, upload) {
             console.log('사용자 인증 안된 상태임.');
             res.redirect('/login');
         } else {
+			
             // expire
-			/*
-            var newDate = new Date();
-            var nowYear = newDate.getFullYear();
-            var nowMonth = (newDate.getMonth() + 1);
-            var nowDate = newDate.getDate();
-            var nowHour = newDate.getHours();
-			*/
-
             dbm.ApplicationModel.remove({'eventYear_forExpire':{$lt:yyyy}}, function(err){
                 if(err) throw err
             });
@@ -168,8 +161,6 @@ module.exports = function(router, passport, upload) {
                             aver = (sum / count).toFixed(2);
                         }
 					   
-					    console.log("all : " + aver);
-
                         eventData[a]['allRating'] = aver;
 
 
@@ -205,9 +196,7 @@ module.exports = function(router, passport, upload) {
 							}else {
 								aver = (sum / count).toFixed(2);
 							}
-
-							console.log("per : " + aver);
-
+							
 							eventData[a]['perRating'] = aver;
 
 
@@ -255,9 +244,7 @@ module.exports = function(router, passport, upload) {
 
 				if(eventData.length>1){
 					repeatFunction(1, function () {
-						console.log('=== rep1 is done ===');
-
-						console.dir(eventData);
+						console.log('=== rep is done ===');
 					});
 				}else{
 					const json2csvParser = new Json2csvParser({ fields });
@@ -644,15 +631,6 @@ module.exports = function(router, passport, upload) {
 
             console.log("======== set profile image =======");
 
-            /*
-            dbm.db.collection("users6").updateOne({email: req.user.email},  {$set: {'profile_img':profile_img}}, function(err, res) {
-                if (err) throw err;
-                console.log("======== set profile image =======");
-                console.dir(req.user.profile_img);
-            });
-            */
-
-
         }catch(err){
             console.dir(err.stack);
         }
@@ -939,8 +917,7 @@ module.exports = function(router, passport, upload) {
             'email':req.body.email || req.query.email,
             'otherEmail': req.body.otherEmail || req.query.otherEmail,
             'match_success': req.body.match_success || req.query.match_success,
-            'otherTeamname': req.body.otherTeamname || req.query.otherTeamname,
-            // 'chatIndex': req.body.chatIndex
+            'otherTeamname': req.body.otherTeamname || req.query.otherTeamname
         };
 
         if (!req.user) {
@@ -974,8 +951,6 @@ module.exports = function(router, passport, upload) {
                 'event_data': event
             };
             res.render('chat.ejs', user_context);
-
-            // res.redirect('/chat');
         }
     });
 
@@ -1107,14 +1082,11 @@ module.exports = function(router, passport, upload) {
 
                     for (var b = 0; b < result.length; b++) {
                         if ((result[b]._doc.email === eventData[a].email) && (result[b]._doc.others.sEmail !== eventData[a].email)) {
-
-                            // if(parseInt(result[b]._doc.received_review) != 0) {
                             if ((result[b]._doc.review_date) != 0) {
                                 sum += parseInt(result[b]._doc.received_review);
                                 count++;
                             }
                         } else if ((result[b]._doc.email !== eventData[a].email) && (result[b]._doc.others.sEmail === eventData[a].email)) {
-                           	// if(parseInt(result[b]._doc.others.sReceivedReview) != 0){
                             if ((result[b]._doc.others.sReviewDate) != 0) {
                                 sum += parseInt(result[b]._doc.others.sReceivedReview);
                                 count++;
