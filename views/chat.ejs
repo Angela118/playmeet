@@ -54,12 +54,12 @@
                 //println('수신 -> ' + JSON.stringify(message));
                 //      $(output).prependTo('#content');
                 // alert('여기냐');
-                addToChatting(message.email, message.data);
+                addToChatting(message.email, message.data, message.application_number);
             });
 
             socket.on('preload',function(dbData){
                 // alert('여기인가');
-                addToChatting(dbData.email, dbData.message);
+                addToChatting(dbData.email, dbData.message, dbData.application_number);
             });
         }
 
@@ -105,10 +105,10 @@
 
             // 13일에 보낸게 왜 15일 방에 상대방이 접속중이면 뜨지..
 
-            addToChatting(message.email, message.data);
+            addToChatting(message.email, message.data, message.application_number);
         }
 
-        function addToChatting(writer, msg) {
+        function addToChatting(writer, msg, application_number) {
             // alert('여기 오긴 함?');
             var temp = '<%= email %>';
             if (writer == temp)
@@ -128,17 +128,13 @@
                 + "<div class='msg'" + "<p>" + msg + "</p>"
                 + "</li>";
 
-            var otherEmail = '<%= event_data.otherEmail %>';
+            if(application_number == '<%= event_data.application_number%>') {
 
                 $(".chatting").append(contents);
 
                 var objDiv = document.getElementById("chatting");
                 objDiv.scrollTop = objDiv.scrollHeight;
-
-            /*var contents = "<li class="+ writer +">"
-                +"<div class='msg'"+"<p>"+msg+"</p>"
-                +"</li>";
-            $(".chatting").append(contents);*/
+            }
         }
 
         function println(data){      //상태 프린트
