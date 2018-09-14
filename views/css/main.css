@@ -1,0 +1,202 @@
+.search_match a{
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    background-color: #7473ff;
+    border-radius: 15px;
+    margin-bottom: 1rem;
+    padding: 5px;
+    justify-content: space-between;
+}
+.search_text {
+    display: block;
+}
+.search_img {
+    display: block;
+}
+
+select.custom-select option{
+  font-size:1rem;
+}
+
+.navbar {
+    position: relative;
+    z-index: 2;
+}
+.list {
+    width: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+.list_item{
+  display: flex;
+  justify-content: space-between;
+  padding: .5rem .8rem;
+    border: 3px solid;
+    border-color: #7473ff;
+    border-radius: 15px;
+    color: white;
+    padding-right: 0;
+}
+.list_divide {
+    display: block;
+    width: 100%;
+    position: relative;
+    margin-right: 10px;
+}
+.list_divide_2 {
+    display: block;
+    width: 90%;
+    position: absolute;
+}
+
+.list_item_teamname{
+  color:white;
+  letter-spacing:.2rem;
+  font-weight: bold;
+    font-size: 1.2rem;
+    margin-bottom: -.2rem;;
+}
+.list_item_date{
+    margin-bottom: 1rem;
+    font-size: .9rem;
+}
+.list_item_detail {
+    line-height: 250%;
+    font-size: .9rem;
+}
+.list_item_detail >h9{
+    background-color: white;
+    color: #292941;
+    font-weight: bold;
+    padding: 5px;
+    border-radius: 15px;
+    margin-right: 10px;
+}
+.list_item_icon {
+    float: right;
+}
+.list_item_icon >h8{
+    background-color: #9933dd;
+    color: white;
+    font-weight: bold;
+    font-size: .9rem;
+    padding: 10px;
+    border-radius: 50%;
+    line-height: 250%;
+    text-align: center;   
+}
+.list_item_icon >h7{
+    background-color: #dd3366;
+    color: white;
+    font-weight: bold;
+    font-size: .9rem;
+    padding: 10px;
+    border-radius: 50%;
+    line-height: 250%;
+    text-align: center;
+}
+
+
+/*페이징*/
+.paging{
+  /*position: absolute;*/
+  bottom: 0;
+  width: 100%;
+  height: 35px;
+}
+.paging ul {
+  text-align:center;
+  width: 100%;
+  padding: 0;
+}
+.paging ul li {
+  display:inline;
+}
+.paging ul li a {
+  display:inline-block;
+  vertical-align:top;
+  padding:4px;
+  margin-right:3px;
+  color:black;
+  border:1px solid #eee;
+  text-align:center;
+  text-decoration:none;
+  width:26px;
+}
+.paging ul li a.now {
+  color:#fff;
+  background-color:#007bff;
+  border:1px solid #007bff;
+}
+.paging ul li a:hover, ul li a:focus {
+  color:white;
+  border:1px solid #007bff;
+  background-color:#007bff;
+}
+
+/*페이징*/
+
+
+.top_container {
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+  /*position: fixed;*/
+  flex-wrap: wrap;
+  align-items: center;
+  padding-top: 1em;
+  padding-bottom: 1em;
+
+  border-bottom: 1px solid white;
+}
+
+
+/*main_search-------------------------------------------*/
+.search {
+    display: flex;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+.p_title {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.wrapper {
+  margin-bottom:1rem;
+  align-items: center;
+  width: 100%;
+}
+
+.search_team{
+  width: 100%;
+  text-align: center;
+}
+
+select {
+  display: flex;
+  width: 100%;
+  height: 50px;
+  text-align: center;
+}
+
+/*match_application_form-------------------------------------------*/
+.table{
+  border-top:2px solid #dee2e6;
+  border-bottom: 2px solid #dee2e6;
+  font-size: 1rem;
+}
+
+.table td,.table th{
+  padding:.50rem;
+  vertical-align:top;
+  border-top:1px solid #dee2e6
+}
+
+
+/*main_search_result------------------------------------------------*/
+.modal_content{
+  margin-bottom: 0.2rem;
+}

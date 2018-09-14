@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="kr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>팀 회원 정보</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="../css/profile.css" rel="stylesheet">
+    <link href="../css/common.css" rel="stylesheet">
+    
+
+    <script src="../js/jquery.js"></script>
+    <script src="../js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript">
+    function goBack(){
+        window.history.back();
+    }
+</script>
+</head>
+
+<body class="coloring">
+   
+<nav class="navbar">
+    <div class="top">
+        <img src="../img/left-arrow.png" height="30rem" onclick="goBack();">
+		<a href="/"><img src="../img/update_logo.png" height="60rem" class="logo"></a>
+        <div class="sets">
+            <a href="/chatroomchat"><img src="../img/update_chat.png" class="menu_img" height="30rem"></a>
+            <img src="../img/update_menu.png" height="30rem" class="navbar-toggler" data-toggle="collapse" data-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
+        </div>
+    </div>
+    <div class="collapse navbar-collapse" id="navbarsExample01">
+        <div class="mypage">
+            <img src="../profile_img/<%= profile_img %>" id="profile_pic" style="margin-right: .2rem; width:3rem; height: 3rem">
+            <span id="name" style="font-weight: bold; font-size: 1.2rem; margin-left: .5rem; color:white;"><%= teamname %> 팀</span>
+            <div>
+                <a href="/teamprofile"><button class="btn btn-sm btn-warning" type="submit" style="margin-right: .5rem">내 정보</button></a>
+                <a href="/logout"><button class="btn btn-sm btn-warning" type="submit">로그아웃</button></a>
+            </div>
+        </div>
+
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="/">홈 (매칭 팀 검색)</a>
+      </li>
+      <li class="nav-item" style="display:flex; align-items:center">
+        <span style="margin-bottom: 0; padding: .5rem 0rem; color:white">우리 팀</span>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" href="/teamreceivedreview" style="margin-left:2rem">우리 팀 평가 점수</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/teamschedule" style="margin-left:2rem">경기 스케줄</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="matchapplication">매칭 등록</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/mymatch">내가 등록한 매칭</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/contact">개발자에게 연락</a>
+      </li>
+    </ul>
+
+    </div>
+</nav>
+
+<div class="container">
+    <div class="reco">
+        <h5 class="mb-3" style="font-weight: bold">기본 정보</h5>
+        
+        <%
+                    if(gender == 25) {
+                        var curGender = '무관';
+                    }else if(gender == 50) {
+                        var curGender = '남자';
+                    }else if(gender == 100){
+                        var curGender = '여자';
+                    }
+                    if(move == 100){
+                        var curMove = 'O';
+                    }else if(move == 50){
+                        var curMove = 'X';
+                    }
+            %>
+        
+            <p class="mb-3">
+            <p>프로필 사진</p> <!--프로필 사진-->
+            <div class="profile_img_upload">
+                <div class="img_div mb-1"><img id="profile_img" src="../profile_img/<%= profile_img %>"/></div>
+                <a href="/uploadimg"><button class="btn btn-sm btn-warning" type="submit" style="margin-right: .5rem">프로필 사진 변경</button></a>
+            </div>
+
+            <div class="mb-3">
+                <div>팀 이름</div>
+            <div class="change"><%= teamname %></div>
+            <!--이름-->
+                <!--<input type="text" class="form-control" id="user-name" placeholder="" value="" required>-->
+                <!--<div class="invalid-feedback">-->
+                    <!--Valid name is required.-->
+                <!--</div>-->
+            </div>
+
+            <div class="mb-3"> <!--아이디-->
+                <div>팀장 이메일</div>
+            <div class="change"><%= email %></div>
+            
+                <!--<div class="input-group">-->
+                    <!--<input type="text" class="form-control" id="user-ID" placeholder="" required>-->
+                    <!--<div class="invalid-feedback" style="width: 100%;">-->
+                        <!--Your ID is required.-->
+                    <!--</div>-->
+                <!--</div>-->
+            </div>
+      
+         <div class="mb-3">
+                <div id="user-gender">성별</div>
+            <div class="change"><%= curGender %></div>
+                <!--<select class="custom-select d-block w-100" id="user-gender" required>-->
+                    <!--<option value="">Choose...</option>-->
+                    <!--<option>여</option>-->
+                    <!--<option>남</option>-->
+                <!--</select>-->
+            </div>
+      
+			<div class="mb-3">
+                <div>평균 연령</div>
+                <div class="enter">
+                <div class="change one"><%= age %></div><div class="two">세</div>
+                </div>
+            </div>
+
+      
+            <div class="mb-3">
+                <div>주 경기 장소</div>
+            <div class="change"><%= region %></div>
+                <!--<input type="text" class="form-control" id="region" placeholder="서울시 용산구 청파동" required>-->
+            </div>
+   
+   
+   
+         <div class="mb-3">
+                <div>원정 가능 유무</div>
+            <div class="change"><%= curMove %></div>
+                <!--<select class="custom-select d-block w-100" name="move" id="" required>
+                    <option>O</option>
+                    <option>X</option>
+                </select>-->
+            </div>
+   
+   
+   
+         <div class="mb-3">
+                <div>팀원 수</div>
+                <div class="enter">
+                    <div class="change one"><%= nofteam %></div><div class="two">명</div>
+                </div>
+            </div>
+   
+   
+   
+         <div class="mb-3">
+                <div>경기 경력</div>
+                <div class="enter">
+                    <div class="change one"><%= career_year %></div><div class="two">년</div>
+                </div>
+            </div>
+      
+      
+         <div class="mb-3">
+                <div>여태까지 경기 횟수</div>
+                <div class="enter">
+                    <div class="change one"><%= career_count %></div> <div class="two">번</div>
+                </div>
+            </div>
+   
+      
+         <div class="mb-3">
+                <div>팀 소개글</div>
+                <div class="change"><%= introteam %></div>
+            </div>
+   
+   
+
+            <hr class="mb-4">
+
+        <a href="/teamprofileedit"><button class="btn btn-block">회원정보 수정하기</button></a>
+    </div>
+</div>
+</body>
+<footer class="my-5 pt-5 text-muted text-center text-small">
+
+</footer>
+</html>

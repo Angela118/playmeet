@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/chat_room.css" rel="stylesheet">
+    <link href="../css/common.css" rel="stylesheet">
+
+    <script src="../js/jquery.js"></script>
+    <script src="../js/bootstrap.bundle.min.js"></script>
+
+    <script type="text/javascript">
+        jQuery.noConflict();
+        /*jQuery(document).ready(function () {
+            appear();
+        });*/
+        function goBack(){
+            window.history.back();
+        }
+    </script>
+
+    <script>
+
+        function createRoom(){
+            var roomId = $('#roomIdInput').val();
+            var roomName = $('#roomNameInput').val();
+            var id = $('#idInput').val();
+            var output = {
+                command:'create',
+                roomId:roomId,
+                roomName:roomName,
+                roomOwnoer:id
+            };
+            socket.emit('room', output);
+        }
+        function updateRoom(){
+            var roomId = $('#roomIdInput').val();
+            var roomName = $('#roomNameInput').val();
+            var id = $('#idInput').val();
+            var output = {
+                command:'update',
+                roomId:roomId,
+                roomName:roomName,
+                roomOwnoer:id
+            };
+            socket.emit('room', output);
+        }
+        function deleteRoom(){
+            var roomId = $('#roomIdInput').val();
+            var id = $('#idInput').val();
+            var output = {
+                command:'delete',
+                roomId:roomId,
+                roomName:'',
+                roomOwnoer:id
+            };
+            socket.emit('room', output);
+        }
+        function joinRoom(){
+            var roomId = $('#roomIdInput').val();
+            var output = {
+                command:'join',
+                roomId:roomId
+            };
+            socket.emit('room', output);
+        }
+        function leaveRoom(){
+            var roomId = $('#roomIdInput').val();
+            var output = {
+                command:'leave',
+                roomId:roomId
+            };
+            socket.emit('room', output);
+        }
+        function println(data){      //상태 프린트
+            console.log(data);
+            $('#results').append('<p>' + data + '</p>');
+        }
+
+    </script>
+    <title>채팅방 목록</title>
+</head>
+    
+<body class="coloring">
+
+<!--메뉴 영역 시작-->
+<!--여기선 메뉴명 채팅방 목록으로 되어 있음-->
+<nav class="navbar">
+    <div class="top">
+        <img src="../img/left-arrow.png" height="30rem" onclick="goBack();">
+		<a href="/"><img src="../img/update_logo.png" height="60rem" class="logo"></a>
+        <div class="sets">
+            <a href="/chatroomchat"><img src="../img/update_chat.png" class="menu_img" height="30rem"></a>
+            <img src="../img/update_menu.png" height="30rem" class="navbar-toggler" data-toggle="collapse" data-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
+        </div>
+    </div>
+
+    <div class="collapse navbar-collapse" id="navbarsExample01">
+        <div class="mypage">
+            <img src="../profile_img/<%= profile_img %>" id="profile_pic" style="margin-right: .2rem; width:3rem; height: 3rem">
+            <span id="name" style="font-weight: bold; font-size: 1.2rem; margin-left: .5rem; color:white;"><%= teamname %> 팀</span>
+            <div>
+                <a href="/teamprofile"><button class="btn btn-sm btn-warning" type="submit" style="margin-right: .5rem">내 정보</button></a>
+                <a href="/logout"><button class="btn btn-sm btn-warning" type="submit">로그아웃</button></a>
+            </div>
+        </div>
+
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="/">홈 (매칭 팀 검색)</a>
+      </li>
+      <li class="nav-item" style="display:flex; align-items:center">
+        <span style="margin-bottom: 0; padding: .5rem 0rem; color:white">우리 팀</span>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" href="/teamreceivedreview" style="margin-left:2rem">우리 팀 평가 점수</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/teamschedule" style="margin-left:2rem">경기 스케줄</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="matchapplication">매칭 등록</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/mymatch">내가 등록한 매칭</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/contact">개발자에게 연락</a>
+      </li>
+    </ul>
+
+    </div>
+</nav>
+<!--메뉴 영역 끝-->
+<div class="container">
+    <div class="reco">
+        <div class = "chat_tab">
+            <div onclick="location='./chatroomchat'">채팅</div>
+            <div onclick="location='./chatroommessage'">메시지</div>
+        </div>
+        
+    <% if(event_data.length == 0) { %>
+    <p style="font-weight: bold">매칭이 성사된 팀이 없습니다.</p>
+    <% }else{
+        var notZeroCount = 0; // 나한테 신청왔는데 매칭 수락이나 거절한거
+        var count = 0; // 띄워지는 값 count
+            
+        for(var i = 0; i < event_data.length; i++) {
+            var email = event_data[i].email;
+            var otherEmail = event_data[i].otherEmail;
+            var match_success = event_data[i].match_success;
+            var otherTeamname = event_data[i].otherTeamname;
+            
+            // match_success=0(수락 대기중)이면 채팅방에서 안보이기
+            if(event_data[i].match_success == 0) {
+                // event_data 다 돌았는데 매칭 수락된게 없으면
+                if((i == (event_data.length - 1)) && ((notZeroCount) == i)) {%>
+                    <p style="font-weight: bold">매칭이 성사된 팀이 없습니다.</p>
+                <%}
+                notZeroCount++;
+            }else{
+        %>
+            
+        <script>
+            function clicked(email, otherEmail, match_success, otherTeamname, index) {
+                document.getElementsByName('email')[index].value = email;
+                document.getElementsByName('otherEmail')[index].value = otherEmail;
+                document.getElementsByName('match_success')[index].value = match_success;
+                document.getElementsByName('otherTeamname')[index].value = otherTeamname;
+                
+                alert('email : ' + email + ', otherEmail : ' + otherEmail + ', index : ' + index + ', match_success : ' + match_success);
+                
+                location.href="/chat";
+            }
+        </script>
+
+        <form action="/chatroomchat" method="post">
+            <input type="hidden" name="email" id="email">
+            <input type="hidden" name="otherEmail" id="otherEmail">
+            <input type="hidden" name="match_success" id="match_success">
+            <input type="hidden" name="otherTeamname" id="otherTeamname">
+        </form>
+        <div class="message" onclick="clicked( '<%= event_data[i].email %>','<%=event_data[i].otherEmail%>', '<%= event_data[i].match_success %>', '<%= event_data[i].otherTeamname %>', '<%= count%>')">
+            <div class="chat_room_content">
+                <div><br>채팅 with " <%=otherTeamname%> "팀<br></div>       
+            </div>
+        </div>
+        
+        <hr class="mb-4">
+
+        <%
+            count++;
+                }
+            }
+        }
+        %>
+    </div>
+</div>
+</body>
+</html>

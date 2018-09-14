@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="kor">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>상대팀 리뷰</title>
+
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/common.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="../css/team_review.css" rel="stylesheet">
+    <script src="../js/jquery.js"></script>
+    <script src="../js/bootstrap.bundle.min.js"></script>
+
+    <script type="text/javascript">
+        function goBack(){
+            window.history.back();
+        }
+    </script>
+</head>
+
+
+<body class="coloring">
+<nav class="navbar">
+    <div class="top">
+        <img src="../img/left-arrow.png" height="30rem" onclick="goBack();">
+		<a href="/"><img src="../img/update_logo.png" height="60rem" class="logo"></a>
+        <div class="sets">
+            <a href="/chatroomchat"><img src="../img/update_chat.png" class="menu_img" height="30rem"></a>
+            <img src="../img/update_menu.png" height="30rem" class="navbar-toggler" data-toggle="collapse" data-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
+        </div>
+    </div>
+
+    <div class="collapse navbar-collapse" id="navbarsExample01">
+        <div class="mypage">
+            <img src="../profile_img/<%= profile_img %>" id="profile_pic" style="margin-right: .2rem; width:3rem; height: 3rem">
+            <span id="name" style="font-weight: bold; font-size: 1.2rem; margin-left: .5rem; color:white;"><%= teamname %> 팀</span>
+            <div>
+                <a href="/teamprofile"><button class="btn btn-sm btn-warning" type="submit" style="margin-right: .5rem">내 정보</button></a>
+                <a href="/logout"><button class="btn btn-sm btn-warning" type="submit">로그아웃</button></a>
+            </div>
+        </div>
+
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="/">홈 (매칭 팀 검색)</a>
+      </li>
+      <li class="nav-item" style="display:flex; align-items:center">
+        <span style="margin-bottom: 0; padding: .5rem 0rem; color:white">우리 팀</span>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" href="/teamreceivedreview" style="margin-left:2rem">우리 팀 평가 점수</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/teamschedule" style="margin-left:2rem">경기 스케줄</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="matchapplication">매칭 등록</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/mymatch">내가 등록한 매칭</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/contact">개발자에게 연락</a>
+      </li>
+    </ul>
+
+    </div>
+</nav>
+
+<div class="container">
+    <form action="/teamreview" method="post">
+
+        <input type="hidden" name="reviewDate" id="theDate" value="">
+        <input type="hidden" name="reviewedTeamEmail" value='<%=event_data.reviewedTeamEmail%>'>
+        <input type="hidden" name="eventDate" value='<%=event_data.eventDate%>'>
+        <input type="hidden" name="eventTime" value='<%=event_data.eventTime%>'>
+
+        <script>
+            $(document).ready(function() {
+                var date = new Date();
+                var day = date.getDate();
+                var month = date.getMonth() + 1;
+                var year = date.getFullYear();
+                if (month < 10) month = "0" + month;
+                if (day < 10) day = "0" + day;
+                var today = year + "-" + month + "-" + day;
+                $("#theDate").attr("value", today);
+            });
+        </script>
+
+        <div class="rating_parent mt-3 mb-3">
+            <div class="rating">
+                <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="">5 stars</label>
+                <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="">4 stars</label>
+                <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="">3 stars</label>
+                <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="">2 stars</label>
+                <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="">1 star</label>
+            </div>
+        </div>
+
+        <textarea name = "review_comment" class="form-control mb-4" rows=5 autofocus required wrap="hard" placeholder="한줄평을 남겨주세요"></textarea>
+
+        <div style="display: flex; justify-content: space-around">
+            <button class="btn" type="submit" style="width: 40%">평가 제출</button>
+            <button class="btn" type="button" onclick="location.href='/teamschedule'" style="width: 40%" >창 닫기</button>
+        </div>
+    </form>
+
+</div>
+
+</body>
+</html>
