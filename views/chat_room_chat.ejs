@@ -171,16 +171,20 @@
         %>
 
         <script>
-            function clicked(email, otherEmail, match_success, otherTeamname, event_date, event_time, application_number, index) {
+            function clicked(email, otherEmail, match_success, otherTeamname, event_date, event_time, event_add, event_region, nofteam, other_nofteam, application_number, index) {
                 document.getElementsByName('email')[index].value = email;
                 document.getElementsByName('otherEmail')[index].value = otherEmail;
                 document.getElementsByName('match_success')[index].value = match_success;
                 document.getElementsByName('otherTeamname')[index].value = otherTeamname;
                 document.getElementsByName('event_date')[index].value = event_date;
                 document.getElementsByName('event_time')[index].value = event_time;
+                document.getElementsByName('event_add')[index].value = event_add;
+                document.getElementsByName('event_region')[index].value = event_region;
+                document.getElementsByName('nofteam')[index].value = nofteam;
+                document.getElementsByName('other_nofteam')[index].value = other_nofteam;
                 document.getElementsByName('application_number')[index].value = application_number;
 
-                alert('email : ' + email + ', otherEmail : ' + otherEmail + ', index : ' + index + ', match_success : ' + match_success + ', event_date : ' + event_date + 'event_time : ' + event_time + 'application_number : ' + application_number);
+                alert('email : ' + email + ', otherEmail : ' + otherEmail + ', index : ' + index + ', match_success : ' + match_success + ', event_date : ' + event_date + 'event_time : ' + event_time + 'event_add : ' + event_add + 'event_region' + event_region + 'nofteam : ' + nofteam + 'other_nofteam : ' + other_nofteam + 'application_number : ' + application_number);
 
                 /*                if(match_success == 0) {
                                     alert("아직 매칭이 완료되지 않았습니다.");
@@ -197,10 +201,26 @@
             <input type="hidden" name="otherTeamname" id="otherTeamname">
             <input type="hidden" name="event_date" id="event_date">
             <input type="hidden" name="event_time" id="event_time">
+            <input type="hidden" name="event_add">
+            <input type="hidden" name="event_region">
+            <input type="hidden" name="nofteam">
+            <input type="hidden" name="other_nofteam">
             <input type="hidden" name="application_number" id="application_number">
         </form>
 
-        <div class="message" onclick="clicked('<%= event_data[i].email %>','<%=event_data[i].otherEmail%>', '<%= event_data[i].match_success %>', '<%= event_data[i].otherTeamname %>', '<%= event_data[i].event_date %>', '<%= event_data[i].event_time %>', '<%= event_data[i].application_number%>', '<%= count%>')">
+        <div class="message" onclick="clicked(
+            '<%= event_data[i].email %>'
+                ,'<%=event_data[i].otherEmail%>'
+                , '<%= event_data[i].match_success %>'
+                , '<%= event_data[i].otherTeamname %>'
+                , '<%= event_data[i].event_date %>'
+                , '<%= event_data[i].event_time %>'
+                ,'<%= event_data[i].event_add %>'
+                , '<%= event_data[i].event_region %>'
+                , '<%= event_data[i].nofteam %>'
+                , '<%= event_data[i].other_nofteam %>'
+                ,'<%= event_data[i].application_number%>'
+                , '<%= count%>')">
             <div class="chat_room_content">
                 <% if(event_data[i].event_time == 'none') {
                     var time = '시간 무관';

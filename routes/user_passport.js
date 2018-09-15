@@ -823,6 +823,10 @@ module.exports = function(router, passport, upload) {
                             'otherTeamname': result[i]._doc.teamname, // 상대팀 팀명
                             'event_date': result[i]._doc.others.sEvent_date,
                             'event_time': result[i]._doc.others.sEvent_time,
+                            'event_add': result[i]._doc.others.sAdd,
+                            'event_region': result[i]._doc.others.sRegion,
+                            'nofteam': result[i]._doc.others.sNofteam,
+                            'other_nofteam': result[i]._doc.nofteam, // 상대팀
                             'application_number': result[i]._doc.others.sApplicationNumber
                         };
                         eventData[j++] = data;
@@ -840,6 +844,10 @@ module.exports = function(router, passport, upload) {
                                 'otherTeamname': result[i]._doc.others.sTeamname, // 상대팀 팀명
                                 'event_date': result[i]._doc.others.sEvent_date,
                                 'event_time': result[i]._doc.others.sEvent_time,
+                                'event_add': result[i]._doc.others.sAdd,
+                                'event_region': result[i]._doc.others.sRegion,
+                                'nofteam': result[i]._doc.nofteam,
+                                'other_nofteam': result[i]._doc.others.sNofteam, // 상대팀
                                 'application_number': result[i]._doc.others.sApplicationNumber
                             };
                             eventData[j++] = data;
@@ -880,6 +888,10 @@ module.exports = function(router, passport, upload) {
             'otherProfile': '',
             'event_date': req.body.event_date,
             'event_time': req.body.event_time,
+            'event_add' : req.body.event_add,
+            'event_region' : req.body.event_region,
+            'nofteam' : req.body.nofteam,
+            'other_nofteam' : req.body.other_nofteam,
             'application_number': req.body.application_number
         };
 
@@ -1492,6 +1504,10 @@ module.exports = function(router, passport, upload) {
             'otherTeamname': req.body.otherTeamname,
             'event_date': req.body.event_date || req.body.preEvent_date,
             'event_time': req.body.event_time || req.body.preEvent_time,
+            'event_add' : req.body.add[0] || req.body.preEvent_add,
+            'event_region' : req.body.region || req.body.preEvent_region,
+            'nofteam' : req.body.event_nofteam || req.body.preNofteam,
+            'other_nofteam' : req.body.other_nofteam,
             'application_number': application_number
         };
 
