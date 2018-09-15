@@ -6,10 +6,10 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <link href="../css/bootstrap.min.css" rel="stylesheet">
-    <link href="../css/common.css" rel="stylesheet">
-    <link href="../css/FRAME.css" rel="stylesheet">
-    <link href="../css/chat.css" rel="stylesheet">
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+    <link href="./css/common.css" rel="stylesheet">
+    <link href="./css/FRAME.css" rel="stylesheet">
+    <link href="./css/chat.css" rel="stylesheet">
 
     <!-- Bootstrap core JavaScript -->
     <script src="../js/jquery.js"></script>
@@ -21,7 +21,6 @@
     <script>
         var socket;
         var writer;
-
         var recipient = '<%= event_data.otherEmail %>';
 
         //jquery에서 문서가 다 로딩 되었을 때 호출되는 함수
@@ -211,7 +210,18 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/chatroomchat">
-                    <b>채팅방 목록으로 돌아가기</b><br>
+                    <b>채팅방 목록으로 돌아가기</b>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link">
+                    <div onclick="appointment()" onmouseover="this.style.color='#dfe3ee'" onmouseout="this.style.color='white'"><b>시간 장소 정하기</b></div>
+                </a>
+            </li>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="" data-toggle="modal" data-target="#reportModal">
+                    <b>상대방 신고하기</b><br>
                 </a>
             </li>
         </ul>
@@ -330,6 +340,10 @@
             alert('신고가 접수되었습니다.');
             document.getElementById('formPost_report').submit();
         }
+
+        function appointment() {
+            document.getElementById('formPost_appoint').submit();
+        }
     </script>
 </div>
 
@@ -337,7 +351,7 @@
 
 
 
-    <form action="/chatappointment" method="get">
+    <form action="/chatappointment" method="get" id="formPost_appoint">
         <input type="hidden" name="email" value="<%=event_data.email%>">
         <input type="hidden" name="otherEmail" value="<%=event_data.otherEmail%>">
         <input type="hidden" name="otherTeamname" value="<%=event_data.otherTeamname%>">
@@ -345,9 +359,9 @@
         <input type="hidden" name="event_time" value="<%=event_data.event_time%>">
         <input type="hidden" name="application_number" value="<%=event_data.application_number%>">
 
-        <button type="submit" class="btn" style="color:black">
+        <!--<button type="submit" class="btn" style="color:black" onclick="appointment()">
             시간 장소 정하기
-        </button>
+        </button>-->
     </form>
 
     <form action="/reportdeveloper" method="post" id="formPost_report">
@@ -355,9 +369,9 @@
         <input type="hidden" name="otherTeamname" value="<%=event_data.otherTeamname%>">
         <input type="hidden" name="application_number" value="<%=event_data.application_number%>">
 
-        <button type="button" class="btn" style="color:black" data-toggle="modal" data-target="#reportModal">
+        <!--<button type="button" class="btn" style="color:black" data-toggle="modal" data-target="#reportModal">
             상대방 신고하기
-        </button>
+        </button>-->
 
         <!-- The report Modal -->
         <div class="modal" id="reportModal">
@@ -372,7 +386,7 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-dismiss="modal" >닫기</button>
-                        <button type="button" class="btn" onclick="report()">제출</button>
+                        <button type="button" class="btn" onclick="report()" data-dismiss="modal" data-toggle="collapse" data-target="#navbarsExample01">제출</button>
                     </div>
 
                 </div>

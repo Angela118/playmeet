@@ -1580,7 +1580,7 @@ module.exports = function(router, passport, upload) {
             res.redirect('/chatroomchat');
         });
 
-// 원하는 이메일로 보낼 수는 있으나 인증 취약해서 스팸 분류됨..
+// 발신자를 원하는 이메일로 보낼 수는 있으나 인증 취약해서 스팸 분류됨..
         /*        const sendmail = require('sendmail')();
 
                 sendmail({
