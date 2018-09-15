@@ -366,7 +366,12 @@ io.sockets.on('connection', function(socket){
         // receives message from DB
         database.ChatModel.find({$and:[
                     {$or:[
-                            {"email":input.id}, {"recipient":input.id}
+                            {$and:[
+                                    {"email":input.id}, {"recipient":input.otherId}
+                                ]},
+                            {$and:[
+                                    {"email":input.otherId}, {"recipient":input.id}
+                                ]},
                         ]},
                     {$and:[
                             {"application_number":input.application_number}

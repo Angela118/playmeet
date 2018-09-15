@@ -351,19 +351,19 @@
 
 <div id="add_button_content" style="display: none; margin-left: .5rem; margin-right: .5rem; justify-content: space-around;" class="mb-3">
 
-    <% if(event_data[i].event_time == 'none') {
+    <% if(event_data.event_time == 'none') {
         var time = '시간 무관';
     }else {
-        var time = event_data[i].event_time + '시'
+        var time = event_data.event_time + '시'
     }%>
 
     <h4>경기 정보</h4>
-    상대방이 업데이트 한 정보는 방을 다시 들어와야 확인 가능
     <div>경기 날짜 : <%=event_data.event_date%></div>
     <div>경기 시간 : <%=time%></div>
     <div>경기 장소 : <%=event_data.event_add%> <%=event_data.event_region%></div>
     <div>상대팀 경기 인원 : <%=event_data.other_nofteam%></div>
     <div>우리팀 경기 인원 : <%=event_data.nofteam%></div>
+    <p style="font-size: 0.9rem">상대방이 업데이트 한 정보는 방을 다시 들어와야 확인 가능</p>
 </div>
 
     <form action="/chatappointment" method="get" id="formPost_appoint">
