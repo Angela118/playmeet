@@ -327,10 +327,9 @@
         }
 
         function report() {
-
-            goBack();
-            // chat post로 보냄
-            document.getElementById('formPost').submit();        }
+            alert('신고가 접수되었습니다.');
+            document.getElementById('formPost_report').submit();
+        }
     </script>
 </div>
 
@@ -351,8 +350,9 @@
         </button>
     </form>
 
-    <form action="/reportdeveloper" method="post">
+    <form action="/reportdeveloper" method="post" id="formPost_report">
         <input type="hidden" name="otherEmail" value="<%=event_data.otherEmail%>">
+        <input type="hidden" name="otherTeamname" value="<%=event_data.otherTeamname%>">
         <input type="hidden" name="application_number" value="<%=event_data.application_number%>">
 
         <button type="button" class="btn" style="color:black" data-toggle="modal" data-target="#reportModal">
@@ -372,7 +372,7 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-dismiss="modal" >닫기</button>
-                        <button type="submit" class="btn">제출</button>
+                        <button type="button" class="btn" onclick="report()">제출</button>
                     </div>
 
                 </div>

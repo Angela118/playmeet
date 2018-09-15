@@ -32,6 +32,7 @@
     "passport-local": "^1.0.0",
     "passport-twitter": "^1.0.4",
     "python-shell": "^0.5.0",
+    "sendmail": "^1.4.1",
     "serve-static": "^1.11.2",
     "socket.io": "^2.1.1"
   },
