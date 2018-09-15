@@ -136,7 +136,7 @@
             if(cancel == 1) {
                 if((writer == 'you') && (application_number == '<%= event_data.application_number%>')) {
 
-                    msg = '상대방이 ' + msg + ' 수락을 누르시면 매칭 정보가 삭제되며, 필요시 상대방 신고하기 버튼을 누르면 관리자에게 접수됩니다.';
+                    msg = '상대방이 ' + msg + ' 수락을 누르면 매칭 정보가 삭제되며, 필요시 상대방 신고하기 버튼을 누르면 관리자에게 접수됩니다.';
                     contents =
                         "<li class=" + writer + ">"
                         + "<div class='img_div'" + "style='margin-left: 0rem; margin-right: 0'>" + "<img class='profile_img' src='../profile_img/" + profile + "'/>" + "</div>"
@@ -364,7 +364,7 @@
             <div class="modal-dialog modal-dialog-centered modal-sm">
                 <div class="modal-content">
                     <div class="modal-body" style="border-top:1px solid black">
-                        개발자에게 신고할 내용을 입력<br>
+                        관리자에게 신고할 내용을 입력<br>
                         신고할 팀 : <b><%=event_data.otherTeamname%>팀</b> <br>(id : <%=event_data.otherEmail%>)
                     </div>
 

@@ -1593,41 +1593,41 @@ module.exports = function(router, passport, upload) {
                     console.dir(reply)
                 })*/
 
-// 인증키 썼는데 첫번째 거랑 똑같음..
-        /*        const nodemailer = require('nodemailer');
-                let transporter = nodemailer.createTransport({
-                    service:'gmail',
-                    auth: {
-                        type: 'OAuth2',
-                        user: 'lsk201808@gmail.com',
-                        clientId: '42964755833-sf3544f720lm9eh9n5rvgram4pq5uj67.apps.googleusercontent.com',
-                        clientSecret: 'sjMSMsKYqEVq_1PYhn5mnPoE',
-                        refreshToken: '1/GBGWKXhvN8aHOaRFVjacWecXc-_Hih8i85QO1MuhU8k',
-                        accessToken: 'ya29.GlsZBvZaGtDOEeq2D9txFBmdklh44wcgF8WMr16b_LH455Cf_ITB-WDSLYG4LYodcLVjiSoI835zvUeTzJfRu2QQ-1XYdyktUX3O9gz3Nc1XNoC08qkOxCT-bHh8',
-                        expires: 3600
-                    }
-                });
 
-                let mailOption = {
-                    from : {
-                        name : req.user.teamname,
-                        address : email
-                    },
-                    to : 'lsk201808@gmail.com',
-                    subject : otherTeamname + '(' + otherEmail +  ')팀 신고합니다.',
-                    html: '<p>' + report_content + '</p><p>application_number : ' + application_number + '</p>'
-                };
 
-                transporter.sendMail(mailOption, function(err, info) {
-                    if ( err ) {
-                        console.error('Send Mail error : ', err);
-                    }
-                    else {
-                        console.log('Message sent : ', info);
-                    }
+        /*
+        //
+        const nodemailer = require('nodemailer');
+        let transporter = nodemailer.createTransport({
+            host: 'smtp.ethereal.email',
+            port: 587,
+            secure: false,
+            auth: {
+                user: req.user.email,
+                pass: req.user.password
+            }
+        });
 
-                    res.redirect('/chatroomchat');
-                });*/
+        let mailOption = {
+            from : {
+                name : req.user.teamname,
+                address : req.user.email
+            },
+            to : 'lsk201808@gmail.com',
+            subject : otherTeamname + '(' + otherEmail +  ')팀 신고합니다.',
+            html: '<p>' + report_content + '</p><p>application_number : ' + application_number + '</p>'
+        };
+
+        transporter.sendMail(mailOption, function(err, info) {
+            if ( err ) {
+                console.error('Send Mail error : ', err);
+            }
+            else {
+                console.log('Message sent : ', info);
+            }
+
+            res.redirect('/chatroomchat');
+        });*/
 
     });
 
