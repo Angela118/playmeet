@@ -204,18 +204,18 @@
     <div class="collapse navbar-collapse" id="navbarsExample01">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-                <a class="nav-link" href="" data-toggle="modal" data-target="#myModal">
-                    <b>매칭 중단하기</b><br>
-                </a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link" href="/chatroomchat">
                     <b>채팅방 목록으로 돌아가기</b>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link">
-                    <div onclick="appointment()" onmouseover="this.style.color='#dfe3ee'" onmouseout="this.style.color='white'"><b>시간 장소 정하기</b></div>
+                    <div onclick="appointment()" onmouseover="this.style.color='#dfe3ee'" onmouseout="this.style.color='white'"><b>시간 장소 다시 정하기</b></div>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="" data-toggle="modal" data-target="#myModal">
+                    <b>매칭 중단하기</b><br>
                 </a>
             </li>
             </li>
@@ -267,11 +267,11 @@
 </style>
 
 <div id="mydiv">
-    <div class="chatting" id="chatting" style="height:74vh;"></div>
+    <div class="chatting" id="chatting" style="height:82vh; margin-bottom: 1rem"></div>
 </div>
 
 <div class="mb-3" style="display: flex; margin-left: .5rem; margin-right: .5rem; justify-content: space-between; align-items: center">
-    <img src="../img/add.png" id="add_button" width="30rem" height="30rem" alt="" style="margin-right: 1rem">
+    <img src="./css/img/add.png" id="add_button" width="30rem" height="30rem" alt="" style="margin-right: 1rem">
     <input type="text" class="form-control" id="dataInput" placeholder="내용을 입력해주세요."  style="margin-right: .5rem" onFocus="clearText(this)">
     <button type="submit" class="btn btn-warning" id="text_button" onclick="send();">전송</button>
 
@@ -282,14 +282,16 @@
 
         // $(".add_button_content").hide();
         $("#add_button").click(function(){
-            $("#add_button_content").toggle();
-            var add = '../css/img/add.png';
-            var close = '../css/img/close-button.png';
+            var add = './css/img/add.png';
+            var close = './css/img/close-button.png';
+
             if($('#add_button').attr('src') === add) {
                 $('#add_button').attr('src', close);
             } else {
                 $('#add_button').attr('src', add);
             }
+
+            $("#add_button_content").toggle();
         });
 
         var email = '<%= email %>';
@@ -347,9 +349,15 @@
     </script>
 </div>
 
-<div id="add_button_content" style="display: flex; margin-left: .5rem; margin-right: .5rem; justify-content: space-around;">
+<div id="add_button_content" style="display: none; margin-left: .5rem; margin-right: .5rem; justify-content: space-around;" class="mb-3">
 
-
+    <h4>경기 정보</h4>
+    <div>경기 날짜 : <%=event_data.event_date%></div>
+    <div>경기 시간 : <%=event_data.event_time%></div>
+    <div>경기 장소 : </div>
+    <div>우리팀 경기 인원 : </div>
+    <div>상대팀 경기 인원 : </div>
+</div>
 
     <form action="/chatappointment" method="get" id="formPost_appoint">
         <input type="hidden" name="email" value="<%=event_data.email%>">
@@ -358,20 +366,12 @@
         <input type="hidden" name="event_date" value="<%=event_data.event_date%>">
         <input type="hidden" name="event_time" value="<%=event_data.event_time%>">
         <input type="hidden" name="application_number" value="<%=event_data.application_number%>">
-
-        <!--<button type="submit" class="btn" style="color:black" onclick="appointment()">
-            시간 장소 정하기
-        </button>-->
     </form>
 
     <form action="/reportdeveloper" method="post" id="formPost_report">
         <input type="hidden" name="otherEmail" value="<%=event_data.otherEmail%>">
         <input type="hidden" name="otherTeamname" value="<%=event_data.otherTeamname%>">
         <input type="hidden" name="application_number" value="<%=event_data.application_number%>">
-
-        <!--<button type="button" class="btn" style="color:black" data-toggle="modal" data-target="#reportModal">
-            상대방 신고하기
-        </button>-->
 
         <!-- The report Modal -->
         <div class="modal" id="reportModal">
@@ -396,7 +396,7 @@
 
     </form>
 
-</div>
+
 
 </body>
 </html>

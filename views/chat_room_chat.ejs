@@ -202,7 +202,12 @@
 
         <div class="message" onclick="clicked('<%= event_data[i].email %>','<%=event_data[i].otherEmail%>', '<%= event_data[i].match_success %>', '<%= event_data[i].otherTeamname %>', '<%= event_data[i].event_date %>', '<%= event_data[i].event_time %>', '<%= event_data[i].application_number%>', '<%= count%>')">
             <div class="chat_room_content">
-                <div><br> <b><%= event_data[i].event_date%></b> <%= event_data[i].event_time%>시 경기 with <%= event_data[i].otherTeamname%>팀<br></div>
+                <% if(event_data[i].event_time == 'none') {
+                    var time = '시간 무관';
+                }else {
+                    var time = event_data[i].event_time + '시'
+                }%>
+                <div><br> <b><%= event_data[i].event_date%></b> <%= time%> 경기 with <%= event_data[i].otherTeamname%>팀<br></div>
             </div>
         </div>
 
