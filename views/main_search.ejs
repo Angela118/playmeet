@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="kr">
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
@@ -32,7 +32,6 @@
 </head>
 
 <body class="coloring">
-
 <nav class="navbar">
     <div class="top">
         <img src="../img/left-arrow.png" height="30rem" onclick="goBack();">
@@ -81,35 +80,19 @@
     </div>
 </nav>
 
-<!--메뉴 영역 끝 : 나중에 파일로 따로 빼기 -->
-
-<!--검색 항목-->
-
 <div class="container">
-  <div class="reco" style="margin-top:0;">
+  <div class="reco" style="margin-top: 0;">
       <!--매칭 팀 찾기-->
-      <div class="search">
+        <div class="search">
           <div><img src="../img/soccer_30.png" style="margin-right: 1rem; vertical-align:baseline;"></div>
           <div class="p_title">매칭팀 찾기</div>
       </div>
+      
 	  <form action="/mainsearch" method="post" class="search_team">
 		  <div class="wrapper zero">
               <label for="search_team" class="one">팀명</label>
            <input type="text" class="search_team form-control two" name="search_team" value="none">
         </div>
-		  <!--<div class="wrapper">
-        	<select class="mr-sm-2 form-control" name="city" style="width:9.5rem">
-				<option value="none"> 지역 </option>
-				<option>서울시</option>
-				<option>경기도</option>
-        	</select>
-			<select class="form-control" name="district" style="width:9.5rem">
-				<option value="none"> 지역 상세검색 </option>
-				<option>용산구</option>
-				<option>양천구</option>
-				<option>강서구</option>
-			</select>
-    	</div>-->
 	<div class="wrapper zero">
 		<label for="search_team" class="one">지역</label>
 		<select name="add" onchange="regionChange(this.selectedIndex);" class="form-control">
@@ -159,40 +142,12 @@
 			<option value="80">80대 이상</option>
         </select>
     </div>
-<!--
+
     <div class="wrapper">
+		<label for="search_team" class="one">날짜</label>
       <input type="date" id="theDate" name="event_date" class="form-control">
-        
-        <script>
-				
-            $(document).ready(function() {
-                var date = new Date();
-                var day = date.getDate();
-                var month = date.getMonth() + 1;
-                var year = date.getFullYear();
-                if (month < 10) month = "0" + month;
-                if (day < 10) day = "0" + day;
-                var today = year + "-" + month + "-" + day;       
-                $("#theDate").attr("value", today);
-            });
-        </script>
     </div>
-    <div class="wrapper">
-      <input class="form-control" id="theTime" name="event_time" type="time" value="00:00:00">
-      <!--모바일에서 터치해서 바꾸는 것 안 나오면 다른 방법 찾기..-->
-		
-<!--		<script>
-			var time = new Date();
-			var now = ("0" + time.getHours()).slice(-2) + ":" + 
-						("0" + time.getMinutes()).slice(-2);
-			console.log(now);
-			$("#theTime").attr("value", now);
-				
-		</script>
-		
-    </div>
-	  
--->
+		  
 		  
 	<div class="wrapper zero">
 		<label for="search_team" class="one">시간대</label>
@@ -247,9 +202,7 @@
     </div>
 
 		  </form>
-  </div> <!--reco-->
-
-
+  </div> 
 
 </div>
 

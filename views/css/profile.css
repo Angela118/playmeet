@@ -1,3 +1,7 @@
+.container {
+    max-width: 960px;
+}
+
 .border-top { border-top: 1px solid #e5e5e5; }
 .border-bottom { border-bottom: 1px solid #e5e5e5; }
 .border-top-gray { border-top-color: #adb5bd; }
@@ -7,18 +11,20 @@
 
 .lh-condensed { line-height: 1.25; }
 
+.navbar{
+    justify-content:space-around;
+    padding:1rem 0rem;
+}
+
 .birth{
     display:flex;
     justify-content: space-around;
     text-align:center;
 }
-.navbar {
-    z-index: 2;
-}
+
 .profile_img_upload{
     /*display: flex; justify-content: center; align-items: center;*/
     text-align: center;
-    z-index: 1;
 }
 
 .img_div{

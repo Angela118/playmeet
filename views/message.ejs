@@ -8,6 +8,7 @@
 
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <link href="../css/common.css" rel="stylesheet">
+    <link href="../css/FRAME.css" rel="stylesheet">
     <link href="../css/chat.css" rel="stylesheet">
 
     <!-- Bootstrap core JavaScript -->
@@ -21,7 +22,7 @@
 
 
 
-<body class="coloring">
+<body class="whiteB">
 
 <script type="text/javascript">
     function goBack(){
@@ -50,7 +51,7 @@ if(curMove == 100){
 
 %>
 
-<nav class="navbar">
+<nav class="navbar blueB">
 
     <div class="top">
         <div>
@@ -70,8 +71,11 @@ if(curMove == 100){
         document.getElementById('sEmail').value = email;
         document.getElementById('sSameEmailIndex').value = sameEmailIndex;
         document.getElementById('match').value = match;
-
-        alert('email : ' + email + '/ sameEmailIndex : ' + sameEmailIndex + '/ match : ' + match);
+		if(match == 1){
+        	alert('email : ' + email + '/ sameEmailIndex : ' + sameEmailIndex + '/ match : ' + match + '매칭을 승낙하였습니다.');
+		}else if(match == 2){
+			alert('email : ' + email + '/ sameEmailIndex : ' + sameEmailIndex + '/ match : ' + match + '매칭을 거절하였습니다.');
+		}
 
         document.getElementById('formPost').submit();
     }
@@ -91,13 +95,15 @@ if(curMove == 100){
                 원정가능 여부 : <%= curMove %><br>
                 연령대 : <%= event_data[index].age %>대<br>
                 성별 : <%= curGender %><br>
+                경기 경력(년수) : <%=event_data[index].career_year%>년<br>
+                경기 경력(횟수) : <%=event_data[index].career_count%>번<br>
                 경기 날짜 : <%= event_data[index].others.sEvent_date %><br>
                 경기 시간 : <%= event_data[index].others.sEvent_time %><br>
                 경기 요일 : <%= event_data[index].others.sEvent_day %>요일<br>
                 한마디 : <%= event_data[index].others.sMention %><br>
                 신청 날짜 : <%= event_data[index].others.sCreatedMonth %>월 <%= event_data[index].others.sCreatedDay %>일<br>
                 팀 인원수 : <%= event_data[index].nofteam %>명<br>
-                상대팀 별점 : ***넣어야 됨<br>
+                상대팀 별점 : <%= event_data[index].allRating %><br>
             </p>
             <p><b>해당 경기 날짜에 매칭 신청합니다. 수락하시겠습니까?</b><br><br></p>
 

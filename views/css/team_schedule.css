@@ -34,10 +34,6 @@
     margin-bottom:0.5rem;
 }
 
-/*.team-img {
-    margin-bottom: 0.5rem;
-} 왜 안 먹지..*/
-
 .score_input_form{
     display:flex;
 }
@@ -80,6 +76,8 @@
 .main {
     list-style: none;
     color: white;
+    /*max-width: 75%;*/
+    /*margin: 1rem auto;*/
 }
 h3 {padding: 0; margin: 0;}
 

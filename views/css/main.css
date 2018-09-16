@@ -47,7 +47,7 @@ select.custom-select option{
 }
 .list_divide_2 {
     display: block;
-    width: 90%;
+    width: 93%;
     position: absolute;
 }
 
@@ -59,7 +59,7 @@ select.custom-select option{
     margin-bottom: -.2rem;;
 }
 .list_item_date{
-    margin-bottom: 1rem;
+    margin-bottom: .5rem;
     font-size: .9rem;
 }
 .list_item_detail {

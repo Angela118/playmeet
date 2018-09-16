@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="kr">
+<html lang="ko">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -14,19 +14,17 @@
     <!-- Custom styles for this template -->
     <link href="../css/profile.css" rel="stylesheet">
     <link href="../css/common.css" rel="stylesheet">
-    
 
     <script src="../js/jquery.js"></script>
-    <script src="../js/bootstrap.bundle.min.js"></script>
+    <script src="../js/bootstrap.bundle.min.js"></script> 
     <script type="text/javascript">
-    function goBack(){
-        window.history.back();
-    }
-</script>
+        function goBack(){
+            window.history.back();
+        }
+    </script>
 </head>
 
 <body class="coloring">
-   
 <nav class="navbar">
     <div class="top">
         <img src="../img/left-arrow.png" height="30rem" onclick="goBack();">
@@ -73,10 +71,10 @@
 
     </div>
 </nav>
-
 <div class="container">
     <div class="reco">
         <h5 class="mb-3" style="font-weight: bold">기본 정보</h5>
+
         
         <%
                     if(gender == 25) {
@@ -97,39 +95,21 @@
             <p>프로필 사진</p> <!--프로필 사진-->
             <div class="profile_img_upload">
                 <div class="img_div mb-1"><img id="profile_img" src="../profile_img/<%= profile_img %>"/></div>
-                <a href="/uploadimg"><button class="btn btn-sm btn-warning" type="submit" style="margin-right: .5rem">프로필 사진 변경</button></a>
             </div>
 
             <div class="mb-3">
                 <div>팀 이름</div>
             <div class="change"><%= teamname %></div>
-            <!--이름-->
-                <!--<input type="text" class="form-control" id="user-name" placeholder="" value="" required>-->
-                <!--<div class="invalid-feedback">-->
-                    <!--Valid name is required.-->
-                <!--</div>-->
             </div>
 
             <div class="mb-3"> <!--아이디-->
                 <div>팀장 이메일</div>
             <div class="change"><%= email %></div>
-            
-                <!--<div class="input-group">-->
-                    <!--<input type="text" class="form-control" id="user-ID" placeholder="" required>-->
-                    <!--<div class="invalid-feedback" style="width: 100%;">-->
-                        <!--Your ID is required.-->
-                    <!--</div>-->
-                <!--</div>-->
             </div>
       
          <div class="mb-3">
                 <div id="user-gender">성별</div>
             <div class="change"><%= curGender %></div>
-                <!--<select class="custom-select d-block w-100" id="user-gender" required>-->
-                    <!--<option value="">Choose...</option>-->
-                    <!--<option>여</option>-->
-                    <!--<option>남</option>-->
-                <!--</select>-->
             </div>
       
 			<div class="mb-3">
@@ -143,7 +123,6 @@
             <div class="mb-3">
                 <div>주 경기 장소</div>
             <div class="change"><%= region %></div>
-                <!--<input type="text" class="form-control" id="region" placeholder="서울시 용산구 청파동" required>-->
             </div>
    
    
@@ -151,10 +130,6 @@
          <div class="mb-3">
                 <div>원정 가능 유무</div>
             <div class="change"><%= curMove %></div>
-                <!--<select class="custom-select d-block w-100" name="move" id="" required>
-                    <option>O</option>
-                    <option>X</option>
-                </select>-->
             </div>
    
    
