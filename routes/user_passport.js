@@ -1504,10 +1504,128 @@ module.exports = function(router, passport, upload) {
                 update['others.sAdd'] = [addr[1], addr[2]];
             } else
                 update['others.sAdd'] = [addr[0], addr[1]];
-            console.log('update[\'others.sAdd\'] : ' + update['others.sAdd']);
         }
 
-        // 신청 받음
+        var updateFunction = function () {
+            console.log('------updateFunction------');
+            if(flag == 0) {
+                dbm.MatchModel.update({$and:[
+                            {"email":otherEmail}, {"others.sEmail":email}, {"others.sEvent_date":preEvent_date}, {"others.sEvent_time":preEvent_time}
+                        ]},
+                    {$set : update}, function (err) {
+                        if(err) throw err
+                        console.log("(flag=0)chatAppointment -> Match db updated")
+                    });
+                // 신청함
+            }else {
+                dbm.MatchModel.update({$and:[
+                            {"email":email}, {"others.sEmail":otherEmail}, {"others.sEvent_date":preEvent_date}, {"others.sEvent_time":preEvent_time}
+                        ]},
+                    {$set : update}, function (err) {
+                        if(err) throw err
+                        console.log("(flag=1)chatAppointment -> Match db updated")
+                    });
+            }
+            chatpostFunction();
+        }
+
+        var chatpostFunction = function () {
+            console.log('------chatpostFunction------');
+            var data;
+
+            dbm.MatchModel.find({"others.sApplicationNumber": application_number}, function (err, result) {
+                for (var i = 0; i < result.length; i++) {
+                    // 나한테 매칭 신청한 팀 찾기
+                    if (result[i]._doc.others.sEmail === req.user.email) {
+                        data = {
+                            'email': req.user.email, // 나
+                            'otherEmail': result[i]._doc.email, //상대팀
+                            'match_success': result[i]._doc.match_success, //매치 수락 여부
+                            'otherTeamname': result[i]._doc.teamname, // 상대팀 팀명
+                            'event_date': req.body.event_date || result[i]._doc.others.sEvent_date,
+                            'event_time': req.body.event_time || result[i]._doc.others.sEvent_time,
+                            'event_add': req.body.add || result[i]._doc.others.sAdd,
+                            'event_region': req.body.region || result[i]._doc.others.sRegion,
+                            'nofteam': req.body.event_nofteam || result[i]._doc.others.sNofteam,
+                            'other_nofteam': result[i]._doc.nofteam, // 상대팀
+                            'other_review_date': result[i]._doc.review_date,
+                            'application_number': result[i]._doc.others.sApplicationNumber
+                        };
+                    } else if (result[i]._doc.email === req.user.email) {
+                        data = {
+                            'email': result[i]._doc.email,//나
+                            'otherEmail': result[i]._doc.others.sEmail, // 상대팀
+                            'match_success': result[i]._doc.match_success, //매치 수락 여부
+                            'otherTeamname': result[i]._doc.others.sTeamname, // 상대팀 팀명
+                            'event_date': req.body.event_date || result[i]._doc.others.sEvent_date,
+                            'event_time': req.body.event_time || result[i]._doc.others.sEvent_time,
+                            'event_add': req.body.add || result[i]._doc.others.sAdd,
+                            'event_region': req.body.region || result[i]._doc.others.sRegion,
+                            'nofteam': req.body.event_nofteam || result[i]._doc.nofteam,
+                            'other_nofteam': result[i]._doc.others.sNofteam, // 상대팀
+                            'other_review_date': result[i]._doc.others.sReviewDate,
+                            'application_number': result[i]._doc.others.sApplicationNumber
+                        };
+                    }
+                }
+
+                if(data['event_add']) {
+                    var addr = [];
+                    addr = data['event_add'].split(' ');
+
+                    if (addr[0] == '제주특별자치도') {
+                        data['event_add'] = [addr[1], addr[2]];
+                    } else
+                        data['event_add'] = [addr[0], addr[1]];
+                }
+
+                dbm.UserModel.find({email: otherEmail}, function (err, result) {
+                    for (var i = 0; i < result.length; i++) {
+                        data['otherProfile'] = result[i]._doc.profile_img;
+                    }
+                    console.log('otherProfile : ' + data.otherProfile);
+
+                    if (!req.user) {
+                        console.log('사용자 인증 안된 상태임.');
+                        res.redirect('/login');
+                    } else {
+                        profile_photo = req.user.profile_img;
+                        if (profile_img.length > 0) {
+                            for (var i = 0; i < profile_img.length; i++) {
+                                if (profile_img[i][0] == req.user.email)
+                                    profile_photo = profile_img[i][1];
+                            }
+                        } else {
+                            profile_img[imgi] = [req.user.email, req.user.profile_img];
+                        }
+
+                        var user_context = {
+                            'email': req.user.email,
+                            'password': req.user.password,
+                            'teamname': req.user.teamname,
+                            'gender': req.user.gender,
+                            'age': req.user.age,
+                            'region': req.user.region,
+                            'move': req.user.move,
+                            'nofteam': req.user.nofteam,
+                            'career_year': req.user.career_year,
+                            'career_count': req.user.career_count,
+                            'introteam': req.user.introteam,
+                            'profile_img': profile_photo,
+                            'event_data': data
+                        };
+                        console.log('profile_img : ' + user_context.profile_img);
+                        console.log(data);
+                        res.render('chat.ejs', user_context);
+                    }
+                });
+            });
+        }
+
+        updateFunction();
+
+
+ /*       // 신청 받음
         if(flag == 0) {
             dbm.MatchModel.update({$and:[
                         {"email":otherEmail}, {"others.sEmail":email}, {"others.sEvent_date":preEvent_date}, {"others.sEvent_time":preEvent_time}
@@ -1566,11 +1684,11 @@ module.exports = function(router, passport, upload) {
                     }
                 }
 
-/*                if(data.event_add) {
+/!*                if(data.event_add) {
                     var array = data.event_add.split(' ');
                     data.event_add[0] = array[0];
                     data.event_add[1] = array[1];
-                }*/
+                }*!/
 
                 dbm.UserModel.find({email:otherEmail}, function (err, result) {
                     for (var i = 0; i < result.length; i++) {
@@ -1613,7 +1731,7 @@ module.exports = function(router, passport, upload) {
                     }
                 });
             });
-        }, 600);
+        }, 600);*/
     });
 
     // 채팅방 내 상대팀 신고(개발자에게 메일보내기)
