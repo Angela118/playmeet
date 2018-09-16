@@ -491,7 +491,35 @@
                                             <%= curTeamname %>팀 : &nbsp
                                             <input type="text" class="form-control" style="height:1.8rem" placeholder=<%=curScore%> name="secondScore" value=''>&nbsp
 
+                                            <%  var today = new Date();
+                                                var dd = today.getDate();
+                                                var mm = today.getMonth()+1; //January is 0!
+                                                var yyyy = today.getFullYear();
+
+                                                if(dd<10) {
+                                                    dd='0'+dd
+                                                }
+
+                                                if(mm<10) {
+                                                    mm='0'+mm
+                                                }
+
+                                                today = yyyy + '-' + mm + '-' + dd; // 오늘 날짜
+                                            today = today.split('-');
+                                            var event = curDate.split('-');
+
+                                            var firstDate = new Date();
+                                            firstDate.setFullYear(today[0],(today[1] - 1 ),today[2]);
+                                                var secondDate=new Date();
+                                                secondDate.setFullYear(event[0],(event[1] - 1 ),event[2]);
+
+                                                // 경기날짜 전이면
+                                                if(firstDate > secondDate){
+                                            %><button type="button" class="btn btn-sm" style="color:black">경기 후에 평가</button><%
+                                                }else{
+                                            %>
                                             <button class="btn btn-sm" style="color:black" onclick="clicked( `<%=event_data[i].email%>`, `<%=event_data[i].otherEmail%>`, `<%=event_data[i].event_date%>`,`<%=event_data[i].event_time%>`, `<%=count%>`)">제출</button>
+                                            <%}%>
                                         </div>
                                     </div>
                                 </div>
@@ -507,7 +535,7 @@
                                 <%if(curReviewDate == 0) {%>
                                 <button type="button" class="btn btn-block blueB" onclick="reviewClicked( `<%=event_data[i].email%>`, `<%=event_data[i].otherEmail%>`, `<%=event_data[i].event_date%>`,`<%=event_data[i].event_time%>`, `<%=count%>`)">상대팀 평가/채팅방 삭제하기</button>
                                 <%}else {%>
-                                <button type="button" class="btn btn-block blueB">상대팀 평가 완료</button>
+                                    <button type="button" class="btn btn-block blueB">상대팀 평가 완료</button>
                                 <%}%>
                             </div>
 
