@@ -105,6 +105,7 @@
             // 13일에 보낸게 왜 15일 방에 상대방이 접속중이면 뜨지..
 
             addToChatting(message.email, message.data, message.application_number, 0);
+            $('#dataInput').val('');
         }
 
         function addToChatting(writer, msg, application_number, cancel) {
