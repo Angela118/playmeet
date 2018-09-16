@@ -827,6 +827,7 @@ module.exports = function(router, passport, upload) {
                             'event_region': result[i]._doc.others.sRegion,
                             'nofteam': result[i]._doc.others.sNofteam,
                             'other_nofteam': result[i]._doc.nofteam, // 상대팀
+                            'other_review_date': result[i]._doc.review_date,
                             'application_number': result[i]._doc.others.sApplicationNumber
                         };
                         eventData[j++] = data;
@@ -848,6 +849,7 @@ module.exports = function(router, passport, upload) {
                                 'event_region': result[i]._doc.others.sRegion,
                                 'nofteam': result[i]._doc.nofteam,
                                 'other_nofteam': result[i]._doc.others.sNofteam, // 상대팀
+                                'other_review_date': result[i]._doc.others.sReviewDate,
                                 'application_number': result[i]._doc.others.sApplicationNumber
                             };
                             eventData[j++] = data;

@@ -161,13 +161,13 @@
         <!--event_data.others는 선택된 (내가 올렸던) 경기 날짜 & 시간 등 들어있음 -->
 
         <% if(event_data.length == 0){ %>
-        <p style="font-weight: bold">성사된 매칭이 없습니다.</p>
+        <p style="font-weight: bold">진행중인 매칭이 없습니다.</p>
         <%}else{
         var count = 0; // 띄워지는 값 count
 
         for(var i = 0; i < event_data.length; i++) {
 
-            if(event_data[i].match_success != 0) {
+            if((event_data[i].match_success != 0) && (event_data[i].other_review_date == '')) {
         %>
 
         <script>
@@ -215,11 +215,11 @@
                 , '<%= event_data[i].otherTeamname %>'
                 , '<%= event_data[i].event_date %>'
                 , '<%= event_data[i].event_time %>'
-                ,'<%= event_data[i].event_add %>'
+                , '<%= event_data[i].event_add %>'
                 , '<%= event_data[i].event_region %>'
                 , '<%= event_data[i].nofteam %>'
                 , '<%= event_data[i].other_nofteam %>'
-                ,'<%= event_data[i].application_number%>'
+                , '<%= event_data[i].application_number%>'
                 , '<%= count%>')">
             <div class="chat_room_content">
                 <% if(event_data[i].event_time == 'none') {
@@ -235,7 +235,9 @@
 
         <%
             count++;
-        }
+        } else if(i == event_data.length - 1) {%>
+            <p style="font-weight: bold">진행중인 매칭이 없습니다.</p>
+        <%}
         }
         }
         %>
