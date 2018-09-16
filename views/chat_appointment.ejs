@@ -27,17 +27,6 @@
     function goBack(){
         window.history.back();
     }
-
-    $(document).ready(function() {
-        var curDate = '<%= event_data.event_date %>';
-
-        var matchYear = curDate.substring(0,4);
-        var matchMonth = curDate.substring(5,7);
-        var matchDay = curDate.substring(8,10);
-
-        var today = matchYear + "-" + matchMonth + "-" + matchDay;
-        $("#theDate").attr("value", today);
-    });
 </script>
 
 
@@ -66,7 +55,7 @@
 
         <div class="fit">
             <div>날짜</div>
-            <input type="date" name="event_date" id="theDate" class="form-control mt-2">
+            <input type="date" name="event_date" id="thedate" value=<%= event_data.event_date %> class="form-control mt-2">
         </div>
 
         <%
@@ -78,7 +67,7 @@
             <div>시간</div>
             <!--<input type="time" name="event_time" class="form-control" value="" step="600">-->
             <select name="event_time" class="form-control">
-                <option value="" selected disabled hidden></option>
+                <option value="<%= event_data.event_time %>" selected disabled hidden><%= event_data.event_time %></option>
                 <option value="none">시간무관</option>
                 <option>00</option>
                 <option>01</option>
