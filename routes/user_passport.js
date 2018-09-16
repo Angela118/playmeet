@@ -883,21 +883,6 @@ module.exports = function(router, passport, upload) {
 
         var otherEmail = req.body.otherEmail || req.query.otherEmail;
         var application_number = req.body.application_number;
-
-        /*        var event = {
-                    'email':req.body.email || req.query.email,
-                    'otherEmail': otherEmail,
-                    'otherTeamname': req.body.otherTeamname || req.query.otherTeamname,
-                    'otherProfile': '',
-                    'event_date': req.body.event_date,
-                    'event_time': req.body.event_time,
-                    'event_add' : req.body.event_add,
-                    'event_region' : req.body.event_region,
-                    'nofteam' : req.body.nofteam,
-                    'other_nofteam' : req.body.other_nofteam,
-                    'application_number': req.body.application_number
-                };*/
-
         var data;
 
         dbm.MatchModel.find({"others.sApplicationNumber" : application_number} ,function (err, result) {
@@ -1538,7 +1523,7 @@ module.exports = function(router, passport, upload) {
                 });
         }
 
-        /*        var event = {
+/*                var event = {
                     'email':req.user.email,
                     'otherEmail': otherEmail,
                     'otherTeamname': req.body.otherTeamname,
@@ -1551,6 +1536,50 @@ module.exports = function(router, passport, upload) {
                     'application_number': application_number
                 };*/
 
+
+  /*      setTimeout(function() {
+            dbm.UserModel.find({email:otherEmail}, function (err, result) {
+                for (var i = 0; i < result.length; i++) {
+                    event['otherProfile'] = result[i]._doc.profile_img;
+                }
+                console.log(event['otherProfile']);
+
+
+                if (!req.user) {
+                    console.log('사용자 인증 안된 상태임.');
+                    res.redirect('/login');
+                } else {
+                    profile_photo = req.user.profile_img;
+                    if (profile_img.length > 0) {
+                        for (var i = 0; i < profile_img.length; i++) {
+                            if (profile_img[i][0] == req.user.email)
+                                profile_photo = profile_img[i][1];
+                        }
+                    } else {
+                        profile_img[imgi] = [req.user.email, req.user.profile_img];
+                    }
+
+                    var user_context = {
+                        'email': req.user.email,
+                        'password': req.user.password,
+                        'teamname': req.user.teamname,
+                        'gender': req.user.gender,
+                        'age': req.user.age,
+                        'region': req.user.region,
+                        'move': req.user.move,
+                        'nofteam': req.user.nofteam,
+                        'career_year': req.user.career_year,
+                        'career_count': req.user.career_count,
+                        'introteam': req.user.introteam,
+                        'profile_img': profile_photo,
+                        'event_data': event
+                    };
+                    console.log('profile_img : ' + user_context.profile_img);
+                    console.dir(event);
+                    res.render('chat.ejs', user_context);
+                }
+            });
+        }, 500);*/
 
         setTimeout(function() {
             var data;
