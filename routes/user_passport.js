@@ -1454,7 +1454,7 @@ module.exports = function(router, passport, upload) {
                 'others.sEvent_date' : req.body.event_date || req.query.event_date,
                 'others.sEvent_time' : req.body.event_time || req.query.event_time,
                 'others.sRegion' : req.body.region || req.query.region,
-                'others.sAdd' : req.body.add[0],
+                'others.sAdd' : req.body.add,
                 'others.sNofteam' : req.body.event_nofteam || req.query.event_nofteam //우리팀꺼
             }
             // 신청함
@@ -1463,7 +1463,7 @@ module.exports = function(router, passport, upload) {
                 'others.sEvent_date' : req.body.event_date || req.query.event_date,
                 'others.sEvent_time' : req.body.event_time || req.query.event_time,
                 'others.sRegion' : req.body.region || req.query.region,
-                'others.sAdd' : req.body.add[0],
+                'others.sAdd' : req.body.add,
                 'nofteam' : req.body.event_nofteam || req.query.event_nofteam //우리팀꺼
             }
         }
@@ -1473,14 +1473,7 @@ module.exports = function(router, passport, upload) {
 
         /* if(!update.add){		//도로명주소 없는 경우 지번 주소
              update.add = req.body.add2 || req.query.add2;
-         }
-         var addr = [];
-         addr= update.add.split(' ');
-
-         if(addr[0] == '제주특별자치도'){
-             event.add = [addr[1], addr[2]];
-         }else
-             event.add = [addr[0], addr[1]];*/
+         }*/
 
         if(update['others.sEvent_date'] == undefined)
             delete update['others.sEvent_date'];
@@ -1503,6 +1496,17 @@ module.exports = function(router, passport, upload) {
         console.log('2. update');
         console.dir(update);
 
+        if(update['others.sAdd']) {
+            var addr = [];
+            addr = update['others.sAdd'].split(' ');
+
+            if (addr[0] == '제주특별자치도') {
+                update['others.sAdd'] = [addr[1], addr[2]];
+            } else
+                update['others.sAdd'] = [addr[0], addr[1]];
+            console.log('update[\'others.sAdd\'] : ' + update['others.sAdd']);
+        }
+
         // 신청 받음
         if(flag == 0) {
             dbm.MatchModel.update({$and:[
@@ -1523,64 +1527,6 @@ module.exports = function(router, passport, upload) {
                 });
         }
 
-/*                var event = {
-                    'email':req.user.email,
-                    'otherEmail': otherEmail,
-                    'otherTeamname': req.body.otherTeamname,
-                    'event_date': req.body.event_date || req.body.preEvent_date,
-                    'event_time': req.body.event_time || req.body.preEvent_time,
-                    'event_add' : req.body.add[0] || req.body.preEvent_add,
-                    'event_region' : req.body.region || req.body.preEvent_region,
-                    'nofteam' : req.body.event_nofteam || req.body.preNofteam,
-                    'other_nofteam' : req.body.other_nofteam,
-                    'application_number': application_number
-                };*/
-
-
-  /*      setTimeout(function() {
-            dbm.UserModel.find({email:otherEmail}, function (err, result) {
-                for (var i = 0; i < result.length; i++) {
-                    event['otherProfile'] = result[i]._doc.profile_img;
-                }
-                console.log(event['otherProfile']);
-
-
-                if (!req.user) {
-                    console.log('사용자 인증 안된 상태임.');
-                    res.redirect('/login');
-                } else {
-                    profile_photo = req.user.profile_img;
-                    if (profile_img.length > 0) {
-                        for (var i = 0; i < profile_img.length; i++) {
-                            if (profile_img[i][0] == req.user.email)
-                                profile_photo = profile_img[i][1];
-                        }
-                    } else {
-                        profile_img[imgi] = [req.user.email, req.user.profile_img];
-                    }
-
-                    var user_context = {
-                        'email': req.user.email,
-                        'password': req.user.password,
-                        'teamname': req.user.teamname,
-                        'gender': req.user.gender,
-                        'age': req.user.age,
-                        'region': req.user.region,
-                        'move': req.user.move,
-                        'nofteam': req.user.nofteam,
-                        'career_year': req.user.career_year,
-                        'career_count': req.user.career_count,
-                        'introteam': req.user.introteam,
-                        'profile_img': profile_photo,
-                        'event_data': event
-                    };
-                    console.log('profile_img : ' + user_context.profile_img);
-                    console.dir(event);
-                    res.render('chat.ejs', user_context);
-                }
-            });
-        }, 500);*/
-
         setTimeout(function() {
             var data;
 
@@ -1595,7 +1541,7 @@ module.exports = function(router, passport, upload) {
                             'otherTeamname': result[i]._doc.teamname, // 상대팀 팀명
                             'event_date': req.body.event_date || result[i]._doc.others.sEvent_date,
                             'event_time': req.body.event_time || result[i]._doc.others.sEvent_time,
-                            'event_add': req.body.add[0] || result[i]._doc.others.sAdd,
+                            'event_add': req.body.add || result[i]._doc.others.sAdd,
                             'event_region': req.body.region || result[i]._doc.others.sRegion,
                             'nofteam': req.body.event_nofteam || result[i]._doc.others.sNofteam,
                             'other_nofteam': result[i]._doc.nofteam, // 상대팀
@@ -1610,7 +1556,7 @@ module.exports = function(router, passport, upload) {
                             'otherTeamname': result[i]._doc.others.sTeamname, // 상대팀 팀명
                             'event_date': req.body.event_date || result[i]._doc.others.sEvent_date,
                             'event_time': req.body.event_time || result[i]._doc.others.sEvent_time,
-                            'event_add': req.body.add[0] || result[i]._doc.others.sAdd,
+                            'event_add': req.body.add || result[i]._doc.others.sAdd,
                             'event_region': req.body.region || result[i]._doc.others.sRegion,
                             'nofteam': req.body.event_nofteam || result[i]._doc.nofteam,
                             'other_nofteam': result[i]._doc.others.sNofteam, // 상대팀
@@ -1619,6 +1565,12 @@ module.exports = function(router, passport, upload) {
                         };
                     }
                 }
+
+/*                if(data.event_add) {
+                    var array = data.event_add.split(' ');
+                    data.event_add[0] = array[0];
+                    data.event_add[1] = array[1];
+                }*/
 
                 dbm.UserModel.find({email:otherEmail}, function (err, result) {
                     for (var i = 0; i < result.length; i++) {
@@ -1661,7 +1613,7 @@ module.exports = function(router, passport, upload) {
                     }
                 });
             });
-        }, 500);
+        }, 600);
     });
 
     // 채팅방 내 상대팀 신고(개발자에게 메일보내기)
