@@ -23,21 +23,21 @@
 <body class="coloring">
 <nav class="navbar">
     <div class="top">
-        <img src="../img/left-arrow.png" height="30rem" onclick="goBack();">
-		<a href="/"><img src="../img/update_logo.png" height="60rem" class="logo"></a>
+        <img src="../img/left-arrow.png" height="20rem" onclick="goBack();">
+		<a href="/"><img src="../img/update_logo2.jpg" height="50rem"></a>
         <div class="sets">
-            <a href="/chatroomchat"><img src="../img/update_chat.png" class="menu_img" height="30rem"></a>
-            <img src="../img/update_menu.png" height="30rem" class="navbar-toggler" data-toggle="collapse" data-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
+            <a href="/chatroomchat"><img src="../img/update_chat.png" class="menu_img" height="20rem"></a>
+            <img src="../img/update_menu.png" height="20rem" class="navbar-toggler" data-toggle="collapse" data-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
         </div>
     </div>
 
     <div class="collapse navbar-collapse" id="navbarsExample01">
         <div class="mypage">
-            <img src="../profile_img/<%= profile_img %>" id="profile_pic" style="margin-right: .2rem; width:3rem; height: 3rem">
-            <span id="name" style="font-weight: bold; font-size: 1.2rem; margin-left: .5rem; color:white;"><%= teamname %> 팀</span>
-            <div>
-                <a href="/teamprofile"><button class="btn btn-sm btn-warning" type="submit" style="margin-right: .5rem">내 정보</button></a>
-                <a href="/logout"><button class="btn btn-sm btn-warning" type="submit">로그아웃</button></a>
+            <img src="../profile_img/<%= profile_img %>" id="profile_pic" style="width:3.5rem; height: 3.5rem">
+            <div id="name" style="font-weight: bold; font-size: 1.2rem; margin-right: 0; color:white;"><%= teamname %> 팀</div>
+            <div style="display: flex; flex-direction: row; align-items: center;">
+                <a href="/teamprofile"><button class="btn btn-sm btn-warning" type="submit" style="margin-right: 2px;">내 정보</button></a>
+                <a href="/logout"><button class="btn btn-sm btn-warning" type="submit" style="margin-left: 2px;">로그아웃</button></a>
             </div>
         </div>
 

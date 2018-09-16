@@ -102,10 +102,11 @@ a{color:white;text-decoration:none;background-color:#292941;-webkit-text-decorat
     margin: 0;
 }
 .container {
-    padding-top: 95.2px;
+    padding-top: 70px;
 }
 .reco {
     color: white;
+    margin-top: 1rem;
 }
 
 #load {

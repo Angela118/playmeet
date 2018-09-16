@@ -1,4 +1,3 @@
-
 :root{
   --main-bg: rgb(40,40,59);
   --calendar-border:rgb(220,220,255);
@@ -8,20 +7,6 @@
   --calendar-fade-color:#c0c0c0;
   --body-color:#444;
 }
-
-html, body {
-  height:100%;
-}
-
-body {
-  font-size:100%;
-  line-height:1.5;
-  font-family: "Roboto Condensed", sans-serif;
-  /*background:var(--main-bg);*/
-  /*background-image:linear-gradient(var(--main-bg) 0%, (var(--main-bg),12%) 100%);*/
-  color:var(--body-color);
-}
-
 *, *:before, *:after {
   box-sizing:border-box;
 }
@@ -32,38 +17,14 @@ body {
   clear: both;
 }
 
-img {
-  max-width:100%;
-  height:auto;
-  vertical-align:baseline;
-}
-
-a {
-  text-decoration:none;
-}
-/*
-.max(--maxWidth;
---rules) {
-    --media only screen and (max-width: --maxWidth) {
-        --rules();
-    }
-}
-.min(--minWidth;
---rules) {
-    --media only screen and (min-width: --minWidth) {
-        --rules();
-    }
-}*/
-
-
 .calendar-wrapper {
   /*width:360px;*/
-  margin:2rem auto;
+  margin-bottom: 1rem;
   /*padding:2rem;*/
   /*border:1px solid --calendar-border;*/
   border-radius:5px;
   /*background:--calendar-bg;*/
-
+    color: white;
 }
 table {
   clear:both;
@@ -74,7 +35,7 @@ table {
   /*color:--calendar-color;*/
 }
 td {
-  height:48px;
+  
   text-align:center;
   vertical-align:middle;
   border-right:1px solid --calendar-border;
