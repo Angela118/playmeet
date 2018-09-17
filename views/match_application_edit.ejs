@@ -82,7 +82,9 @@
 					
 					
                     if(event_data[0].event_time == 'none')
-                        var curTime = '시간 무관';                   
+                        var curTime = '시간 무관';
+                    else
+                        var curTime = event_data[0].event_time;
                  %>
 			
                 <tr>
