@@ -377,9 +377,10 @@ module.exports = function(router, passport, upload) {
 
         dbm.ApplicationModel.update({email:others.sEmail, application_number:others.sApplicationNumber}, {$set: {match: 1}}, function (err, result) {
             if(err) throw err
-        });
+            else console.log('ApplicationModel update in main');
 
-        res.redirect('/');
+            res.redirect('/');
+        });
 
     });
 
@@ -1380,17 +1381,14 @@ module.exports = function(router, passport, upload) {
                     });
             }else if(match == 2){
                 dbm.ApplicationModel.update({email:req.user.email, event_date:findEventDate, event_time:findEventTime}, {$set: {match:0}}, function (err, result) {
-                    if(err) throw err
-                });
-
-                setTimeout(function(){
+                    if(err) throw err;
                     dbm.MatchModel.remove({email: otherEmail, "others.sEvent_date": findEventDate, "others.sEvent_time": findEventTime}, function(err){
                         if(err) throw err
+                        res.redirect('/chatroommessage');
                     });
-                }, 500);
+                });
             }
         });
-        res.redirect('/chatroommessage');
     });
 
 
@@ -1621,7 +1619,7 @@ module.exports = function(router, passport, upload) {
                     }
                 }
 
-                if(data['event_add']) {
+                if(data['event_add'] != null) {
                     var addr = [];
                     addr = data['event_add'].split(' ');
 
@@ -1951,8 +1949,6 @@ module.exports = function(router, passport, upload) {
         res.redirect('/mainsearchresult');
     });
 
-
-
     router.route('/mainsearchresult').get(function(req, res){
         console.log('/mainsearchresult 패스 get 요청됨.');
 
@@ -1970,7 +1966,6 @@ module.exports = function(router, passport, upload) {
             } else{
                 profile_img[imgi] = [req.user.email, req.user.profile_img];
             }
-
 
             dbm.SearchModel.find({$and:[{email:req.user.email}, {search_number:sn}]}, function(err, sResult){
                 if(err) throw err
@@ -2203,11 +2198,11 @@ module.exports = function(router, passport, upload) {
             console.log('data : ' + data);
         });
 
-        dbm.ApplicationModel.update({email:others.sEmail, application_number:others.sApplicationNumber}, {$set: {match: 2}}, function (err, result) {
-            if(err) throw err
-        });
+        dbm.ApplicationModel.update({email:others.sEmail, application_number:others.sApplicationNumber}, {$set: {match: 1}}, function (err, result) {
+            if(err) throw err;
 
-        res.redirect('/');
+            res.redirect('/');
+        });
     });
 
     //경기 스케쥴
