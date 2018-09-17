@@ -16,11 +16,10 @@
 	<link href="../css/fullcalendar.print.css" rel="stylesheet" media="print"/>
 
     <!-- Bootstrap core JavaScript -->
-    <script src="../js/jquery.js"></script>
-    <script src="../js/bootstrap.bundle.min.js"></script>	
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.bundle.min.js"></script>
 	
 	<script type="text/javascript" src="../js/moment.min.js"></script>
-	<script type="text/javascript" src="../js/jquery.min.js"></script>
 	<script type="text/javascript" src="../js/fullcalendar.js"></script>
 <!---->
 	
@@ -336,7 +335,7 @@
 		*/
 
 									function team_inform_clicked(email, teamname, realAdd, realRegion, move, age, gender, careerYear, careerCount, nofteam, allRating, index) {
-										// alert('email : ' + email + ', teamname : ' + teamname + ', allRating : ' + allRating + ', realAdd : ' + realAdd + ', realRegion : ' + realRegion + ' move : ' + move + ' age :' + age + ', gender : ' + gender + ', careerYear : ' + careerYear + ', careerCount : ' + careerCount + 'nofteam : ' + nofteam + ', index : ' + index);
+										alert('email : ' + email + ', teamname : ' + teamname + ', allRating : ' + allRating + ', realAdd : ' + realAdd + ', realRegion : ' + realRegion + ' move : ' + move + ' age :' + age + ', gender : ' + gender + ', careerYear : ' + careerYear + ', careerCount : ' + careerCount + 'nofteam : ' + nofteam + ', index : ' + index);
 										if(gender == 25) {
 											gender = '무관'
 										}else if(gender == 50) {
@@ -370,7 +369,7 @@
 								<!-- The Modal -->
 								<div class="modal" name="myModal">
 									<div class="modal-dialog modal-dialog-centered modal-sm">
-										<div class="modal-content">
+										<div class="modal-content" style="color: black">
 
 											<!--&lt;!&ndash; Modal Header &ndash;&gt;-->
 											<div class="modal-header">
