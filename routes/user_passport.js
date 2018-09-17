@@ -1378,6 +1378,7 @@ module.exports = function(router, passport, upload) {
                         } else {
                             console.dir(result);
                         }
+                        res.redirect('/chatroommessage');
                     });
             }else if(match == 2){
                 dbm.ApplicationModel.update({email:req.user.email, event_date:findEventDate, event_time:findEventTime}, {$set: {match:0}}, function (err, result) {
@@ -2457,7 +2458,6 @@ module.exports = function(router, passport, upload) {
 
 
                             var textColor = "\'"+ "#FFFFFF" +"\'";
-
 
                             var pData = {
                                 title: title,
