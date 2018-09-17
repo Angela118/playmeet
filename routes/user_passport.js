@@ -2672,6 +2672,7 @@ module.exports = function(router, passport, upload) {
                             }else {
                                 aver = (sum / count).toFixed(2);
                             }
+                            eventData[a]['allRating'] = aver;
 
                             if(a>=eventData.length-1) {
                                 callback();
