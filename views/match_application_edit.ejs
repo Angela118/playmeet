@@ -166,8 +166,9 @@
 					// 마커에 클릭이벤트를 등록합니다
 					daum.maps.event.addListener(marker, 'click', function() {
 						displayPlaceInfo(place);
-						
-						document.getElementById.value = place.place_name;
+
+                        document.getElementById('region').value = place.place_name;
+						// document.getElementById.value = place.place_name;
 						document.getElementById('resultLat').value = geoLat;
 						document.getElementById('resultLng').value = geoLng;
 						document.getElementById('add').value = place.road_address_name;

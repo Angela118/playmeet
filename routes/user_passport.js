@@ -3371,18 +3371,25 @@ module.exports = function(router, passport, upload) {
             'application_number': selectone.application_number
         };
 
-        if(!event.add){		//도로명주소 없는 경우 지번 주소
-            event.add = req.body.add2 || req.query.add2;
+        if(!update.add){		//도로명주소 없는 경우 지번 주소
+            update.add = req.body.add2 || req.query.add2;
         }
-        var addr = [];
-        addr= event.add.split(' ');
 
-        if(addr[0] == '제주특별자치도'){
-            event.add = [addr[1], addr[2]];
-        }else
-            event.add = [addr[0], addr[1]];
+        if(update['add']) {
+            var addr = [];
+            addr = update['add'].split(' ');
 
-        if(update.add[0] == undefined)
+            if(addr[0] == '제주특별자치도'){
+                add = [addr[1], addr[2]];
+            }else
+                update.add = [addr[0], addr[1]];
+        }
+
+        console.log('1. update');
+        console.dir(update);
+
+        // if(update.add[0] == undefined)
+        if(update.add == undefined)
             delete update.add;
         if(update.region == undefined)
             delete update.region;
@@ -3404,6 +3411,9 @@ module.exports = function(router, passport, upload) {
             delete update.geoLng;
         if(update.nofteam == undefined)
             delete update.nofteam;
+
+        console.log('2. update');
+        console.dir(update);
 
 		
         dbm.ApplicationModel.updateOne({application_number:selectone.application_number},  {$set: update}, function(err, res) {

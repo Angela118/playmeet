@@ -335,7 +335,8 @@
 		*/
 
 									function team_inform_clicked(email, teamname, realAdd, realRegion, move, age, gender, careerYear, careerCount, nofteam, allRating, index) {
-										alert('email : ' + email + ', teamname : ' + teamname + ', allRating : ' + allRating + ', realAdd : ' + realAdd + ', realRegion : ' + realRegion + ' move : ' + move + ' age :' + age + ', gender : ' + gender + ', careerYear : ' + careerYear + ', careerCount : ' + careerCount + 'nofteam : ' + nofteam + ', index : ' + index);
+										// alert('email : ' + email + ', teamname : ' + teamname + ', allRating : ' + allRating + ', realAdd : ' + realAdd + ', realRegion : ' + realRegion + ' move : ' + move + ' age :' + age + ', gender : ' + gender + ', careerYear : ' + careerYear + ', careerCount : ' + careerCount + 'nofteam : ' + nofteam + ', index : ' + index);
+
 										if(gender == 25) {
 											gender = '무관'
 										}else if(gender == 50) {
@@ -343,12 +344,12 @@
 										}else{
 											gender = '여'
 										}
+
 										if(move == 100){
 											move = 'O';
 										}else if(move == 50){
 											move = 'X';
 										}
-
 
 										$("div[name=email]").eq(index).text('주장 이메일 : ' + email);
 										$("div[name=teamname]").eq(index).text('팀명: ' + teamname + '팀');
@@ -412,11 +413,11 @@
 											<div class="score_input">
 												<div class="form-group"  style="display: flex; align-items: center">
 													<%= teamname %>팀 : &nbsp;
-													<input type="text" class="form-control" style="height:1.8rem" placeholder=<%=score%>; name="firstScore" value=''>
+													<input type="text" class="form-control" style="height:1.8rem" placeholder=<%=score%> name="firstScore" value=''>
 												</div>
 												<div class="form-group"  style="display: flex; align-items: center">
 													<%= curTeamname %>팀 : &nbsp;
-													<input type="text" class="form-control" style="height:1.8rem" placeholder=<%=curScore%>; name="secondScore" value=''>&nbsp;
+													<input type="text" class="form-control" style="height:1.8rem" placeholder=<%=curScore%> name="secondScore" value=''>&nbsp;
 
 													<button class="btn btn-sm" style="color:black" onclick="clicked( `<%=event_data[i].email%>`, `<%=event_data[i].otherEmail%>`, `<%=event_data[i].event_date%>`,`<%=event_data[i].event_time%>`, `<%=count%>`)">제출</button>
 												</div>
