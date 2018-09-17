@@ -202,7 +202,8 @@
 
         <%
             count++;
-        } else if(i == event_data.length - 1) {%>
+            // 다 돌았는데 다 main_search != 1일 때
+        } else if((i == event_data.length - 1) && (count == 0)) {%>
             <p style="font-weight: bold">진행중인 매칭이 없습니다.</p>
         <%}
         }
