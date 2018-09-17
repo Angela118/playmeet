@@ -2,9 +2,8 @@ body {
   align-items: center;
   padding-top: 40px;
   padding-bottom: 40px;
-  background-color: white; 
+  background-color: white;
 }
-
 .align-center {
   text-align: center;
 }
@@ -15,13 +14,67 @@ body {
   text-align:center;
 }
 
-.form-signin .form-control {
-  position: relative;
-  box-sizing: border-box;
-  height: auto;
-  padding: 10px;
-  font-size: 16px; 
+.input-control {
+    display: block;
+    width: 85%;
+    margin-left: auto;
+    margin-right: auto;
+    padding: .375rem .75rem;
+    line-height: 1.5;
+    margin-bottom: 2rem;
+    background-color:#292941;
+    font-size: 1rem;
+    color: white;
+    border: none;
+    border-radius: .25rem;
+    border-bottom: 1px solid #17a2b8;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 }
-.form-signin .form-control:focus {
-  z-index: 2;
+input::placeholder {
+    color: white;
+}
+
+.go {
+    color: white;
+    background-color: #7473ff;
+    font-style: italic;
+    font-weight: bold;
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 7rem;
+    -webkit-transform: skew(-20deg);
+    -moz-transform: skew(-20deg);
+    -o-transform: skew(-20deg);
+    border-radius: 0;
+    padding: .5rem .75rem;
+}
+
+.signup{    
+    margin-top: 7rem;
+    font-size: .8rem;
+    
+    float: right;
+    position: relative;
+    left: -50%;
+}
+.signup a{    
+    display: flex;
+    flex-wrap: nowrap;
+    
+    float: left;
+    position: relative;
+    left: 50%;
+}
+.findpwd {
+    margin-top: -10rem;
+    font-size: .8rem;  
+    
+    float: right;
+    position: relative;
+    left: 50%;
+}
+.findpwd a{
+    display: flex;
+    flex-wrap: nowrap;
 }
