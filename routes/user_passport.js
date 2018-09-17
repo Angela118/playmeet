@@ -1852,8 +1852,7 @@ module.exports = function(router, passport, upload) {
                     //            console.log('Profile done');
 								
 						
-						console.dir(eventData);
-								
+								/*
 								function get_random_hexColor () { 
 									var color = "#"; 
 									var max = Math.pow( 256, 3 ); 
@@ -1869,7 +1868,8 @@ module.exports = function(router, passport, upload) {
 								} 
 								
 								console.log(get_random_hexColor());
-								
+								*/
+						
 								// Calendar
 								var parr = [];
 								parr[0] = {
@@ -1877,22 +1877,35 @@ module.exports = function(router, passport, upload) {
 									start:"\'"+today+"\'"
 								};
 								
+								var col = ['#7473ff', '#9933dd', '#dd3366'];
+						
 								for(var i=0; i<eventData.length; i++){
 									if(eventData[i].otherTeam)
-										var title = "\'"+eventData[i].otherTeam+"\'";
+										var title = "\'"+eventData[i].otherTeam+" 팀"+"\'";
 									else
-										var title = "\'"+eventData[i].teamname+"\'";
+										var title = "\'"+eventData[i].teamname+" 팀"+"\'";
 									
-									var color = "\'"+get_random_hexColor()+"\'";
+									console.log(col.length%(i+1));
+									var color = "\'"+col[col.length%(i+1)]+"\'";
 									colors.push(color);
+									
 									var description = "\'"+eventData[i].event_region+"\'";
-									var start = "\'"+eventData[i].event_date+" "+eventData[i].event_time+":"+"00"+"\'";
+									
+									if(eventData[i].event_time == 'none')
+										var start =  "\'"+eventData[i].event_date+"\'";
+									else
+										var start = "\'"+eventData[i].event_date+" "+eventData[i].event_time+":"+"00"+"\'";
+									
+										
+									
+									var textColor = "\'"+ "#FFFFFF" +"\'";
 									
 
 									var pData = {
 										title: title,
 										description: description,
 										backgroundColor:color,
+										textColor:textColor,
 										start: start
 									};
 
@@ -2191,20 +2204,6 @@ module.exports = function(router, passport, upload) {
                                 console.log('Profile done');
 								
 								
-								function get_random_hexColor () { 
-									var color = "#"; 
-									var max = Math.pow( 256, 3 ); 
-									var random = Math.floor( Math.random() * max ).toString( 16 ); 
-									var gap = 6 - random.length; 
-
-									if (gap > 0) {    
-										for(var x=0; x<gap; x++) 
-											color += "0";   
-									} 
-
-									return color + random; 
-								} 
-								
 								// Calendar
 								var parr = [];
 								parr[0] = {
@@ -2213,13 +2212,17 @@ module.exports = function(router, passport, upload) {
 								};
 								for(var i=0; i<eventData.length; i++){
 									if(eventData[i].otherTeam)
-										var title = "\'"+eventData[i].otherTeam+"\'";
+										var title = "\'"+eventData[i].otherTeam+" 팀"+"\'";
 									else
-										var title = "\'"+eventData[i].teamname+"\'";
+										var title = "\'"+eventData[i].teamname+" 팀"+"\'";
 									
 									var color = colors[i];
 									var description = "\'"+eventData[i].event_region+"\'";
-									var start = "\'"+eventData[i].event_date+" "+eventData[i].event_time+":"+"00"+"\'";
+									
+									if(eventData[i].event_time == 'none')
+										var start =  "\'"+eventData[i].event_date+"\'";
+									else
+										var start = "\'"+eventData[i].event_date+" "+eventData[i].event_time+":"+"00"+"\'";
 									
 
 									var pData = {
