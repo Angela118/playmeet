@@ -1851,6 +1851,8 @@ module.exports = function(router, passport, upload) {
                    //         profileFunction(0, function () {
                     //            console.log('Profile done');
 								
+						
+						console.dir(eventData);
 								
 								function get_random_hexColor () { 
 									var color = "#"; 
@@ -1875,7 +1877,7 @@ module.exports = function(router, passport, upload) {
 									start:"\'"+today+"\'"
 								};
 								
-								for(var i=1; i<eventData.length; i++){
+								for(var i=0; i<eventData.length; i++){
 									if(eventData[i].otherTeam)
 										var title = "\'"+eventData[i].otherTeam+"\'";
 									else
@@ -1894,7 +1896,7 @@ module.exports = function(router, passport, upload) {
 										start: start
 									};
 
-									parr[i] = pData;
+									parr[i+1] = pData;
 								}
 
 								var pEvent = JSON.stringify(parr);
@@ -2209,7 +2211,7 @@ module.exports = function(router, passport, upload) {
 									title:"\' Today \'", 
 									start:"\'"+today+"\'"
 								};
-								for(var i=1; i<eventData.length; i++){
+								for(var i=0; i<eventData.length; i++){
 									if(eventData[i].otherTeam)
 										var title = "\'"+eventData[i].otherTeam+"\'";
 									else
@@ -2227,11 +2229,11 @@ module.exports = function(router, passport, upload) {
 										start: start
 									};
 
-									parr[i] = pData;
+									parr[i+1] = pData;
 								}
 
 								var pEvent = JSON.stringify(parr);
-
+								
                                 var user_context = {
                                     'email': req.user.email,
                                     'password': req.user.password,
