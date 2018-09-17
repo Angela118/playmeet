@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>경기 스케줄</title>
+
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/team_schedule.css" rel="stylesheet">
+    <link href="../css/calendar.css" rel="stylesheet">
+    <link href="../css/fullcalendar.css" rel="stylesheet">
+	<link href="../css/fullcalendar.print.css" rel="stylesheet" media="print">
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="../js/jquery.js"></script>
+    <script src="../js/bootstrap.bundle.min.js"></script>
+	
+	<script type="text/javascript" src="../js/moment.min.js"></script>
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
+	<script type="text/javascript" src="../js/fullcalendar.js"></script>
+    
+    <!-- 달력-->	
+	<style type="text/css">
+		body {
+			margin :40px 10px;
+			padding : 0;
+			font-family : "Lucida Grande", Helvetica, Arial, Verdana,sans-serif;
+			font-size : 14px;
+		}
+		#calendar {
+			max-width : 900px;
+			margin : 0 auto;
+		}
+	</style>
+</head>
+    
+<body class="coloring">
+<nav class="navbar">
+    <div class="top">
+        <img src="../img/left-arrow.png" height="20rem" onclick="goBack();">
+		<a href="/"><img src="../img/update_logo2.jpg" height="50rem"></a>
+        <div class="sets">
+            <a href="/chatroomchat"><img src="../img/update_chat.png" class="menu_img" height="20rem"></a>
+            <img src="../img/update_menu.png" height="20rem" class="navbar-toggler" data-toggle="collapse" data-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
+        </div>
+    </div>
+
+    <div class="collapse navbar-collapse" id="navbarsExample01">
+        <div class="mypage">
+            <img src="../profile_img/<%= profile_img %>" id="profile_pic" style="width:3.5rem; height: 3.5rem">
+            <div id="name" style="font-weight: bold; font-size: 1.2rem; margin-right: 0; color:white;"><%= teamname %> 팀</div>
+            <div style="display: flex; flex-direction: row; align-items: center;">
+                <a href="/teamprofile"><button class="btn btn-sm btn-warning" type="submit" style="margin-right: 2px;">내 정보</button></a>
+                <a href="/logout"><button class="btn btn-sm btn-warning" type="submit" style="margin-left: 2px;">로그아웃</button></a>
+            </div>
+        </div>
+
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="/">홈 (매칭 팀 검색)</a>
+      </li>
+      <li class="nav-item" style="display:flex; align-items:center">
+        <span style="margin-bottom: 0; padding: .5rem 0rem; color:white">우리 팀</span>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" href="/teamreceivedreview" style="margin-left:2rem">우리 팀 평가 점수</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/teamcal" style="margin-left:2rem">경기 스케줄</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/matchapplication">매칭 등록</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/mymatch">내가 등록한 매칭</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/contact">개발자에게 연락</a>
+      </li>
+    </ul>
+
+    </div>
+</nav>
+<!--메뉴 영역 끝 : 나중에 파일로 따로 빼기 -->
+
+<div class="container">
+    <div class="reco">
+
+        <!--달력-->
+		<script type="text/javascript">
+			
+			$(function(){
+
+				var today = new Date();
+				var dd = today.getDate();
+				var mm = today.getMonth()+1; //January is 0!
+				var yyyy = today.getFullYear();
+
+				if(dd<10) {
+					dd='0'+dd;
+				}
+
+				if(mm<10) {
+					mm='0'+mm;
+				}
+				
+
+				var pevent = '<%= pEvent %>';
+				var encoded = JSON.stringify(pevent).replace(/&#34;/g, "");
+				encoded = encoded.replace(/&#39;/g, "'");
+				var eventP = JSON.parse(encoded);
+				
+				var ff = '<%= flag %>';
+				if(ff != 0){
+				   mm = calMonth;
+				}
+				
+				document.getElementById('calMonth').value = mm;
+				document.getElementById('calform').submit();
+
+				var ww,view;
+				jQuery("#calendar").fullCalendar({
+					  defaultDate : yyyy+"-"+mm+"-"+dd
+					, defaultView : 'month'
+					, editable : false
+					, eventLimit : false
+					, events: eval(eventP)
+					, eventClick:function(event) {
+						if(event) {
+							alert("상대팀 : "+event.title + "\n" + "경기 장소 : " +event.description, "wicked", "width=700,height=600");
+							return false;
+						}
+					}
+					, windowResize: function(view) {
+							ww = getWindowWidth();
+							view = getView();
+							var currentView = $('#calendar').fullCalendar('getView');
+							if(view != currentView){
+								$('#calendar').fullCalendar('changeView',view);
+							}
+							if(ww <= 768){
+								$('.fc-header-right .fc-button').hide();
+							}else{
+								$('.fc-header-right .fc-button').show();
+							}
+					}
+				});
+				
+				
+				// 이전달 버튼
+				jQuery("button.fc-prev-button").click(function() {
+					var date = jQuery("#calendar").fullCalendar("getDate");
+					convertDate(date);
+				});
+
+				// 다음달 버튼
+				jQuery("button.fc-next-button").click(function() {
+					var date = jQuery("#calendar").fullCalendar("getDate");
+					convertDate(date);
+				});
+
+			});
+			
+			// 받은 날짜값 형변환
+			function convertDate(date) {
+				var date = new Date(date);
+				var calMonth = date.yyyymmdd();
+				document.getElementById('calMonth').value = calMonth;
+			}
+			
+			Date.prototype.yyyymmdd = function() {
+				var mm = (this.getMonth() + 1).toString();
+				return (mm[1] ? mm : "0" + mm[0])+"";
+			}
+						
+			function getWindowWidth(){
+				return $(window).width();
+			}
+			function getView(){
+				return (ww <= 768) ? 'basicDay' : 'month';
+			}
+
+
+		</script>
+        <div class="calendar-wrapper">
+            <div id="calendar"></div>
+        </div>
+        <!--달력 끝-->
+
+        <div class="main">
+			<form action="/teamcal" id="calform" method="post">
+				<input type="" name="calMonth" id="calMonth" readonly/>월 일정
+				<br>
+			</form>
+			<% if(event_data.length == 0) { %>
+        		<p style="font-weight: bold; color:white;">스케줄이 없습니다.</p>	
+            <%}%>
+			
+            
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+</body>
+</html>

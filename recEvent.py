@@ -15,7 +15,7 @@ def swap(x, i, j):
 
 
 #파일 불러오기 
-file = open('D:/coding test/javascriptTest/playmeet/recEvent.csv', 'r', encoding='UTF8')
+file = open('D:/coding test/javascriptTest/playmeet-final/recEvent.csv', 'r', encoding='UTF8')
 reader = csv.reader(file)
 
 data=[]
@@ -50,10 +50,17 @@ for i in range(1, len(data)):
     del data[i][0]
 
 
-
-data = np.array(data)
-
-data = data[:, 0:7]
+if(len(data)>1):        
+    if(type(data[1][8]) == 'str'):
+        data = np.array(data)
+        data = data[:, 0:9]
+    else:
+        data = np.array(data)
+        data = data[:, 0:7]
+else:
+    data = np.array(data)
+    data = data[:, 0:7]
+    
 
 print(data)
 print()
@@ -109,7 +116,7 @@ print()
 
 
 #recOutput.csv에 저장 
-with open('D:/coding test/javascriptTest/playmeet/recOutput.csv','w', encoding='UTF8', newline='') as output:
+with open('D:/coding test/javascriptTest/playmeet-final/recOutput.csv','w', encoding='UTF8', newline='') as output:
     writer = csv.writer(output)
     for val in result_data:
         writer.writerow(val)

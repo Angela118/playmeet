@@ -1,4 +1,8 @@
 /*schedule---------------------------------------------------*/
+.navbar {
+    position: relative;
+    z-index: 2;
+}
 
 .match-teams{
     display:flex;
@@ -29,10 +33,6 @@
 .schedule-detail-content{
     margin-bottom:0.5rem;
 }
-
-/*.team-img {
-    margin-bottom: 0.5rem;
-} 왜 안 먹지..*/
 
 .score_input_form{
     display:flex;
@@ -75,6 +75,7 @@
 
 .main {
     list-style: none;
+    color: white;
     /*max-width: 75%;*/
     /*margin: 1rem auto;*/
 }
@@ -83,8 +84,8 @@ h3 {padding: 0; margin: 0;}
 
 .date {
     width: 17%;
-    padding: 10% 1% 0 0 ;
     float: left;
+    margin-top: 1rem;
 }
 
 .date h3 {
@@ -145,7 +146,7 @@ h3 {padding: 0; margin: 0;}
     .date {
         width: 100%;
         border-bottom: 1px solid #ccc;
-        margin-bottom: 10px;
+        margin-top: 1rem;
     }
 
     .events {

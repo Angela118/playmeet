@@ -9,7 +9,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    /*width: 17rem;*/
+    width: 17rem;
 }
 
 .chat_tab{
