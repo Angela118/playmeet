@@ -908,6 +908,12 @@ module.exports = function(router, passport, upload) {
                             eventData[j++] = data;
                         }
                     }
+
+                    //오름차순 정렬
+                    eventData.sort(function (a, b) {
+                        return a.event_date < b.event_date ? -1 : a.event_date > b.event_date ? 1 : 0;
+                    });
+
                     var user_context = {
                         'email': req.user.email,
                         'password': req.user.password,

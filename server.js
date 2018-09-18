@@ -354,47 +354,36 @@ io.sockets.on('connection', function(socket){
         console.log('input.application_number : ' + input.application_number);
 
         var matchFunction = function(dbData){
-            console.log('matchFunction --- ');
             var reviewed;
 
-            database.MatchModel.find({$and:[{"others.sApplicationNumber":input.application_number}]}
-                , function (err, result) {
-                    // console.log('result.length : ' + result.length);
-                    for (var i = 0; i < result.length; i++) {
+            database.MatchModel.find({$and:
+                    [{"others.sApplicationNumber":input.application_number}]}, function (err, result) {
+                for (var i = 0; i < result.length; i++) {
 
-                        // console.log('result[i].email : ' + result[i].email);
-                        // console.log('result[i].others.sEmail : ' + result[i].others.sEmail);
+                    if((result[i].email == input.id) && (result[i].others.sEmail == input.otherId)) {
+                        if(result[i].review_date) {
+                            reviewed = result[i].review_date;
 
-                        if((result[i].email == input.id) && (result[i].others.sEmail == input.otherId)) {
-                            if(result[i].review_date) {
-                                // console.log('if');
-                                reviewed = result[i].review_date;
+                            dbData['email'] = input.otherId;
+                            dbData['recipient'] = input.id;
+                            dbData['reviewed'] = reviewed;
+                            dbData['message'] = '상대방이 우리 팀을 평가하였습니다. 리뷰한 후 채팅방을 삭제하세요.';
 
-                                dbData['email'] = input.otherId;
-                                dbData['recipient'] = input.id;
-                                dbData['reviewed'] = reviewed;
-                                dbData['message'] = '상대방이 우리 팀을 평가하였습니다. 리뷰한 후 채팅방을 삭제하세요.';
+                            io.sockets.sockets[socket.id].emit('preload', dbData);
+                        }
+                    }else if ((result[i].email == input.otherId) && (result[i].others.sEmail == input.id)) {
+                        if(result[i].others.sReviewDate) {
+                            reviewed = result[i].others.sReviewDate;
 
-                                // console.log('1. dbData[\'reviewed\'] : ' +  dbData['reviewed']);
-                                io.sockets.sockets[socket.id].emit('preload', dbData);
-                            }
-                        }else if ((result[i].email == input.otherId) && (result[i].others.sEmail == input.id)) {
-                            if(result[i].others.sReviewDate) {
-                                // console.log('else if');
-                                reviewed = result[i].others.sReviewDate;
-
-                                dbData['email'] = input.otherId;
-                                dbData['recipient'] = input.id;
-                                dbData['reviewed'] = reviewed;
-                                dbData['message'] = '상대방이 우리 팀을 평가하였습니다. 더 이상 채팅방을 사용할 수 없습니다.';
-                                io.sockets.sockets[socket.id].emit('preload', dbData);
-                            }
+                            dbData['email'] = input.otherId;
+                            dbData['recipient'] = input.id;
+                            dbData['reviewed'] = reviewed;
+                            dbData['message'] = '상대방이 우리 팀을 평가하였습니다. 더 이상 채팅방을 사용할 수 없습니다.';
+                            io.sockets.sockets[socket.id].emit('preload', dbData);
                         }
                     }
-                    // console.log('2. dbData[\'reviewed\'] : ' +  dbData['reviewed']);
-                    // console.log('dbData : ');
-                    // console.dir(dbData);
-                });
+                }
+            });
         }
 
         // receives message from DB
@@ -411,14 +400,12 @@ io.sockets.on('connection', function(socket){
                         {"application_number":input.application_number}
                     ]}
             ]}, function (err, result) {
-            console.log('chat result.length : ' + result.length);
 
             if(result.length === 0 ) {
                 var dbData = {
                     application_number: input.application_number,
                 };
                 matchFunction(dbData);
-                // console.log('matchFunction end');
             }
 
             for(var i = 0 ; i < result.length ; i++) {
@@ -430,15 +417,10 @@ io.sockets.on('connection', function(socket){
                     application_number: input.application_number,
                     cancel: result[i]._doc.cancel
                 };
-                // console.log('1 dbData : ');
-                // console.dir(dbData);
 
                 if (i === (result.length - 1)) {
                     io.sockets.sockets[socket.id].emit('preload', dbData);
                     matchFunction(dbData);
-                    // console.log('2 dbData : ');
-                    // console.dir(dbData);
-                    // console.log('matchFunction end');
                 } else
                     io.sockets.sockets[socket.id].emit('preload', dbData);
             }

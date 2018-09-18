@@ -52,19 +52,12 @@
             socket.on('message', function(message){
                 //println('수신 -> ' + JSON.stringify(message));
                 //      $(output).prependTo('#content');
-                // addToChatting(message.email, message.data, message.application_number, message.cancel);
                 addToChatting(message.email, message.data, message.application_number, message.cancel, 0);
             });
 
             socket.on('preload',function(dbData){
-                // addToChatting(dbData.email, dbData.message, dbData.application_number, dbData.cancel);
                 addToChatting(dbData.email, dbData.message, dbData.application_number, dbData.cancel, dbData.reviewed);
             });
-
-            /*            socket.on('cancel_message',function(dbData){
-                            addToChatting(dbData.email, dbData.message, dbData.application_number, dbData.cancel);
-                            // addToChatting(dbData.email, dbData.message, dbData.application_number, dbData.cancel, dbData.reviewed);
-                        });*/
         }
 
         function login(){
@@ -72,7 +65,7 @@
             var teamname = '<%= teamname %>';
             var today = new Date();
             var otherId = '<%= event_data.otherEmail %>';
-            var application_number = '<%=event_data.application_number%>';
+            var application_number = '<%= event_data.application_number%>';
 
             var output = {
                 id:id,
@@ -200,7 +193,7 @@
 <nav class="navbar reco">
     <div class="top">
         <div>
-            <!--<img src="../img/left-arrow.png" alt="" width="20rem" height="20rem" style="margin-right:3rem" onclick="goBack()">-->
+            <img src="../img/left-arrow.png" alt="" width="20rem" height="20rem" style="margin-right:3rem" onclick="location.href='/chatroomchat'">
 
             <p class="logo ml-sm-3"><%= event_data.otherTeamname %>팀과의 채팅방</p>
         </div>
