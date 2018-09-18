@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -9,7 +9,6 @@
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <link href="../css/main.css" rel="stylesheet">
     <link href="../css/common.css" rel="stylesheet">
-    <link href="../css/FRAME.css" rel="stylesheet">
 
     <!-- Bootstrap core JavaScript -->
     <script src="../js/jquery.js"></script>
@@ -18,34 +17,28 @@
     
     <title>매칭 등록</title>
 </head>
-<body class="whiteB">
-
-
-<!--메뉴 영역 시작 : 나중에 파일로 따로 빼기 -->
-<!--여기선 메뉴명 매칭 등록으로 되어 있음-->
-
-<nav class="navbar blueB">
-
+<body class="coloring">
+<nav class="navbar">
     <div class="top">
-        <img src="../img/menu3.png" width="30rem" height="30rem" class="navbar-toggler" data-toggle="collapse" data-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
-		
-		<a href="/"><p onclick="/" class="logo">축하싶</p></a>
-        <p class="logo">매칭 등록</p>
-
-        <a href="/chatroomchat"><img src="../img/envelope.png" class="menu_img" width="30rem" height="30rem" ></a>
+        <img src="../img/left-arrow.png" height="20rem" onclick="goBack();">
+		<a href="/"><img src="../img/update_logo2.jpg" height="50rem"></a>
+        <div class="sets">
+            <a href="/chatroomchat"><img src="../img/update_chat.png" class="menu_img" height="20rem"></a>
+            <img src="../img/update_menu.png" height="20rem" class="navbar-toggler" data-toggle="collapse" data-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
+        </div>
     </div>
-
 
     <div class="collapse navbar-collapse" id="navbarsExample01">
         <div class="mypage">
-            <img src="../profile_img/<%= profile_img %>" id="profile_pic" style="margin-right: .2rem; width:3rem; height: 3rem">
-            <span id="name" style="font-weight: bold; font-size: 1.2rem; margin-left: .5rem"><%= teamname %> 팀</span>
-            <a href="/teamprofile"><button class="btn btn-sm btn-warning" type="submit" style="margin-right: .5rem">내 정보</button></a>
-			<a href="/uploadimg"><button class="btn btn-sm btn-warning" type="submit" style="margin-right: .5rem">프로필 사진 변경</button></a>
-            <a href="/logout"><button class="btn btn-sm btn-warning" type="submit">로그아웃</button></a>
+            <img src="../profile_img/<%= profile_img %>" id="profile_pic" style="width:3.5rem; height: 3.5rem">
+            <div id="name" style="font-weight: bold; font-size: 1.2rem; margin-right: 0; color:white;"><%= teamname %> 팀</div>
+            <div style="display: flex; flex-direction: row; align-items: center;">
+                <a href="/teamprofile"><button class="btn btn-sm btn-warning" type="submit" style="margin-right: 2px;">내 정보</button></a>
+                <a href="/logout"><button class="btn btn-sm btn-warning" type="submit" style="margin-left: 2px;">로그아웃</button></a>
+            </div>
         </div>
 
-       <ul class="navbar-nav mr-auto">
+    <ul class="navbar-nav mr-auto">
       <li class="nav-item">
         <a class="nav-link" href="/">홈 (매칭 팀 검색)</a>
       </li>
@@ -57,10 +50,10 @@
         <a class="nav-link" href="/teamreceivedreview" style="margin-left:2rem">우리 팀 평가 점수</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/teamcal" style="margin-left:2rem">경기 스케줄</a>
+        <a class="nav-link" href="/teamschedule" style="margin-left:2rem">경기 스케줄</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/matchapplication">매칭 등록</a>
+        <a class="nav-link" href="matchapplication">매칭 등록</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/mymatch">내가 등록한 매칭</a>
@@ -69,17 +62,12 @@
         <a class="nav-link" href="/contact">개발자에게 연락</a>
       </li>
     </ul>
+
     </div>
 </nav>
-
-<div class="py-4 text-center"></div>
-
-<!--메뉴 영역 끝 : 나중에 파일로 따로 빼기 -->
-
-
 <div class="container">
-    <div class="reco" style="margin-top: 2.3rem">
-        <h5 class="mb-3 blackW" style="font-weight: bold">매칭 등록</h5>
+    <div class="reco">
+        <h5 class="mb-3" style="font-weight: bold">매칭 등록</h5>
 
         <form name="select_region" method="post" action="/matchapplicationedit">			
             <table class="table">
@@ -96,41 +84,7 @@
                     if(event_data[0].event_time == 'none')
                         var curTime = '시간 무관';                   
                  %>
-					
-                    
-	<!--
-                <tr>
-                    <th>지역</th>
-                    <td>
-                        <div class="mb-2">
-                            <select name="add" onchange="regionChange(this.selectedIndex);" class="form-control">
-                                <option value="<%= event_data[0].add[0] %>" selected disabled hidden><%= event_data[0].add[0] %></option>
-                                <option>서울</option>
-                                <option>부산</option>
-                                <option>대구</option>
-                                <option>인천</option>
-                                <option>광주</option>
-                                <option>대전</option>
-                                <option>울산</option>
-                                <option>경기도</option>
-                                <option>강원도</option>
-                                <option>충청북도</option>
-                                <option>충청남도</option>
-                                <option>전라북도</option>
-                                <option>전라남도</option>
-                                <option>경상북도</option>
-                                <option>경상남도</option>
-                                <option>제주도</option>
-                                <option>지역무관</option>
-                            </select>
-                        </div>
-                        <select name="add" class="form-control">
-                            <option> <%= event_data[0].add[1] %></option>
-                        </select>
-                    </td>
-                </tr>
-					
-	-->
+			
                 <tr>
                     <th>장소</th>
                     <td>
@@ -338,13 +292,8 @@
             </table>
             <button type="submit" class="btn btn-block" style="color:black">수정 완료</button>
         </form>
-
     </div>
-
-
 </div>
-
-
-
 </body>
+<footer class="my-5 pt-5 text-muted text-center text-small"></footer>
 </html>

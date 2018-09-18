@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="kr">
+<html lang="ko">
 <head>
 	<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
@@ -7,8 +7,8 @@
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <link href="../css/main.css" rel="stylesheet">
     <link href="../css/common.css" rel="stylesheet">
-    <link href="../css/FRAME.css" rel="stylesheet">
 
+    <link href="https://fonts.googleapis.com/css?family=Nanum+Gothic" rel="stylesheet">
     <!-- Bootstrap core JavaScript -->
     <script src="../js/jquery.js"></script>
     <script src="../js/bootstrap.bundle.min.js"></script>
@@ -18,23 +18,25 @@
     <title>메인페이지</title>
 </head>
 
-<body>	
-<nav class="navbar blueB">
+<body class="coloring">	
+<nav class="navbar">
     <div class="top">
-        <img src="../img/menu3.png" width="30rem" height="30rem" class="navbar-toggler" data-toggle="collapse" data-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
-
-		<a href="/"><p onclick="/" class="logo">축하싶</p></a>
-
-        <a href="/chatroomchat"><img src="../img/envelope.png" class="menu_img" width="40rem" height="40rem" ></a>
+        <img src="../img/left-arrow.png" height="20rem" onclick="goBack();">
+		<a href="/"><img src="../img/update_logo2.jpg" height="50rem"></a>
+        <div class="sets">
+            <a href="/chatroomchat"><img src="../img/update_chat.png" class="menu_img" height="20rem"></a>
+            <img src="../img/update_menu.png" height="20rem" class="navbar-toggler" data-toggle="collapse" data-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
+        </div>
     </div>
 
     <div class="collapse navbar-collapse" id="navbarsExample01">
         <div class="mypage">
-            <img src="../profile_img/<%= profile_img %>" id="profile_pic" style="margin-right: .2rem; width:3rem; height: 3rem">
-            <span id="name" style="font-weight: bold; font-size: 1.2rem; margin-left: .5rem"><%= teamname %> 팀</span>
-            <a href="/teamprofile"><button class="btn btn-sm btn-warning" type="submit" style="margin-right: .5rem">내 정보</button></a>
-			<a href="/uploadimg"><button class="btn btn-sm btn-warning" type="submit" style="margin-right: .5rem">프로필 사진 변경</button></a>
-            <a href="/logout"><button class="btn btn-sm btn-warning" type="submit">로그아웃</button></a>
+            <img src="../profile_img/<%= profile_img %>" id="profile_pic" style="width:3.5rem; height: 3.5rem">
+            <div id="name" style="font-weight: bold; font-size: 1.2rem; margin-right: 0; color:white;"><%= teamname %> 팀</div>
+            <div style="display: flex; flex-direction: row; align-items: center;">
+                <a href="/teamprofile"><button class="btn btn-sm btn-warning" type="submit" style="margin-right: 2px;">내 정보</button></a>
+                <a href="/logout"><button class="btn btn-sm btn-warning" type="submit" style="margin-left: 2px;">로그아웃</button></a>
+            </div>
         </div>
 
     <ul class="navbar-nav mr-auto">
@@ -65,22 +67,19 @@
     </div>
 </nav>
 
-<div class="py-4 text-center"></div>
-<div class="search blueB">
-    <div class="top_range">
-        <p class="logo"><img src="../img/soccer_30.png" alt="" style="margin-right: 1rem">매칭팀 찾기</p>
-        <a href="/mainsearch"><img src="../img/down_60.png" class="btn" width="60" style="float: right;"></a>
-    </div>
-</div>
-
 <div class="container">
-    <div class="reco" style="margin-top: 1rem">
-        <div style="display:flex; justify-content: space-between; align-items: center" class="mb-3">
-            <span style="font-weight: bold;">매칭추천</span>
-
+    <div class="reco">
+        <div class="search_match">
+            <a href="/mainsearch" style="background-color:#7473ff; width:100%;">
+                <div class="search_text">&nbsp; &nbsp; &nbsp; &nbsp; Search Match</div>
+                <div class="search_img"><img src="../img/update_findteam.png" height="25rem" style="padding:1px;"> &nbsp; </div>
+            </a>
+        </div>
+        <div style="display:flex; justify-content: space-between; align-items: center;" class="mb-3">
+            <span style="font-weight: bold; color: white;">매칭추천</span>
 			
 			<form action="/main" name="changesubmit" method="post">
-            <select class="custom-select" name="sort" id="sort" style="width: 8rem">
+            <select class="custom-select" name="sort" id="sort" style="width: 8rem;">
                 <option selected value="0">정렬 기준</option>
 				<option value="1">지역</option>
 				<option value="2">성별</option>
@@ -122,6 +121,23 @@
             var matchMonth = curDate.substring(5,7);
             var matchDay = curDate.substring(8,10);
 			
+			var add_rep = curAdd.replace(/\"/g, "");
+			add_rep = add_rep.replace(/\[/g, "");
+			add_rep = add_rep.replace(/\]/g, "");
+			add_rep = add_rep.replace(/\,/g, " ");
+			
+            var today = new Date();
+            var dd = today.getDate();
+            dd = Number(dd);
+            var mm = today.getMonth()+1;
+            mm = Number(mm);
+            var month = Number(matchMonth);
+            var date = Number(matchDay);
+            var dday = 0;
+            if(month == mm){
+                dday = date - dd;
+            }
+            
 			if(curGender == 25) {
                 curGender = '무관';
             }else if(curGender == 50) {
@@ -140,19 +156,23 @@
         <!--<p>로로롱팀의 팀 정보를 기반으로 가장 일치하는 순으로 추천된 리스트입니다.</p>-->
         <div class="list mb-3">
             <div class="list_item">
-                <div class="list_item_date">
-                    <h3><%= matchMonth %>.<%= matchDay %></h3>
+                <div class="list_divide">
+                    <div class="list_item_teamname"><%= curTeamname %></div>
+                    <div class="list_item_date">
+                        <%= matchYear %>년 <%= matchMonth %>월 <%= matchDay %>일 <%= curDay %>요일, <%= curTime %>시
+                    </div>
+                    <div class="list_item_detail">
+                        <h9>&nbsp;장소&nbsp;</h9><%= add_rep %> <%= curRegion %>
+                    </div>
+                    <div class="list_item_detail">
+                        <h9>&nbsp;정원&nbsp;</h9> 총 <%= curNofteam %>명 (*인원변동가능)
+                    </div>
                 </div>
-                <div class="list_item_team">
-                    <p class="list_item_team_detail">
-                        지역 : <%=curAdd%><br>
-                        성별 : <%= curGender %><br>
-                        나이 : <%= curAge %>대<br>
-                        장소 : <%= curRegion %><br>
-						팀원 : <%= curNofteam %>명<br>
-                        한마디 : <%= curMention %><br>
-                    </p>
-                    <h6 class="list_item_team_name"><%= curTeamname %> 팀</h6>
+                <div class="list_divide_2">
+                    <div class="list_item_icon">
+                        <h8><%= curGender %></h8>
+                        <h7>D-<%= dday %></h7>
+                    </div>
                 </div>
             </div>
         </div>
@@ -196,12 +216,18 @@
                 }else if(move == 50){
                     move = 'X';
                 }
+				
+				var add_rep = add.replace(/\"/g, "");
+				add_rep = add_rep.replace(/\[/g, "");
+				add_rep = add_rep.replace(/\]/g, "");
+				add_rep = add_rep.replace(/\,/g, " ");
+										  
 
                 // alert(region + email + city);
 
                 $("div[name=email]").eq(index).text('주장 이메일 : ' + email);
                 $("div[name=teamname]").eq(index).text('팀명: ' + teamname + '팀');
-                $("div[name=add]").eq(index).text('지역 : ' + add);
+                $("div[name=add]").eq(index).text('지역 : ' + add_rep);
                 $("div[name=region]").eq(index).text('장소 : ' + region);
                 $("div[name=move]").eq(index).text('원정가능여부 : ' + move);
                 $("div[name=age]").eq(index).text('연령대 : ' + age +'대');
@@ -267,7 +293,7 @@
             </div>
 
             <!-- The Modal -->
-            <div class="modal" name="myModal">
+            <div class="modal" name="myModal" style="color:black;">
                 <div class="modal-dialog modal-dialog-centered modal-sm">
                     <div class="modal-content">
 

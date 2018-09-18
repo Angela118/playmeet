@@ -1,61 +1,47 @@
 <!doctype html>
-<html lang="kr">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <link href="../css/common.css" rel="stylesheet">
-    <link href="../css/FRAME.css" rel="stylesheet">
 
     <!-- Bootstrap core JavaScript -->
     <script src="../js/jquery.js"></script>
     <script src="../js/bootstrap.bundle.min.js"></script>
 
+    <script type="text/javascript">
+        function goBack(){
+            window.history.back();
+        }
+    </script>
+    
     <title>개발자에게 연락</title>
 </head>
 
-<body class="whiteB">
-
-
-<!--메뉴 영역 시작-->
-<!--여기선 메뉴명 개발자에게 연락하기로 되어 있음-->
-
-<script type="text/javascript">
-    function goBack(){
-        window.history.back();
-    }
-</script>
-
-<nav class="navbar blueB">
+<body class="coloring">
+<nav class="navbar">
     <div class="top">
-		<div>
-			<img src="../img/left-arrow.png" alt="" width="20rem" height="20rem" style="margin-right:3rem" onclick="goBack();">
-
-		</div>
-		<div>
-			<a href="/"><p onclick="/" class="logo">축하싶</p></a>
-			<p class="logo ml-sm-3">개발자에게 연락하기</p>
-		</div>
-
-		<div>
-			<a href="/chatroomchat"><img src="../img/envelope.png" class="menu_img" width="20rem" height="20rem" style="margin-right:1rem"></a>
-
-			<img src="../img/menu.png" width="20rem" height="20rem" class="navbar-toggler" data-toggle="collapse" data-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
-		</div>
+        <img src="../img/left-arrow.png" height="20rem" onclick="goBack();">
+		<a href="/"><img src="../img/update_logo2.jpg" height="50rem"></a>
+        <div class="sets">
+            <a href="/chatroomchat"><img src="../img/update_chat.png" class="menu_img" height="20rem"></a>
+            <img src="../img/update_menu.png" height="20rem" class="navbar-toggler" data-toggle="collapse" data-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
+        </div>
     </div>
 
     <div class="collapse navbar-collapse" id="navbarsExample01">
         <div class="mypage">
-            <img src="../profile_img/<%= profile_img %>" id="profile_pic" style="margin-right: .2rem; width:3rem; height: 3rem">
-            <span id="name" style="font-weight: bold; font-size: 1.2rem; margin-left: .5rem"><%= teamname %> 팀</span>
-            <a href="/teamprofile"><button class="btn btn-sm btn-warning" type="submit" style="margin-right: .5rem">내 정보</button></a>
-			<a href="/uploadimg"><button class="btn btn-sm btn-warning" type="submit" style="margin-right: .5rem">프로필 사진 변경</button></a>
-            <a href="/logout"><button class="btn btn-sm btn-warning" type="submit">로그아웃</button></a>
+            <img src="../profile_img/<%= profile_img %>" id="profile_pic" style="width:3.5rem; height: 3.5rem">
+            <div id="name" style="font-weight: bold; font-size: 1.2rem; margin-right: 0; color:white;"><%= teamname %> 팀</div>
+            <div style="display: flex; flex-direction: row; align-items: center;">
+                <a href="/teamprofile"><button class="btn btn-sm btn-warning" type="submit" style="margin-right: 2px;">내 정보</button></a>
+                <a href="/logout"><button class="btn btn-sm btn-warning" type="submit" style="margin-left: 2px;">로그아웃</button></a>
+            </div>
         </div>
 
-
-        <ul class="navbar-nav mr-auto">
+    <ul class="navbar-nav mr-auto">
       <li class="nav-item">
         <a class="nav-link" href="/">홈 (매칭 팀 검색)</a>
       </li>
@@ -67,10 +53,10 @@
         <a class="nav-link" href="/teamreceivedreview" style="margin-left:2rem">우리 팀 평가 점수</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/teamcal" style="margin-left:2rem">경기 스케줄</a>
+        <a class="nav-link" href="/teamschedule" style="margin-left:2rem">경기 스케줄</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/matchapplication">매칭 등록</a>
+        <a class="nav-link" href="matchapplication">매칭 등록</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/mymatch">내가 등록한 매칭</a>
@@ -79,13 +65,9 @@
         <a class="nav-link" href="/contact">개발자에게 연락</a>
       </li>
     </ul>
+
     </div>
 </nav>
-
-<div class="py-4 text-center"></div>
-
-<!--메뉴 영역 끝-->
-
 <div class="container">
     <div class="reco" style="margin-top: 2.3rem">
 

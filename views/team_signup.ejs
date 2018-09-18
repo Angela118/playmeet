@@ -24,8 +24,7 @@
 		.hAddr {position:absolute;left:10px;top:10px;border-radius: 2px;background:#fff;background:rgba(255,255,255,0.8);z-index:1;padding:5px;}
 		#centerAddr {display:block;margin-top:2px;font-weight: normal;}
 		.bAddr {padding:5px;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
-	</style>	
-</head>
+	</style>
 
 <script type="text/javascript">
     function goBack(){
@@ -51,35 +50,32 @@
         else
             event.target.value = event.target.value.replace(/[^0-9]/g, "");
     }
-</script>
-
-
-<nav class="navbar blueB">
-    <div style="display: flex; justify-content: space-between; align-items: center;  margin-left:1rem; margin-right:1rem;">
-        <img src="../img/left-arrow.png" alt="" width="20rem" height="20rem" style="margin-right:3rem;" onclick="goBack();">
-		
-		<a href="/"><p onclick="/" class="logo">축하싶</p></a>
-        <p class="logo whiteW">팀 회원 가입</p>
+</script>	
+</head>
+<body class="coloring">
+    <nav class="navbar">
+    <div class="top">
+        <img src="../img/left-arrow.png" height="30rem" onclick="goBack();">
+		<a href="/"><img src="../img/update_logo2.jpg" height="60rem" class="logo"></a>
+        <div class="sets">
+            <a href="/chatroomchat"><img src="../img/update_chat.png" class="menu_img" height="30rem"></a>
+            <img src="../img/update_menu.png" height="30rem" class="navbar-toggler" data-toggle="collapse" data-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
+        </div>
     </div>
-</nav>
-
-<div class="container">
+    </nav>
+    
+<div class="container">    
     <div class="reco">
-        <h5 class="mb-3 blackW" style="font-weight: bold">기본 정보</h5>
+        <h5 class="mb-3" style="font-weight: bold">기본 정보</h5>
 		
 		  <form class="" action="/teamsignup" method="post">
-			  
-			  
-			
-			  
-			  
-            <div class="mb-3">
-                <label for="user-name">팀 이름</label> <!--이름-->
+              <div class="mb-3">
+                <label for="user-name">팀 이름</label>
                 <input type="text" class="form-control" name="teamname" id="user-name" placeholder="" value="" required>
                 <div class="invalid-feedback">
                     Valid name is required.
                 </div>
-            </div>
+                </div>
 
             <div class="mb-3"> <!--아이디-->
                 <label for="user-ID">아이디</label>
@@ -265,5 +261,5 @@
         </form>
     </div>
 </div>
-
+</body>
 </html>

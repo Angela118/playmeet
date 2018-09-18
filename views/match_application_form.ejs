@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -9,7 +9,6 @@
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <link href="../css/main.css" rel="stylesheet">
     <link href="../css/common.css" rel="stylesheet">
-    <link href="../css/FRAME.css" rel="stylesheet">
 
     <!-- Bootstrap core JavaScript -->
     <script src="../js/jquery.js"></script>
@@ -18,34 +17,30 @@
     
     <title>매칭 등록</title>
 </head>
-<body class="whiteB">
-
-
+<body class="coloring">
 <!--메뉴 영역 시작 : 나중에 파일로 따로 빼기 -->
 <!--여기선 메뉴명 매칭 등록으로 되어 있음-->
-
-<nav class="navbar blueB">
-
+<nav class="navbar">
     <div class="top">
-        <img src="../img/menu3.png" width="30rem" height="30rem" class="navbar-toggler" data-toggle="collapse" data-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
-
-		<a href="/"><p onclick="/" class="logo">축하싶</p></a>
-        <p class="logo">매칭 등록</p>
-
-        <a href="/chatroomchat"><img src="../img/envelope.png" class="menu_img" width="30rem" height="30rem" ></a>
+        <img src="../img/left-arrow.png" height="20rem" onclick="goBack();">
+		<a href="/"><img src="../img/update_logo2.jpg" height="50rem" class="logo"></a>
+        <div class="sets">
+            <a href="/chatroomchat"><img src="../img/update_chat.png" class="menu_img" height="20rem"></a>
+            <img src="../img/update_menu.png" height="20rem" class="navbar-toggler" data-toggle="collapse" data-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
+        </div>
     </div>
-
 
     <div class="collapse navbar-collapse" id="navbarsExample01">
         <div class="mypage">
-            <img src="../profile_img/<%= profile_img %>" id="profile_pic" style="margin-right: .2rem; width:3rem; height: 3rem">
-            <span id="name" style="font-weight: bold; font-size: 1.2rem; margin-left: .5rem"><%= teamname %> 팀</span>
-            <a href="/teamprofile"><button class="btn btn-sm btn-warning" type="submit" style="margin-right: .5rem">내 정보</button></a>
-			<a href="/uploadimg"><button class="btn btn-sm btn-warning" type="submit" style="margin-right: .5rem">프로필 사진 변경</button></a>
-            <a href="/logout"><button class="btn btn-sm btn-warning" type="submit">로그아웃</button></a>
+            <img src="../profile_img/<%= profile_img %>" id="profile_pic" style="width:3.5rem; height: 3.5rem">
+            <div id="name" style="font-weight: bold; font-size: 1.2rem; margin-right: 0; color:white;"><%= teamname %> 팀</div>
+            <div style="display: flex; flex-direction: row; align-items: center;">
+                <a href="/teamprofile"><button class="btn btn-sm btn-warning" type="submit" style="margin-right: 2px;">내 정보</button></a>
+                <a href="/logout"><button class="btn btn-sm btn-warning" type="submit" style="margin-left: 2px;">로그아웃</button></a>
+            </div>
         </div>
 
-        <ul class="navbar-nav mr-auto">
+    <ul class="navbar-nav mr-auto">
       <li class="nav-item">
         <a class="nav-link" href="/">홈 (매칭 팀 검색)</a>
       </li>
@@ -57,10 +52,10 @@
         <a class="nav-link" href="/teamreceivedreview" style="margin-left:2rem">우리 팀 평가 점수</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/teamcal" style="margin-left:2rem">경기 스케줄</a>
+        <a class="nav-link" href="/teamschedule" style="margin-left:2rem">경기 스케줄</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/matchapplication">매칭 등록</a>
+        <a class="nav-link" href="matchapplication">매칭 등록</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/mymatch">내가 등록한 매칭</a>
@@ -69,55 +64,19 @@
         <a class="nav-link" href="/contact">개발자에게 연락</a>
       </li>
     </ul>
+
     </div>
 </nav>
-
-<div class="py-4 text-center"></div>
-
 <!--메뉴 영역 끝 : 나중에 파일로 따로 빼기 -->
 
 
 <div class="container">
-    <div class="reco" style="margin-top: 2.3rem">
-        <h5 class="mb-3 blackW" style="font-weight: bold">매칭 등록</h5>
+    <div class="reco">
+        <h5 class="mb-3" style="font-weight: bold">매칭 등록</h5>
 
         <form name="select_region" method="post" action="/matchapplication">
             <table class="table">
-                <tbody>
-
-<!--					
-                <tr>
-                    <th>지역</th>
-                    <td>
-                        <div class="mb-2">
-                            <select name="region" onchange="regionChange(this.selectedIndex);" class="form-control">
-                                <option value="" selected disabled hidden>지역 검색</option>
-                                <option value="서울">서울</option>
-                                <option value="부산">부산</option>
-                                <option value="대구">대구</option>
-                                <option value="인천">인천</option>
-                                <option value="광주">광주</option>
-                                <option value="대전">대전</option>
-                                <option value="울산">울산</option>
-                                <option value="경기도">경기도</option>
-                                <option value="강원도">강원도</option>
-                                <option value="충청북도">충청북도</option>
-                                <option value="충청남도">충청남도</option>
-                                <option value="전라북도">전라북도</option>
-                                <option value="전라남도">전라남도</option>
-                                <option value="경상북도">경상북도</option>
-                                <option value="경상남도">경상남도</option>
-                                <option value="제주도">제주도</option>
-                                <option value="지역무관">지역무관</option>
-                            </select>
-                        </div>
-                        <select name="region" class="form-control">
-                            <option>상세 검색</option>
-                        </select>
-                    </td>
-                </tr>
-					
--->					
+                <tbody>	
                 <tr>
                     <th>장소</th>
                     <td>
@@ -214,36 +173,6 @@
 							infowindow.setContent(content);
 							infowindow.open(map, marker); 
 						}
-						/*
-						// 지도를 클릭했을 때 클릭 위치 좌표에 대한 주소정보를 표시하도록 이벤트를 등록합니다
-						daum.maps.event.addListener(marker, 'click', function() {
-							searchDetailAddrFromCoords((geoLng, geoLat), function(result, status) {
-								if (status === daum.maps.services.Status.OK) {
-									var detailAddr = !!result[0].road_address ? '<div>도로명주소 : ' + result[0].road_address.address_name + '</div>' : '';
-										detailAddr += '<div>지번 주소 : ' + result[0].address.address_name + '</div>';
-									var content = '<div class="bAddr">' +
-													'<span class="title">'+ place.place_name+''</span>' + 
-													detailAddr + 
-												'</div>';
-									// 인포윈도우에 클릭한 위치에 대한 법정동 상세 주소정보를 표시합니다
-									infowindow.setContent(content);
-									infowindow.open(map, marker);
-								}   
-							});
-						});	
-						// 마커에 클릭이벤트를 등록합니다
-						daum.maps.event.addListener(marker, 'click', function() {
-							// 마커를 클릭하면 장소명이 인포윈도우에 표출됩니다
-							infowindow.setContent('<div style="padding:5px;font-size:12px;">' + place.place_name + '</div>');
-							infowindow.open(map, marker);
-							var region = document.getElementById('region');
-							region.value = place.place_name;
-							var resultLat = document.getElementById('resultLat');
-							resultLat.value = geoLat;
-							var resultLng = document.getElementById('resultLng');
-							resultLng.value = geoLng;
-						});
-						*/
 					}
 					</script>
 					</td>
@@ -359,8 +288,6 @@
         </form>
     </div>
 </div>
-
-
-
 </body>
+    <footer class="my-5 pt-5 text-muted text-center text-small"></footer>
 </html>
