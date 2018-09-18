@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "311758600822",
+    "firebase_url": "https://playmeet-push.firebaseio.com",
+    "project_id": "playmeet-push",
+    "storage_bucket": "playmeet-push.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:311758600822:android:018109132176508e",
+        "android_client_info": {
+          "package_name": "com.playmeet.playmeet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "311758600822-2m89ki1s2vg2jc6naqaabkt33l66lr3d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCttZFjR4gG7NIOM_UtaIpIzemPzVkJbds"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
