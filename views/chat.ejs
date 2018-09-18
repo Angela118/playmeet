@@ -53,7 +53,7 @@
                 //println('수신 -> ' + JSON.stringify(message));
                 //      $(output).prependTo('#content');
                 // addToChatting(message.email, message.data, message.application_number, message.cancel);
-                addToChatting(message.email, message.message, message.application_number, message.cancel, 0);
+                addToChatting(message.email, message.data, message.application_number, message.cancel, 0);
             });
 
             socket.on('preload',function(dbData){
@@ -81,7 +81,6 @@
                 today:today,
                 application_number:application_number
             };
-
             socket.emit('login', output);
         }
 
@@ -104,7 +103,7 @@
                 type:'text'
             };
             socket.emit('message', message);
-            addToChatting(message.email, message.data, message.application_number, 0, 0);
+            addToChatting(message.email, message.data, message.application_number, 0, null);
             $('#dataInput').val('');
         }
 
@@ -119,7 +118,6 @@
 
             // 그냥 메시지
             if (writer == 'me') {
-
                 contents =
                     "<li class="+ writer +">"
                     +"<div class='msg'"+"<p>"+msg+"</p>"
@@ -146,8 +144,7 @@
             // 매칭 중단시
             if(cancel == 1) {
                 if((writer == 'you') && (application_number == '<%= event_data.application_number%>')) {
-
-                    msg = '상대방이 ' + msg + ' 수락을 누르면 매칭 정보가 삭제되며, 필요시 상대방 신고하기 버튼을 누르면 관리자에게 접수됩니다.';
+                    msg = '상대방이 매칭을 취소하였습니다. 수락을 누르면 매칭 정보가 삭제되며, 필요시 상대방 신고하기 버튼을 누르면 관리자에게 접수됩니다.';
                     contents =
                         "<li class=" + writer + ">"
                         + "<div class='img_div'" + "style='margin-left: 0rem; margin-right: 0'>" + "<img class='profile_img' src='../profile_img/" + profile + "'/>" + "</div>"
@@ -325,8 +322,8 @@
                 type:'text'
             };
             socket.emit('message', message);
-            // addToChatting(message.email, message.message, message.application_number, message.cancel);
-            addToChatting(message.email, message.message, message.application_number, message.cancel, 0);
+            // addToChatting(message.email, message.data, message.application_number, message.cancel);
+            addToChatting(message.email, message.data, message.application_number, message.cancel, 0);
         }
 
         function deleteClick() {
@@ -386,10 +383,9 @@
     <div>경기 날짜 : <%=event_data.event_date%></div>
     <div>경기 시간 : <%=time%></div>
     <div>경기 장소 : <%=event_data.event_add[0]%> <%=event_data.event_add[1]%> <%=event_data.event_region%></div>
-    <div>상대팀 경기 인원 : <%=event_data.other_nofteam%></div>
-    <div>우리팀 경기 인원 : <%=event_data.nofteam%></div>
-    <p style="font-size: 0.9rem">상대방이 업데이트 한 정보는 방을 다시 들어와야 확인 가능</p>
-    <!--<button type="button" class="btn" value="페이지 새로 고침" onClick="window.location.reload()">새로고침</button>-->
+    <div>상대팀 경기 인원 : <%=event_data.other_nofteam%>명</div>
+    <div>우리팀 경기 인원 : <%=event_data.nofteam%>명</div>
+    <p style="font-size: 0.9rem">상대방이 업데이트 한 정보는 새로고침해야 확인 가능</p>
     <button type="button" class="btn" value="페이지 새로 고침" onClick="reloadChat()">새로고침</button>
 </div>
 

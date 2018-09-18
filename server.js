@@ -430,10 +430,14 @@ io.sockets.on('connection', function(socket){
                     application_number: input.application_number,
                     cancel: result[i]._doc.cancel
                 };
+                // console.log('1 dbData : ');
+                // console.dir(dbData);
 
                 if (i === (result.length - 1)) {
                     io.sockets.sockets[socket.id].emit('preload', dbData);
                     matchFunction(dbData);
+                    // console.log('2 dbData : ');
+                    // console.dir(dbData);
                     // console.log('matchFunction end');
                 } else
                     io.sockets.sockets[socket.id].emit('preload', dbData);
