@@ -144,7 +144,7 @@
             // 매칭 중단시
             if(cancel == 1) {
                 if((writer == 'you') && (application_number == '<%= event_data.application_number%>')) {
-                    msg = '상대방이 매칭을 취소하였습니다. 수락을 누르면 매칭 정보가 삭제되며, 필요시 상대방 신고하기 버튼을 누르면 관리자에게 접수됩니다.';
+                    msg = '상대방이 ' + msg + ' 수락을 누르면 매칭 정보가 삭제되며, 필요시 상대방 신고하기 버튼을 누르면 관리자에게 접수됩니다.';
                     contents =
                         "<li class=" + writer + ">"
                         + "<div class='img_div'" + "style='margin-left: 0rem; margin-right: 0'>" + "<img class='profile_img' src='../profile_img/" + profile + "'/>" + "</div>"
@@ -157,7 +157,7 @@
                     objDiv.scrollTop = objDiv.scrollHeight;
                 }else if((writer == 'me') && (application_number == '<%= event_data.application_number%>')) {
 
-                    msg = '매칭을 취소하였습니다. 상대방이 확인을 누르면 매칭 정보가 삭제됩니다.';
+                    msg = msg + ' 상대방이 확인을 누르면 매칭 정보가 삭제됩니다.';
 
                     contents =
                         "<li class=" + writer + ">"
