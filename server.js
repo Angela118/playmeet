@@ -373,7 +373,7 @@ io.sockets.on('connection', function(socket){
                                 dbData['email'] = input.otherId;
                                 dbData['recipient'] = input.id;
                                 dbData['reviewed'] = reviewed;
-                                dbData['message'] = '상대방이 우리 팀을 평가하였습니다. 더 이상 채팅방을 사용할 수 없습니다.';
+                                dbData['message'] = '상대방이 우리 팀을 평가하였습니다. 리뷰한 후 채팅방을 삭제하세요.';
 
                                 // console.log('1. dbData[\'reviewed\'] : ' +  dbData['reviewed']);
                                 io.sockets.sockets[socket.id].emit('preload', dbData);
