@@ -772,16 +772,16 @@ module.exports = function(router, passport, upload) {
         }
         if(req.body.region || req.query.region){
             user_context.add = req.body.add || req.query.add;
-            if(!event.add){		//도로명주소 없는 경우 지번 주소
-                event.add = req.body.add2 || req.query.add2;
+            if(!user_context.add){		//도로명주소 없는 경우 지번 주소
+                user_context.add = req.body.add2 || req.query.add2;
             }
             var addr = [];
-            addr= event.add.split(' ');
+            addr= user_context.add.split(' ');
 
             if(addr[0] == '제주특별자치도'){
-                event.add = [addr[1], addr[2]];
+                user_context.add = [addr[1], addr[2]];
             }else
-                event.add = [addr[0], addr[1]];
+                user_context.add = [addr[0], addr[1]];
 
             user_context.region = req.body.region || req.query.region;
             user_context.geoLat = req.body.resultLat || req.query.resultLat;
@@ -802,12 +802,10 @@ module.exports = function(router, passport, upload) {
         if(req.body.introteam || req.query.introteam){
             user_context.introteam = req.body.introteam || req.query.introteam;
         }
-
-        console.log('=== Profile edit ===');
-
-        dbm.db.collection("users6").updateOne({email: user_context.email},  {$set: user_context}, function(err, res) {
-            if (err) throw err;
-            console.log("=== Profile updated ===");
+		
+		dbm.UserModel.update({email: user_context.email}, {$set: {introteam:user_context.introteam}}, function (err, res) {
+            if(err) throw err
+			console.log("=== Profile updated ===");
         });
 
         res.redirect('/profileeditok');
@@ -1408,46 +1406,50 @@ module.exports = function(router, passport, upload) {
                 profile_img[imgi] = [req.user.email, req.user.profile_img];
             }
 
-
-            dbm.SearchModel.find({$and:[{email:req.user.email}, {search_number:sn}]}, function(err, sResult){
+			var searchResult=[];
+            dbm.SearchModel.find({$and:[{search_number:sn}, {email:req.user.email}]}, function(err, sResult){
                 if(err) throw err
+				
+				for(var i=0; i<sResult.length; i++){
+					var searchR = {
+						'teamname':sResult[i]._doc.search_teamname,
+						'add':[sResult[i]._doc.search_add0, sResult[i]._doc.search_add1],
+						'gender':sResult[i]._doc.search_gender,
+						'age':sResult[i]._doc.search_age,
+						'event_date':sResult[i]._doc.search_event_date,
+						'event_time':sResult[i]._doc.search_event_time,
+						'event_day':sResult[i]._doc.search_event_day
+					};
+					
+					searchResult[i] = searchR;
+				}
+				var SR = searchResult[searchResult.length-1];
 
-                var searchResult = {
-                    'teamname':sResult[0]._doc.search_teamname,
-                    'add':[sResult[0]._doc.search_add0, sResult[0]._doc.search_add1],
-                    'gender':sResult[0]._doc.search_gender,
-                    'age':sResult[0]._doc.search_age,
-                    'event_date':sResult[0]._doc.search_event_date,
-                    'event_time':sResult[0]._doc.search_event_time,
-                    'event_day':sResult[0]._doc.search_event_day
-                };
-
-                if(searchResult.teamname == 'none')
-                    delete searchResult.teamname;
-                if(searchResult.add[0] && searchResult.add[1]){
-                    if(searchResult.add[0] == 'none')
-                        delete searchResult.add;
+                if(SR.teamname == 'none')
+                    delete SR.teamname;
+                if(SR.add[0] && SR.add[1]){
+                    if(SR.add[0] == 'none')
+                        delete SR.add;
                 }
-                if(searchResult.gender == 0)
-                    delete searchResult.gender;
-                if(searchResult.age == 0)
-                    delete searchResult.age;
-                if(searchResult.event_date == '')
-                    delete searchResult.event_date;
-                if(searchResult.event_time == 'none')
-                    delete searchResult.event_time;
-                if(searchResult.event_day == 'none')
-                    delete searchResult.event_day;
-
+                if(SR.gender == 0)
+                    delete SR.gender;
+                if(SR.age == 0)
+                    delete SR.age;
+                if(SR.event_date == '')
+                    delete SR.event_date;
+                if(SR.event_time == 'none')
+                    delete SR.event_time;
+                if(SR.event_day == 'none')
+                    delete SR.event_day;
 
 
                 var search = [];
 
-                if(searchResult){
-                    for(var key in searchResult) {
+                if(SR){
+                    for(var key in SR) {
                         var testobj = new Object();
-                        var testkey = searchResult;
-                        testobj[key] = searchResult[key];
+                        var testkey = SR;
+                        testobj[key] = SR[key];
                         search.push(testobj);
                     }
                 }
@@ -1535,6 +1537,8 @@ module.exports = function(router, passport, upload) {
                     if(eventData.length>0) {
                         repeatFunction(0, function () {
                             console.log('done');
+					
+							console.dir(eventData);
 
                             user_context = {
                                 'email': req.user.email,
@@ -1578,8 +1582,8 @@ module.exports = function(router, passport, upload) {
 
                         res.render('main_search_result.ejs', user_context);
                     }
-                });
-            });
+                });	//application DB
+            });	//search DB
         }
     });
 
