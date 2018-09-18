@@ -419,11 +419,8 @@ io.sockets.on('connection', function(socket){
             }
             console.log('New message is inserted');
         });
-
     });
-
 });
-
 
 
 function sendResponse(socket, command, code, message){

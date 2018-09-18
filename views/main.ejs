@@ -77,7 +77,7 @@
         </div>
         <div style="display:flex; justify-content: space-between; align-items: center;" class="mb-3">
             <span style="font-weight: bold; color: white;">매칭추천</span>
-			
+<!--
 			<form action="/main" name="changesubmit" method="post">
             <select class="custom-select" name="sort" id="sort" style="width: 8rem;">
                 <option selected value="0">정렬 기준</option>
@@ -85,7 +85,7 @@
 				<option value="2">성별</option>
 				<option value="3">평균 연령대</option>
             </select>
-			</form>
+			</form>-->
 				 <script type="text/javascript">
 					 
   						jQuery(function() {
@@ -120,6 +120,11 @@
             var matchYear = curDate.substring(0,4);
             var matchMonth = curDate.substring(5,7);
             var matchDay = curDate.substring(8,10);
+
+            var add_rep = curAdd.replace(/\"/g, "");
+            add_rep = add_rep.replace(/\[/g, "");
+            add_rep = add_rep.replace(/\]/g, "");
+            add_rep = add_rep.replace(/\,/g, " ");
 			
             var today = new Date();
             var dd = today.getDate();
@@ -148,7 +153,6 @@
 			}
         %>
 		
-        <!--<p>로로롱팀의 팀 정보를 기반으로 가장 일치하는 순으로 추천된 리스트입니다.</p>-->
         <div class="list mb-3">
             <div class="list_item">
                 <div class="list_divide">
@@ -157,7 +161,7 @@
                         <%= matchYear %>년 <%= matchMonth %>월 <%= matchDay %>일 <%= curDay %>요일, <%= curTime %>시
                     </div>
                     <div class="list_item_detail">
-                        <h9>&nbsp;장소&nbsp;</h9><%= curAdd %> <%= curRegion %>
+                        <h9>&nbsp;장소&nbsp;</h9><%= add_rep %> <%= curRegion %>
                     </div>
                     <div class="list_item_detail">
                         <h9>&nbsp;정원&nbsp;</h9> 총 <%= curNofteam %>명 (*인원변동가능)
@@ -212,11 +216,16 @@
                     move = 'X';
                 }
 
+                var add_rep = add.replace(/\"/g, "");
+                add_rep = add_rep.replace(/\[/g, "");
+                add_rep = add_rep.replace(/\]/g, "");
+                add_rep = add_rep.replace(/\,/g, " ");
+
                 // alert(region + email + city);
 
                 $("div[name=email]").eq(index).text('주장 이메일 : ' + email);
                 $("div[name=teamname]").eq(index).text('팀명: ' + teamname + '팀');
-                $("div[name=add]").eq(index).text('지역 : ' + add);
+                $("div[name=add]").eq(index).text('지역 : ' + add_rep);
                 $("div[name=region]").eq(index).text('장소 : ' + region);
                 $("div[name=move]").eq(index).text('원정가능여부 : ' + move);
                 $("div[name=age]").eq(index).text('연령대 : ' + age +'대');

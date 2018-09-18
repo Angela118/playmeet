@@ -1879,8 +1879,7 @@ module.exports = function(router, passport, upload) {
 
     // ===== 메뉴
 
-
-    //경기 검색
+//경기 검색
     router.route('/mainsearch').get(function(req, res){
         console.log('/main_search 패스 get 요청됨.');
 
@@ -1950,6 +1949,8 @@ module.exports = function(router, passport, upload) {
         res.redirect('/mainsearchresult');
     });
 
+
+
     router.route('/mainsearchresult').get(function(req, res){
         console.log('/mainsearchresult 패스 get 요청됨.');
 
@@ -1968,45 +1969,50 @@ module.exports = function(router, passport, upload) {
                 profile_img[imgi] = [req.user.email, req.user.profile_img];
             }
 
-            dbm.SearchModel.find({$and:[{email:req.user.email}, {search_number:sn}]}, function(err, sResult){
+            var searchResult=[];
+            dbm.SearchModel.find({$and:[{search_number:sn}, {email:req.user.email}]}, function(err, sResult){
                 if(err) throw err
 
-                var searchResult = {
-                    'teamname':sResult[0]._doc.search_teamname,
-                    'add':[sResult[0]._doc.search_add0, sResult[0]._doc.search_add1],
-                    'gender':sResult[0]._doc.search_gender,
-                    'age':sResult[0]._doc.search_age,
-                    'event_date':sResult[0]._doc.search_event_date,
-                    'event_time':sResult[0]._doc.search_event_time,
-                    'event_day':sResult[0]._doc.search_event_day
-                };
+                for(var i=0; i<sResult.length; i++){
+                    var searchR = {
+                        'teamname':sResult[i]._doc.search_teamname,
+                        'add':[sResult[i]._doc.search_add0, sResult[i]._doc.search_add1],
+                        'gender':sResult[i]._doc.search_gender,
+                        'age':sResult[i]._doc.search_age,
+                        'event_date':sResult[i]._doc.search_event_date,
+                        'event_time':sResult[i]._doc.search_event_time,
+                        'event_day':sResult[i]._doc.search_event_day
+                    };
 
-                if(searchResult.teamname == 'none')
-                    delete searchResult.teamname;
-                if(searchResult.add[0] && searchResult.add[1]){
-                    if(searchResult.add[0] == 'none')
-                        delete searchResult.add;
+                    searchResult[i] = searchR;
                 }
-                if(searchResult.gender == 0)
-                    delete searchResult.gender;
-                if(searchResult.age == 0)
-                    delete searchResult.age;
-                if(searchResult.event_date == '')
-                    delete searchResult.event_date;
-                if(searchResult.event_time == 'none')
-                    delete searchResult.event_time;
-                if(searchResult.event_day == 'none')
-                    delete searchResult.event_day;
+                var SR = searchResult[searchResult.length-1];
 
+                if(SR.teamname == 'none')
+                    delete SR.teamname;
+                if(SR.add[0] && SR.add[1]){
+                    if(SR.add[0] == 'none')
+                        delete SR.add;
+                }
+                if(SR.gender == 0)
+                    delete SR.gender;
+                if(SR.age == 0)
+                    delete SR.age;
+                if(SR.event_date == '')
+                    delete SR.event_date;
+                if(SR.event_time == 'none')
+                    delete SR.event_time;
+                if(SR.event_day == 'none')
+                    delete SR.event_day;
 
 
                 var search = [];
 
-                if(searchResult){
-                    for(var key in searchResult) {
+                if(SR){
+                    for(var key in SR) {
                         var testobj = new Object();
-                        var testkey = searchResult;
-                        testobj[key] = searchResult[key];
+                        var testkey = SR;
+                        testobj[key] = SR[key];
                         search.push(testobj);
                     }
                 }
@@ -2074,7 +2080,7 @@ module.exports = function(router, passport, upload) {
                             }else {
                                 aver = (sum / count).toFixed(2);
                             }
-							
+
                             eventData[a]['allRating'] = aver;
 
                             if(a>=eventData.length-1) {
@@ -2094,6 +2100,8 @@ module.exports = function(router, passport, upload) {
                     if(eventData.length>0) {
                         repeatFunction(0, function () {
                             console.log('done');
+
+                            console.dir(eventData);
 
                             user_context = {
                                 'email': req.user.email,
@@ -2137,8 +2145,8 @@ module.exports = function(router, passport, upload) {
 
                         res.render('main_search_result.ejs', user_context);
                     }
-                });
-            });
+                });	//application DB
+            });	//search DB
         }
     });
 
@@ -2201,7 +2209,6 @@ module.exports = function(router, passport, upload) {
 
         dbm.ApplicationModel.update({email:others.sEmail, application_number:others.sApplicationNumber}, {$set: {match: 1}}, function (err, result) {
             if(err) throw err;
-
             res.redirect('/');
         });
     });
