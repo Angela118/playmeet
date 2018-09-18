@@ -1815,6 +1815,7 @@ module.exports = function(router, passport, upload) {
     // 채팅방 내 상대팀 신고(개발자에게 메일보내기)
     router.route('/reportdeveloper').post(function(req, res){
         console.log('/reportdeveloper 패스 post 요청됨');
+        res.redirect('/chatroomchat');
 
         var otherEmail = req.body.otherEmail;
         var otherTeamname = req.body.otherTeamname;
@@ -1849,7 +1850,7 @@ module.exports = function(router, passport, upload) {
                 console.log('Message sent : ', info);
             }
 
-            res.redirect('/chatroomchat');
+            // res.redirect('/chatroomchat');
         });
 
 // 발신자를 원하는 이메일로 보낼 수는 있으나 인증 취약해서 스팸 분류됨..
@@ -1865,41 +1866,6 @@ module.exports = function(router, passport, upload) {
                     console.dir(reply)
                 })*/
 
-
-
-        /*
-        //
-        const nodemailer = require('nodemailer');
-        let transporter = nodemailer.createTransport({
-            host: 'smtp.ethereal.email',
-            port: 587,
-            secure: false,
-            auth: {
-                user: req.user.email,
-                pass: req.user.password
-            }
-        });
-
-        let mailOption = {
-            from : {
-                name : req.user.teamname,
-                address : req.user.email
-            },
-            to : 'lsk201808@gmail.com',
-            subject : otherTeamname + '(' + otherEmail +  ')팀 신고합니다.',
-            html: '<p>' + report_content + '</p><p>application_number : ' + application_number + '</p>'
-        };
-
-        transporter.sendMail(mailOption, function(err, info) {
-            if ( err ) {
-                console.error('Send Mail error : ', err);
-            }
-            else {
-                console.log('Message sent : ', info);
-            }
-
-            res.redirect('/chatroomchat');
-        });*/
 
     });
 
