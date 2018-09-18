@@ -178,10 +178,16 @@
 
 		<script>
             function clicked(email, teamname, add, region, move, age, gender, careerYear, careerCount, date, time, day, mention, createdMonth, createdDay, geoLng, geoLat, nofteam, application_number, index) {
+
+                var add_rep = add.replace(/\"/g, "");
+                add_rep = add_rep.replace(/\[/g, "");
+                add_rep = add_rep.replace(/\]/g, "");
+                add_rep = add_rep.replace(/\,/g, " ");
+
                 document.getElementsByName('sEmail')[index].value = email;
                 document.getElementsByName('sTeamname')[index].value = teamname;
-                document.getElementsByName('sAdd0')[index].value = add.split(',')[0];
-                document.getElementsByName('sAdd1')[index].value = add.split(',')[1];
+                document.getElementsByName('sAdd0')[index].value = add_rep.split(' ')[0];
+                document.getElementsByName('sAdd1')[index].value = add_rep.split(' ')[1];
                 document.getElementsByName('sRegion')[index].value = region;
                 document.getElementsByName('sMove')[index].value = move;
                 document.getElementsByName('sAge')[index].value = age;

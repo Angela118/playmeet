@@ -1331,7 +1331,6 @@ module.exports = function(router, passport, upload) {
         var j = 0;
 
 
-
         // 나한테 신청한 사람 이메일 받아온거로 matches에서 email 찾아서
         dbm.MatchModel.find({email: otherEmail}, function (err, result) {
             console.log('result.length : ' + result.length);
@@ -1620,6 +1619,7 @@ module.exports = function(router, passport, upload) {
                     }
                 }
 
+                console.log('data[\'event_add\'] : '  +data['event_add']);
                 if(data['event_add'] != null) {
                     var addr = [];
                     addr = data['event_add'].split(' ');
