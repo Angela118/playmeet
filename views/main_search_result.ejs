@@ -155,7 +155,7 @@
                 <div style="">
                     <p style="font-weight: bold; margin-bottom: 0"><%=curTeamname%> 팀</p>
                     <p style="font-size: .7rem">
-                        <span>지역 : <%=curAdd%></span><br>
+                        <span>지역 : <%=curAdd[0]%> <%=curAdd[1]%></span><br>
                         <span>성별 : <%= curGender %></span><br>
                         <span>나이 : <%= curAge %>대</span><br>
                         <span>장소 : <%= curRegion %></span><br>
@@ -190,6 +190,9 @@
                     }
 
                     function modal_open_clicked(email, teamname, add, region, move, age, gender, careerYear, careerCount, date, time, day, mention, createdMonth, createdDay, geoLng, geoLat, nofteam, allRating, index) {
+
+                        add = add.split(',');
+                        // alert('add[0] : ' + add[0]);
                         if(gender == 25) {
                             gender = '무관'
                         }else if(gender == 50) {
@@ -207,7 +210,7 @@
 
                         $("div[name=email]").eq(index).text('주장 이메일 : ' + email);
                         $("div[name=teamname]").eq(index).text('팀명: ' + teamname + '팀');
-                        $("div[name=add]").eq(index).text('지역 : ' + add);
+                        $("div[name=add]").eq(index).text('지역 : ' + add[0] + ' ' + add[1]);
                         $("div[name=region]").eq(index).text('장소 : ' + region);
                         $("div[name=move]").eq(index).text('원정가능여부 : ' + move);
                         $("div[name=age]").eq(index).text('연령대 : ' + age +'대');
