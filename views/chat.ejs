@@ -52,19 +52,19 @@
             socket.on('message', function(message){
                 //println('수신 -> ' + JSON.stringify(message));
                 //      $(output).prependTo('#content');
-                addToChatting(message.email, message.data, message.application_number, message.cancel);
-                // addToChatting(message.email, message.message, message.application_number, message.cancel, 0);
+                // addToChatting(message.email, message.data, message.application_number, message.cancel);
+                addToChatting(message.email, message.message, message.application_number, message.cancel, 0);
             });
 
             socket.on('preload',function(dbData){
-                addToChatting(dbData.email, dbData.message, dbData.application_number, dbData.cancel);
-                // addToChatting(dbData.email, dbData.message, dbData.application_number, dbData.cancel, dbData.reviewed);
-            });
-
-/*            socket.on('cancel_message',function(dbData){
                 // addToChatting(dbData.email, dbData.message, dbData.application_number, dbData.cancel);
                 addToChatting(dbData.email, dbData.message, dbData.application_number, dbData.cancel, dbData.reviewed);
-            });*/
+            });
+
+            /*            socket.on('cancel_message',function(dbData){
+                            addToChatting(dbData.email, dbData.message, dbData.application_number, dbData.cancel);
+                            // addToChatting(dbData.email, dbData.message, dbData.application_number, dbData.cancel, dbData.reviewed);
+                        });*/
         }
 
         function login(){
@@ -104,14 +104,11 @@
                 type:'text'
             };
             socket.emit('message', message);
-
-            // 13일에 보낸게 왜 15일 방에 상대방이 접속중이면 뜨지..
-
-            addToChatting(message.email, message.data, message.application_number, 0);
+            addToChatting(message.email, message.data, message.application_number, 0, 0);
             $('#dataInput').val('');
         }
 
-        function addToChatting(writer, msg, application_number, cancel) {
+        function addToChatting(writer, msg, application_number, cancel, reviewed) {
             var temp = '<%= email %>';
             if (writer == temp)
                 writer = 'me';
@@ -120,6 +117,7 @@
 
             var contents;
 
+            // 그냥 메시지
             if (writer == 'me') {
 
                 contents =
@@ -136,13 +134,16 @@
                     + "</li>";
             }
 
-/*            if(reviewed) {
-                $(".chatting").append(contents);
+            //상대방이 리뷰했을 경우
+            if(reviewed) {
+                contents =
+                    "<li class=" + writer + ">"
+                    + "<div class='img_div'" + "style='margin-left: 0rem; margin-right: 0'>" + "<img class='profile_img' src='../profile_img/" + profile + "'/>" + "</div>"
+                    + "<div class='msg'" + "<p>" + msg + "</p><button class='btn' onclick=\"location.href='/teamcal'\">상대방 리뷰" + "</button></div>"
+                    + "</li> ";
+            }
 
-                var objDiv = document.getElementById("chatting");
-                objDiv.scrollTop = objDiv.scrollHeight;
-            }*/
-
+            // 매칭 중단시
             if(cancel == 1) {
                 if((writer == 'you') && (application_number == '<%= event_data.application_number%>')) {
 
@@ -324,8 +325,8 @@
                 type:'text'
             };
             socket.emit('message', message);
-            addToChatting(message.email, message.message, message.application_number, message.cancel);
-            // addToChatting(message.email, message.message, message.application_number, message.cancel, 0);
+            // addToChatting(message.email, message.message, message.application_number, message.cancel);
+            addToChatting(message.email, message.message, message.application_number, message.cancel, 0);
         }
 
         function deleteClick() {
@@ -392,42 +393,42 @@
     <button type="button" class="btn" value="페이지 새로 고침" onClick="reloadChat()">새로고침</button>
 </div>
 
-    <form action="/chatappointment" method="get" id="formPost_appoint">
-        <input type="hidden" name="email" value="<%=event_data.email%>">
-        <input type="hidden" name="otherEmail" value="<%=event_data.otherEmail%>">
-        <input type="hidden" name="otherTeamname" value="<%=event_data.otherTeamname%>">
-        <input type="hidden" name="event_date" value="<%=event_data.event_date%>">
-        <input type="hidden" name="event_time" value="<%=event_data.event_time%>">
-        <input type="hidden" name="application_number" value="<%=event_data.application_number%>">
-    </form>
+<form action="/chatappointment" method="get" id="formPost_appoint">
+    <input type="hidden" name="email" value="<%=event_data.email%>">
+    <input type="hidden" name="otherEmail" value="<%=event_data.otherEmail%>">
+    <input type="hidden" name="otherTeamname" value="<%=event_data.otherTeamname%>">
+    <input type="hidden" name="event_date" value="<%=event_data.event_date%>">
+    <input type="hidden" name="event_time" value="<%=event_data.event_time%>">
+    <input type="hidden" name="application_number" value="<%=event_data.application_number%>">
+</form>
 
-    <form action="/reportdeveloper" method="post" id="formPost_report">
-        <input type="hidden" name="otherEmail" value="<%=event_data.otherEmail%>">
-        <input type="hidden" name="otherTeamname" value="<%=event_data.otherTeamname%>">
-        <input type="hidden" name="application_number" value="<%=event_data.application_number%>">
+<form action="/reportdeveloper" method="post" id="formPost_report">
+    <input type="hidden" name="otherEmail" value="<%=event_data.otherEmail%>">
+    <input type="hidden" name="otherTeamname" value="<%=event_data.otherTeamname%>">
+    <input type="hidden" name="application_number" value="<%=event_data.application_number%>">
 
-        <!-- The report Modal -->
-        <div class="modal" id="reportModal">
-            <div class="modal-dialog modal-dialog-centered modal-sm">
-                <div class="modal-content">
-                    <div class="modal-body" style="border-top:1px solid black">
-                        관리자에게 신고할 내용을 입력<br>
-                        신고할 팀 : <b><%=event_data.otherTeamname%>팀</b> <br>(id : <%=event_data.otherEmail%>)
-                    </div>
-
-                    <textarea name="report_content" id="" cols="7" rows="4" placeholder="여기 입력"></textarea>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal" >닫기</button>
-                        <button type="button" class="btn" onclick="report()" data-dismiss="modal" data-toggle="collapse" data-target="#navbarsExample01">제출</button>
-                    </div>
-
+    <!-- The report Modal -->
+    <div class="modal" id="reportModal">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content">
+                <div class="modal-body" style="border-top:1px solid black">
+                    관리자에게 신고할 내용을 입력<br>
+                    신고할 팀 : <b><%=event_data.otherTeamname%>팀</b> <br>(id : <%=event_data.otherEmail%>)
                 </div>
+
+                <textarea name="report_content" id="" cols="7" rows="4" placeholder="여기 입력"></textarea>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" >닫기</button>
+                    <button type="button" class="btn" onclick="report()" data-dismiss="modal" data-toggle="collapse" data-target="#navbarsExample01">제출</button>
+                </div>
+
             </div>
         </div>
-        <!--reportModal end-->
+    </div>
+    <!--reportModal end-->
 
-    </form>
+</form>
 
 
 
