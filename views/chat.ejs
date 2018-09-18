@@ -52,16 +52,19 @@
             socket.on('message', function(message){
                 //println('수신 -> ' + JSON.stringify(message));
                 //      $(output).prependTo('#content');
-                addToChatting(message.email, message.data, message.application_number, message.cancel);
+                // addToChatting(message.email, message.data, message.application_number, message.cancel);
+                addToChatting(message.email, message.message, message.application_number, message.cancel, 0);
             });
 
             socket.on('preload',function(dbData){
-                addToChatting(dbData.email, dbData.message, dbData.application_number, dbData.cancel);
+                // addToChatting(dbData.email, dbData.message, dbData.application_number, dbData.cancel);
+                addToChatting(dbData.email, dbData.message, dbData.application_number, dbData.cancel, dbData.reviewed);
             });
 
-            socket.on('cancel_message',function(dbData){
-                addToChatting(dbData.email, dbData.message, dbData.application_number, dbData.cancel);
-            });
+/*            socket.on('cancel_message',function(dbData){
+                // addToChatting(dbData.email, dbData.message, dbData.application_number, dbData.cancel);
+                addToChatting(dbData.email, dbData.message, dbData.application_number, dbData.cancel, dbData.reviewed);
+            });*/
         }
 
         function login(){
@@ -104,11 +107,11 @@
 
             // 13일에 보낸게 왜 15일 방에 상대방이 접속중이면 뜨지..
 
-            addToChatting(message.email, message.data, message.application_number, 0);
+            addToChatting(message.email, message.data, message.application_number, 0, 0);
             $('#dataInput').val('');
         }
 
-        function addToChatting(writer, msg, application_number, cancel) {
+        function addToChatting(writer, msg, application_number, cancel, reviewed) {
             var temp = '<%= email %>';
             if (writer == temp)
                 writer = 'me';
@@ -132,6 +135,13 @@
                     + "<div class='msg'" + "<p>" + msg + "</p></div>"
                     + "</li>";
             }
+
+/*            if(reviewed) {
+                $(".chatting").append(contents);
+
+                var objDiv = document.getElementById("chatting");
+                objDiv.scrollTop = objDiv.scrollHeight;
+            }*/
 
             if(cancel == 1) {
                 if((writer == 'you') && (application_number == '<%= event_data.application_number%>')) {
@@ -189,45 +199,45 @@
 
 <body class="">
 
-<nav class="navbar reco">
-    <div class="top">
-        <div>
-            <!--<img src="../img/left-arrow.png" alt="" width="20rem" height="20rem" style="margin-right:3rem" onclick="goBack()">-->
+<!--<nav class="navbar reco">-->
+    <!--<div class="top">-->
+        <!--<div>-->
+            <!--&lt;!&ndash;<img src="../img/left-arrow.png" alt="" width="20rem" height="20rem" style="margin-right:3rem" onclick="goBack()">&ndash;&gt;-->
 
-            <p class="logo ml-sm-3"><%= event_data.otherTeamname %>팀과의 채팅방</p>
-        </div>
+            <!--<p class="logo ml-sm-3"><%= event_data.otherTeamname %>팀과의 채팅방</p>-->
+        <!--</div>-->
 
-        <div>
-            <img src="../css/img/menu.png" width="20rem" height="20rem" class="navbar-toggler" data-toggle="collapse" data-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
-        </div>
-    </div>
+        <!--<div>-->
+            <!--<img src="../css/img/menu.png" width="20rem" height="20rem" class="navbar-toggler" data-toggle="collapse" data-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">-->
+        <!--</div>-->
+    <!--</div>-->
 
-    <div class="collapse navbar-collapse" id="navbarsExample01">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="/chatroomchat">
-                    <b>채팅방 목록으로 돌아가기</b>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link">
-                    <div onclick="appointment()" onmouseover="this.style.color='#dfe3ee'" onmouseout="this.style.color='white'"><b>시간 장소 다시 정하기</b></div>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="" data-toggle="modal" data-target="#myModal">
-                    <b>매칭 중단하기</b><br>
-                </a>
-            </li>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="" data-toggle="modal" data-target="#reportModal">
-                    <b>상대방 신고하기</b><br>
-                </a>
-            </li>
-        </ul>
-    </div>
-</nav>
+    <!--<div class="collapse navbar-collapse" id="navbarsExample01">-->
+        <!--<ul class="navbar-nav mr-auto">-->
+            <!--<li class="nav-item">-->
+                <!--<a class="nav-link" href="/chatroomchat">-->
+                    <!--<b>채팅방 목록으로 돌아가기</b>-->
+                <!--</a>-->
+            <!--</li>-->
+            <!--<li class="nav-item">-->
+                <!--<a class="nav-link">-->
+                    <!--<div onclick="appointment()" onmouseover="this.style.color='#dfe3ee'" onmouseout="this.style.color='white'"><b>시간 장소 다시 정하기</b></div>-->
+                <!--</a>-->
+            <!--</li>-->
+            <!--<li class="nav-item">-->
+                <!--<a class="nav-link" href="" data-toggle="modal" data-target="#myModal">-->
+                    <!--<b>매칭 중단하기</b><br>-->
+                <!--</a>-->
+            <!--</li>-->
+            <!--</li>-->
+            <!--<li class="nav-item">-->
+                <!--<a class="nav-link" href="" data-toggle="modal" data-target="#reportModal">-->
+                    <!--<b>상대방 신고하기</b><br>-->
+                <!--</a>-->
+            <!--</li>-->
+        <!--</ul>-->
+    <!--</div>-->
+<!--</nav>-->
 
 <div class="py-4 text-center"></div>
 
@@ -314,9 +324,8 @@
                 type:'text'
             };
             socket.emit('message', message);
-            // alert('cancel 함수' );
-            addToChatting(message.email, message.message, message.application_number, message.cancel);
-            // alert('addToChatting 보냄');
+            // addToChatting(message.email, message.message, message.application_number, message.cancel);
+            addToChatting(message.email, message.message, message.application_number, message.cancel, 0);
         }
 
         function deleteClick() {
