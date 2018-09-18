@@ -1497,6 +1497,17 @@ module.exports = function(router, passport, upload) {
         var preEvent_time = req.body.preEvent_time;
         var application_number = req.body.application_number;
         var flag = req.body.flag; // 신청한건지 받은건지 여부
+        var add = req.body.add || req.body.add2;
+        var add2 = req.body.add2;
+        console.log('body.add : ' + add);
+        console.log('body.add2 : ' + add2);
+
+        if(add) {
+            var add_array = [add.split(' ')[0], add.split(' ')[1]];
+        }else {
+            var add_array = undefined;
+        }
+        console.log('add_array : ' + add_array);
 
         // 신청 받음 / others.sNofteam이 내꺼
         if (flag == 0) {
@@ -1504,7 +1515,7 @@ module.exports = function(router, passport, upload) {
                 'others.sEvent_date' : req.body.event_date || req.query.event_date,
                 'others.sEvent_time' : req.body.event_time || req.query.event_time,
                 'others.sRegion' : req.body.region || req.query.region,
-                'others.sAdd' : req.body.add,
+                'others.sAdd' : add_array,
                 'others.sNofteam' : req.body.event_nofteam || req.query.event_nofteam //우리팀꺼
             }
             // 신청함
@@ -1513,7 +1524,7 @@ module.exports = function(router, passport, upload) {
                 'others.sEvent_date' : req.body.event_date || req.query.event_date,
                 'others.sEvent_time' : req.body.event_time || req.query.event_time,
                 'others.sRegion' : req.body.region || req.query.region,
-                'others.sAdd' : req.body.add,
+                'others.sAdd' : add_array,
                 'nofteam' : req.body.event_nofteam || req.query.event_nofteam //우리팀꺼
             }
         }
@@ -1521,7 +1532,11 @@ module.exports = function(router, passport, upload) {
         console.log('1. update');
         console.dir(update);
 
-        /* if(!update.add){		//도로명주소 없는 경우 지번 주소
+        if((update['others.sRegion']) && (update['others.sAdd'] == undefined)) {
+            update['others.sAdd'] = '';
+        }
+
+/*         if((!update['others.sAdd']) && (update['others.sRegion'])){		//도로명주소 없는 경우 지번 주소
              update.add = req.body.add2 || req.query.add2;
          }*/
 
@@ -1532,7 +1547,7 @@ module.exports = function(router, passport, upload) {
         if(update['others.sRegion'] == undefined)
             delete update['others.sRegion'];
         //배열로 안바뀌면0, 1 따로보내기
-        if(update['others.sAdd'] == undefined)
+        if(update['others.sAdd'] == undefined || update['others.sAdd'] == '')
             delete update['others.sAdd'];
 
         if(flag == 0) {
@@ -1546,15 +1561,18 @@ module.exports = function(router, passport, upload) {
         console.log('2. update');
         console.dir(update);
 
-        if(update['others.sAdd']) {
-            var addr = [];
-            addr = update['others.sAdd'].split(' ');
+        console.log('update["others.sAdd"] : ');
+        console.dir(update['others.sAdd']);
+
+        if(update['others.sAdd'] != null) {
+            var addr = (update['others.sAdd']);
 
             if (addr[0] == '제주특별자치도') {
                 update['others.sAdd'] = [addr[1], addr[2]];
             } else
                 update['others.sAdd'] = [addr[0], addr[1]];
         }
+        update['event_add'] = addr;
 
         var updateFunction = function () {
             console.log('------updateFunction------');
@@ -1594,7 +1612,7 @@ module.exports = function(router, passport, upload) {
                             'otherTeamname': result[i]._doc.teamname, // 상대팀 팀명
                             'event_date': req.body.event_date || result[i]._doc.others.sEvent_date,
                             'event_time': req.body.event_time || result[i]._doc.others.sEvent_time,
-                            'event_add': req.body.add || result[i]._doc.others.sAdd,
+                            'event_add': add_array || result[i]._doc.others.sAdd,
                             'event_region': req.body.region || result[i]._doc.others.sRegion,
                             'nofteam': req.body.event_nofteam || result[i]._doc.others.sNofteam,
                             'other_nofteam': result[i]._doc.nofteam, // 상대팀
@@ -1609,7 +1627,7 @@ module.exports = function(router, passport, upload) {
                             'otherTeamname': result[i]._doc.others.sTeamname, // 상대팀 팀명
                             'event_date': req.body.event_date || result[i]._doc.others.sEvent_date,
                             'event_time': req.body.event_time || result[i]._doc.others.sEvent_time,
-                            'event_add': req.body.add || result[i]._doc.others.sAdd,
+                            'event_add': add_array || result[i]._doc.others.sAdd,
                             'event_region': req.body.region || result[i]._doc.others.sRegion,
                             'nofteam': req.body.event_nofteam || result[i]._doc.nofteam,
                             'other_nofteam': result[i]._doc.others.sNofteam, // 상대팀
@@ -1619,16 +1637,19 @@ module.exports = function(router, passport, upload) {
                     }
                 }
 
-                console.log('data[\'event_add\'] : '  +data['event_add']);
-                if(data['event_add'] != null) {
-                    var addr = [];
-                    addr = data['event_add'].split(' ');
+                console.log('data[\'event_add\'] : ');
+                console.dir(data['event_add']);
+
+                if(data['event_add'][0] != null) {
+                    var addr = (data['event_add']);
 
                     if (addr[0] == '제주특별자치도') {
                         data['event_add'] = [addr[1], addr[2]];
                     } else
                         data['event_add'] = [addr[0], addr[1]];
                 }
+
+                // data['event_add'] = add_;
 
                 dbm.UserModel.find({email: otherEmail}, function (err, result) {
                     for (var i = 0; i < result.length; i++) {
