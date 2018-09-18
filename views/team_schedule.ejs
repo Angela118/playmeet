@@ -24,6 +24,30 @@
 	<!---->
 
 </head>
+
+
+<script>
+    // 로딩 - 안할거면 div id = loading 내 코드 전부 & div id = page 는 태그만 삭제
+    window.onload = function(){
+        document.getElementById("loading").style.display = "none"; // to undisplay
+        document.getElementById("page").style.display = ""; // to display
+        return true;
+    }
+</script>
+
+
+<body class="coloring">
+
+<div id="loading">
+	<div id="load">
+		<img src="../css/img/loading.gif" alt="loading">
+	</div>
+
+	<p> Loading . . . </p>
+
+</div>
+
+<div id="page" style="display: none">
 <body class="coloring">
 <nav class="navbar">
 	<div class="top">
@@ -545,6 +569,7 @@
 		</div>
 
 	</div>
+</div>
 </div>
 </body>
 </html>

@@ -10,6 +10,7 @@
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <link href="../css/team_schedule.css" rel="stylesheet">
     <link href="../css/calendar.css" rel="stylesheet">
+    <link href="../css/common.css" rel="stylesheet">
     <link href="../css/fullcalendar.css" rel="stylesheet">
 	<link href="../css/fullcalendar.print.css" rel="stylesheet" media="print">
 
@@ -35,12 +36,36 @@
 		}
 	</style>
 </head>
-    
+
+
+
+<script>
+    // 로딩 - 안할거면 div id = loading 내 코드 전부 & div id = page 는 태그만 삭제
+    window.onload = function(){
+        document.getElementById("loading").style.display = "none"; // to undisplay
+        document.getElementById("page").style.display = ""; // to display
+        return true;
+    }
+</script>
+
+
 <body class="coloring">
+
+<div id="loading">
+	<div id="load">
+		<img src="../css/img/loading.gif" alt="loading">
+	</div>
+
+	<p> Loading . . . </p>
+
+</div>
+
+<div id="page" style="display: none">
+<!--<body class="coloring">-->
 <nav class="navbar">
     <div class="top">
         <img src="../img/left-arrow.png" height="20rem" onclick="goBack();">
-		<a href="/"><img src="../img/update_logo2.jpg" height="50rem"></a>
+		<!--<a href="/"><img src="../img/update_logo2.jpg" height="50rem"></a>-->
         <div class="sets">
             <a href="/chatroomchat"><img src="../img/update_chat.png" class="menu_img" height="20rem"></a>
             <img src="../img/update_menu.png" height="20rem" class="navbar-toggler" data-toggle="collapse" data-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
@@ -208,6 +233,6 @@
 
 
 
-
+</div>
 </body>
 </html>
