@@ -2923,16 +2923,6 @@ module.exports = function(router, passport, upload) {
             res.redirect('/');
         }
         else{
-            profile_photo = req.user.profile_img;
-            if(profile_img.length > 0){
-                for(var i=0; i<profile_img.length; i++){
-                    if(profile_img[i][0] == req.user.email)
-                        profile_photo = profile_img[i][1];
-                }
-            } else{
-                profile_img[imgi] = [req.user.email, req.user.profile_img];
-            }
-
             var reviewerTeamEmail = req.user.email;
             var reviewedTeamEmail = req.query.reviewedTeamEmail;
             var eventDate = req.query.eventDate;
