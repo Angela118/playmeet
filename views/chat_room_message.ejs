@@ -22,12 +22,12 @@
 
     <title>채팅방 목록 - 메시지</title>
 </head>
-<body class="whiteB">
+<body class="coloring">
 
 <!--메뉴 영역 시작-->
 <!--여기선 메뉴명 채팅방 목록으로 되어 있음-->
 
-<nav class="navbar blueB">
+<nav class="navbar blueB reco">
     <div class="top">
         <div>
             <img src="../img/left-arrow.png" alt="" width="20rem" height="20rem" style="margin-right:3rem" onclick="goBack();">
@@ -36,7 +36,7 @@
         </div>
 
         <div>
-            <a href="/chatroom"><img src="../img/envelope.png" class="menu_img" width="20rem" height="20rem" style="margin-right:1rem"></a>
+            <a href="/chatroomchat"><img src="../img/envelope.png" class="menu_img" width="20rem" height="20rem" style="margin-right:1rem"></a>
 
             <img src="../img/menu.png" width="20rem" height="20rem" class="navbar-toggler" data-toggle="collapse" data-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
         </div>
@@ -64,7 +64,7 @@
                 <a class="nav-link" href="/teamreceivedreview" style="margin-left:2rem">우리 팀 평가 점수</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/teamcal" style="margin-left:2rem">경기 스케줄</a>
+                <a class="nav-link" href="/teamschedule" style="margin-left:2rem">경기 스케줄</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/matchapplication">매칭 등록</a>
@@ -81,7 +81,7 @@
 
 <!--메뉴 영역 끝-->
 
-<div class = "blueB chat_tab">
+<div class = "blueB chat_tab reco">
     <div onclick="location='./chatroomchat'">채팅</div>
     <div onclick="location='./chatroommessage'">메시지</div>
 </div>
@@ -94,7 +94,6 @@
         <%}else{
             var notZeroCount = 0; // 나한테 신청왔는데 매칭 수락이나 거절한거
             var count = 0; // 띄워지는 값 count
-
         <!--event_data는 내게 신청한 상대팀 정보-->
         <!--event_data.others는 선택된 (내가 올렸던) 경기 날짜 & 시간 등 들어있음 -->
         for(var i = 0; i < event_data.length; i++) {
@@ -104,10 +103,8 @@
             var curCreatedMonth = event_data[i].created_month;
             var curCreatedDay = event_data[i].created_day;
             var match_succcess = event_data[i].match_success;
-
             // matchsuccess=0인것만 메시지함에서 띄우기
             if(event_data[i].match_success != 0) {
-
                 // event_data 다 돌았는데 다 매칭 수락이나 거절했으면
                 if((i == (event_data.length - 1)) && ((notZeroCount) == i)) {%>
                     <p style="font-weight: bold">우리 팀에게 온 메시지가 없습니다.</p>
@@ -115,22 +112,17 @@
                 notZeroCount++;
             }else{
         %>
-
         <script>
             function clicked(email, sameEmailIndex, index) {
                 document.getElementsByName('sEmail')[index].value = email;
                 document.getElementsByName('sSameEmailIndex')[index].value = sameEmailIndex;
-
                 // alert(email + '주장팀 클릭클릭 sameEmailIndex : ' + sameEmailIndex + '/ index : ' + index);
-
                 document.getElementsByName('formPost')[index].submit();
             }
         </script>
-
         <form action="/chatroommessage" name="formPost" method="post">
             <input type="hidden" name="sEmail" id="sEmail" value=''>
             <input type="hidden" name="sSameEmailIndex" id="sSameEmailIndex" value=''>
-
             <div class="message" onclick="clicked( `<%= curEmail %>`,`<%=event_data[i].sameEmailIndex%>`, `<%= count%>`)">
                 <div class="chat_room_name mb-2">
                     <span style="font-weight:bold"> <%=curTeamname%> 팀</span>
@@ -139,7 +131,6 @@
                 <div class="chat_room_content">매칭 신청합니다. <%=curMention%></div>
             </div>
         </form>
-
         <hr class="mb-4">
         <%
                 count++;

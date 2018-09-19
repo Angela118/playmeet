@@ -12,7 +12,7 @@
   <link href="../css/bootstrap.min.css" rel="stylesheet">
   <link href="../css/common.css" rel="stylesheet">
   <link href="../css/login.css" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css?family=Nanum+Gothic" rel="stylesheet">
 </head>
 
 
@@ -22,21 +22,26 @@
   <div class="col-md-8 order-md-1">
 
     <div class="py-4 text-center">
-      <img class="mb-4" src="../img/soccerball.png" alt="" width="100rem" height="100rem">
-      <h5 class="mb-3 align-center" style="font-weight: bold; color: white;">로그인하기</h5>
+      <img src="../img/update_playmeet.jpg" width="280rem">
+      <h5 class="mb-3 align-center" style="color: #676789; font-style:oblique; font-size:small;">축구하고 싶은 사람 모여라!</h5>
     </div>
 
     <form action="/login" method="post" class="">
-      <input type="email" name="email" id="inputEmail" class="form-control mb-2" placeholder="아이디(팀장 이메일 주소)" required autofocus>
-      <input type="password" name="password" id="inputPassword" class="form-control mb-3" placeholder="비밀번호" required>
+      <input type="email" name="email" id="inputEmail" class="input-control" placeholder="ID (팀장 이메일 주소)" required autofocus>
+      <input type="password" name="password" id="inputPassword" class="input-control mb-3" placeholder="비밀번호" required>
 
       <div class="buttons mb-3">
-	<button class="btn btn-block" type="submit">로그인</button>
+	<button class="btn btn-block go" type="submit">GO!</button>
       </div>	
     </form>
-
-      <a href="/teamsignup"><button class="btn btn-block mb-3">회원가입하기</button></a>
-    <a href="/findpassword"><button class="btn btn-block mb-3">비밀번호 찾기</button></a>
+    
+    <div class="signup">
+        <a href="/teamsignup"><p style="color:#676789;">계정이 없으신가요?&nbsp;</p><p style="color: #7473ff;">가입하기</p></a>
+    </div>
+    
+    <div class="findpwd">
+      <a href="/findpassword"><p style="color:#7473ff;">비밀번호</p><p style="color:#676789;">를 잊으셨나요?</p></a>
+    </div>
       <!--<div class="buttons2">-->
         <!--<a href="find_id.html"><button class="btn btn-block mb-3" style="width: 9rem">아이디 찾기</button></a>-->
     <!--<a href="find_password.html"><button class="btn btn-block mb-3" style="width: 9rem">비밀번호 찾기</button></a>-->
