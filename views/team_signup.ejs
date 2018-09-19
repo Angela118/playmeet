@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="kr">
+<html lang="ko">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -18,6 +18,12 @@
     <script src="../js/jquery.js"></script>
     <script src="../js/bootstrap.bundle.min.js"></script>
 	
+    <script>
+        function goBack(){
+            window.history.back();
+        }
+    </script>
+    
 	 <style>
 		.map_wrap {position:relative;width:100%;height:350px;}
 		.title {font-weight:bold;display:block;}
@@ -25,12 +31,6 @@
 		#centerAddr {display:block;margin-top:2px;font-weight: normal;}
 		.bAddr {padding:5px;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
 	</style>
-
-<script type="text/javascript">
-    function goBack(){
-        window.history.back();
-    }
-</script>
 
 <!--숫자만 입력-->
 <script>
@@ -53,13 +53,13 @@
 </script>	
 </head>
 <body class="coloring">
-    <nav class="navbar">
+<nav class="navbar">
     <div class="top">
-        <img src="../img/left-arrow.png" height="30rem" onclick="goBack();">
-		<a href="/"><img src="../img/update_logo2.jpg" height="60rem" class="logo"></a>
-        <div class="sets">
-            <a href="/chatroomchat"><img src="../img/update_chat.png" class="menu_img" height="30rem"></a>
-            <img src="../img/update_menu.png" height="30rem" class="navbar-toggler" data-toggle="collapse" data-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
+        <img src="../img/left-arrow.png" height="20rem" onclick="goBack();">
+		<a href="/"><img src="../img/update_playmeet3.jpg" height="50rem" style="margin-right:-1rem;"></a>
+        <div class="sets" style="visibility:hidden;">
+            <a href="/chatroomchat"><img src="../img/update_chat.png" class="menu_img" height="20rem" style="margin-right: .3rem;"></a>
+            <img src="../img/update_menu.png" height="20rem" class="navbar-toggler" data-toggle="collapse" data-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
         </div>
     </div>
     </nav>
@@ -262,4 +262,5 @@
     </div>
 </div>
 </body>
+    <footer class="my-5 pt-5 text-muted text-center text-small"></footer>
 </html>
