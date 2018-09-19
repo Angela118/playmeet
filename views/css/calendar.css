@@ -17,15 +17,6 @@
   clear: both;
 }
 
-.calendar-wrapper {
-  /*width:360px;*/
-  margin-bottom: 1rem;
-  /*padding:2rem;*/
-  /*border:1px solid --calendar-border;*/
-  border-radius:5px;
-  /*background:--calendar-bg;*/
-    color: white;
-}
 table {
   clear:both;
   width:100%;
@@ -34,8 +25,7 @@ table {
   border-collapse:collapse;
   /*color:--calendar-color;*/
 }
-td {
-  
+td {  
   text-align:center;
   vertical-align:middle;
   border-right:1px solid --calendar-border;
