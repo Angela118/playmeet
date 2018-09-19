@@ -18,9 +18,8 @@
     <title>메인페이지</title>
 </head>
 
-<body class="coloring">	
+<body class="coloring">
 <% include ./navbar %>
-
 <div class="container">
     <div class="reco">
         <div class="search_match">
@@ -31,7 +30,7 @@
         </div>
         <div style="display:flex; justify-content: space-between; align-items: center;" class="mb-3">
             <span style="font-weight: bold; color: white;">매칭추천</span>
-			
+<!--
 			<form action="/main" name="changesubmit" method="post">
             <select class="custom-select" name="sort" id="sort" style="width: 8rem;">
                 <option selected value="0">정렬 기준</option>
@@ -39,7 +38,7 @@
 				<option value="2">성별</option>
 				<option value="3">평균 연령대</option>
             </select>
-			</form>
+			</form>-->
 				 <script type="text/javascript">
 					 
   						jQuery(function() {
@@ -74,6 +73,10 @@
             var matchYear = curDate.substring(0,4);
             var matchMonth = curDate.substring(5,7);
             var matchDay = curDate.substring(8,10);
+            var add_rep = curAdd.replace(/\"/g, "");
+            add_rep = add_rep.replace(/\[/g, "");
+            add_rep = add_rep.replace(/\]/g, "");
+            add_rep = add_rep.replace(/\,/g, " ");
 			
             var today = new Date();
             var dd = today.getDate();
@@ -102,7 +105,6 @@
 			}
         %>
 		
-        <!--<p>로로롱팀의 팀 정보를 기반으로 가장 일치하는 순으로 추천된 리스트입니다.</p>-->
         <div class="list mb-3">
             <div class="list_item">
                 <div class="list_divide">
@@ -111,7 +113,7 @@
                         <%= matchYear %>년 <%= matchMonth %>월 <%= matchDay %>일 <%= curDay %>요일, <%= curTime %>시
                     </div>
                     <div class="list_item_detail">
-                        <h9>&nbsp;장소&nbsp;</h9><%= curAdd %> <%= curRegion %>
+                        <h9>&nbsp;장소&nbsp;</h9><%= add_rep %> <%= curRegion %>
                     </div>
                     <div class="list_item_detail">
                         <h9>&nbsp;정원&nbsp;</h9> 총 <%= curNofteam %>명 (*인원변동가능)
@@ -125,13 +127,16 @@
                 </div>
             </div>
         </div>
-
 		<script>
             function clicked(email, teamname, add, region, move, age, gender, careerYear, careerCount, date, time, day, mention, createdMonth, createdDay, geoLng, geoLat, nofteam, application_number, index) {
+                var add_rep = add.replace(/\"/g, "");
+                add_rep = add_rep.replace(/\[/g, "");
+                add_rep = add_rep.replace(/\]/g, "");
+                add_rep = add_rep.replace(/\,/g, " ");
                 document.getElementsByName('sEmail')[index].value = email;
                 document.getElementsByName('sTeamname')[index].value = teamname;
-                document.getElementsByName('sAdd0')[index].value = add.split(',')[0];
-                document.getElementsByName('sAdd1')[index].value = add.split(',')[1];
+                document.getElementsByName('sAdd0')[index].value = add_rep.split(' ')[0];
+                document.getElementsByName('sAdd1')[index].value = add_rep.split(' ')[1];
                 document.getElementsByName('sRegion')[index].value = region;
                 document.getElementsByName('sMove')[index].value = move;
                 document.getElementsByName('sAge')[index].value = age;
@@ -150,7 +155,6 @@
                 document.getElementsByName('sApplicationNumber')[index].value = application_number;
                 alert(teamname + '팀에게 매칭 신청하였습니다. 상대팀에서 수락하면 채팅방이 열리게 됩니다.')
             }
-
             function modal_open_clicked(email, teamname, add, region, move, age, gender, careerYear, careerCount, date, time, day, mention, createdMonth, createdDay, geoLng, geoLat, nofteam, allRating, index) {
                 if(gender == 25) {
                     gender = '무관'
@@ -159,18 +163,19 @@
                 }else{
                     gender = '여'
                 }
-
                 if(move == 100){
                     move = 'O';
                 }else if(move == 50){
                     move = 'X';
                 }
-
+                var add_rep = add.replace(/\"/g, "");
+                add_rep = add_rep.replace(/\[/g, "");
+                add_rep = add_rep.replace(/\]/g, "");
+                add_rep = add_rep.replace(/\,/g, " ");
                 // alert(region + email + city);
-
                 $("div[name=email]").eq(index).text('주장 이메일 : ' + email);
                 $("div[name=teamname]").eq(index).text('팀명: ' + teamname + '팀');
-                $("div[name=add]").eq(index).text('지역 : ' + add);
+                $("div[name=add]").eq(index).text('지역 : ' + add_rep);
                 $("div[name=region]").eq(index).text('장소 : ' + region);
                 $("div[name=move]").eq(index).text('원정가능여부 : ' + move);
                 $("div[name=age]").eq(index).text('연령대 : ' + age +'대');
@@ -209,7 +214,6 @@
             <input type="hidden" name="sGeoLat" id="sGeoLat" value=''>
             <input type="hidden" name="sNofteam" id="sNofteam" value=''>
             <input type="hidden" name="sApplicationNumber" id="sApplicationNumber" value=''>
-
             <div style="text-align: center">
                 <!--<button type="button" class="btn btn-primary" onclick='clicked()'>매칭 신청</button>-->
                 <button type="button" class="btn btn-primary" name="modal_open_button" onclick="modal_open_clicked(
@@ -234,18 +238,15 @@
                         '<%= event_data[i].allRating %>',
                         '<%= i%>')">상세 정보</button>
             </div>
-
             <!-- The Modal -->
             <div class="modal" name="myModal" style="color:black;">
                 <div class="modal-dialog modal-dialog-centered modal-sm">
                     <div class="modal-content">
-
                         <!--&lt;!&ndash; Modal Header &ndash;&gt;-->
                         <div class="modal-header">
                             <h4 class="modal-title" style="text-align: center"><%=event_data[i].teamname%> 팀</h4>
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
-
                         <!--&lt;!&ndash; Modal body &ndash;&gt;-->
                         <div class="modal-body">
                             <div name="email" value='' class="modal_content"></div>
@@ -268,7 +269,6 @@
                             <div name="nofteam" value='' class="modal_content"></div>
                             <div name="allRating" value='' class="modal_content"></div>
                         </div>
-
                         <!--&lt;!&ndash; Modal footer &ndash;&gt;-->
                         <div class="modal-footer">
                             <button type="button" class="btn btn-danger" data-dismiss="modal" >닫기</button>
@@ -298,20 +298,10 @@
                 </div>
             </div>
         </form>
-
-
-
     </div>
 </div>
-
-
-
 <%}%>
 <%}%>
-
-
-
-
 
 </body>
 </html>

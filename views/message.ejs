@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="kr">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -31,10 +31,8 @@
 </script>
 
 <% var index = sSameEmailIndex;
-
 var curGender = event_data[index].gender;
 var curMove = event_data[index].move;
-
 if(curGender == 25) {
     curGender = '무관';
 }else if(curGender == 50) {
@@ -42,20 +40,19 @@ if(curGender == 25) {
 }else if(curGender == 100){
     curGender = '여자';
 }
-
 if(curMove == 100){
     curMove = 'O';
 }else if(curMove == 50){
     curMove = 'X';
 }
-
 %>
 
-<nav class="navbar">
+<!--메뉴 다름-->
+<nav class="navbar blueB reco">
 
     <div class="top">
         <div>
-            <img src="../img/left-arrow.png" alt="" width="20rem" height="20rem" style="margin-right:3rem" onclick="goBack()">
+            <img src="../img/left-arrow.png" alt="" width="20rem" height="20rem" style="margin-right:3rem" onclick="location.href='/chatroommessage'">
 
             <p class="logo ml-sm-3"> <%= event_data[index].teamname %>팀으로부터 받은 메시지</p>
         </div>
@@ -76,7 +73,6 @@ if(curMove == 100){
 		}else if(match == 2){
 			alert('email : ' + email + '/ sameEmailIndex : ' + sameEmailIndex + '/ match : ' + match + '매칭을 거절하였습니다.');
 		}
-
         document.getElementById('formPost').submit();
     }
 </script>

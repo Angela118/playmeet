@@ -10,6 +10,7 @@
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <link href="../css/team_schedule.css" rel="stylesheet">
     <link href="../css/calendar.css" rel="stylesheet">
+    <link href="../css/common.css" rel="stylesheet">
     <link href="../css/fullcalendar.css" rel="stylesheet">
 	<link href="../css/fullcalendar.print.css" rel="stylesheet" media="print">
 
@@ -35,10 +36,32 @@
 		}
 	</style>
 </head>
-    
-<body style="background-color: #292941; visibility: hidden !important;">
-<% include ./navbar %>
 
+
+
+<script>
+    // 로딩 - 안할거면 div id = loading 내 코드 전부 & div id = page 는 태그만 삭제
+    window.onload = function(){
+        document.getElementById("loading").style.display = "none"; // to undisplay
+        document.getElementById("page").style.display = ""; // to display
+        return true;
+    }
+</script>
+
+
+<body>
+
+<div id="loading">
+	<div id="load">
+		<img src="../css/img/loading.gif" alt="loading">
+	</div>
+
+	<p> Loading . . . </p>
+
+</div>
+
+<div id="page" style="display: none">
+    <% include ./navbar %>
 <div class="container">
     <div class="reco">
 
@@ -46,21 +69,17 @@
 		<script type="text/javascript">
 			
 			$(function(){
-
 				var today = new Date();
 				var dd = today.getDate();
 				var mm = today.getMonth()+1; //January is 0!
 				var yyyy = today.getFullYear();
-
 				if(dd<10) {
 					dd='0'+dd;
 				}
-
 				if(mm<10) {
 					mm='0'+mm;
 				}
 				
-
 				var pevent = '<%= pEvent %>';
 				var encoded = JSON.stringify(pevent).replace(/&#34;/g, "");
 				encoded = encoded.replace(/&#39;/g, "'");
@@ -73,7 +92,6 @@
 				
 				document.getElementById('calMonth').value = mm;
 				document.getElementById('calform').submit();
-
 				var ww,view;
 				jQuery("#calendar").fullCalendar({
 					  defaultDate : yyyy+"-"+mm+"-"+dd
@@ -108,13 +126,11 @@
 					var date = jQuery("#calendar").fullCalendar("getDate");
 					convertDate(date);
 				});
-
 				// 다음달 버튼
 				jQuery("button.fc-next-button").click(function() {
 					var date = jQuery("#calendar").fullCalendar("getDate");
 					convertDate(date);
 				});
-
 			});
 			
 			// 받은 날짜값 형변환
@@ -135,8 +151,6 @@
 			function getView(){
 				return (ww <= 768) ? 'basicDay' : 'month';
 			}
-
-
 		</script>
         <div class="calendar-wrapper">
             <div id="calendar"></div>
@@ -158,9 +172,6 @@
     </div>
 </div>
 
-
-
-
-
+</div>
 </body>
 </html>
