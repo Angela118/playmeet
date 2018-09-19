@@ -8,7 +8,6 @@
 
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <link href="../css/common.css" rel="stylesheet">
-    <link href="../css/FRAME.css" rel="stylesheet">
     <link href="../css/chat.css" rel="stylesheet">
 
     <!-- Bootstrap core JavaScript -->
@@ -48,21 +47,18 @@ if(curMove == 100){
 %>
 
 <!--메뉴 다름-->
-<nav class="navbar blueB reco">
-
+<nav class="navbar">
     <div class="top">
-        <div>
-            <img src="../img/left-arrow.png" alt="" width="20rem" height="20rem" style="margin-right:3rem" onclick="location.href='/chatroommessage'">
-
-            <p class="logo ml-sm-3"> <%= event_data[index].teamname %>팀으로부터 받은 메시지</p>
+        <img src="../img/left-arrow.png" height="20rem" onclick="goBack();">
+		<!--<a href="/"><img src="../img/update_playmeet3.jpg" height="50rem" style="margin-right:-1rem;"></a>-->
+        <div style="color:white;"> <%= event_data[index].teamname %>팀으로부터 받은 메시지</div>
+        <div class="sets" style="visibility:hidden;">
+            <a href="/chatroomchat"><img src="../img/update_chat.png" class="menu_img" height="20rem" style="margin-right: .3rem;"></a>
+            <img src="../img/update_menu.png" height="20rem" class="navbar-toggler" data-toggle="collapse" data-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
         </div>
     </div>
 </nav>
-
-<div class="py-4 text-center"></div>
-
-<!--메뉴 영역 끝  -->
-
+    
 <script>
     function clicked(email, sameEmailIndex, match) {
         document.getElementById('sEmail').value = email;
@@ -77,8 +73,8 @@ if(curMove == 100){
     }
 </script>
 
-<div class="container">
-    <div class="reco" style="margin-top: 2.3rem">
+<div class="container" style="padding-top:40px;">
+    <div class="reco" style="border:2px solid #7473ff; padding:.5rem;">
         <div class="mb-3">
             <p style="line-height: 2rem">
                 주장 이메일 : <%= event_data[index].email %><br>

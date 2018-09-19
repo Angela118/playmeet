@@ -9,7 +9,6 @@
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <link href="../css/chat_room.css" rel="stylesheet">
     <link href="../css/common.css" rel="stylesheet">
-    <link href="../css/FRAME.css" rel="stylesheet">
 
     <script src="../js/jquery.js"></script>
     <script src="../js/bootstrap.bundle.min.js"></script>
@@ -57,7 +56,7 @@
                 document.getElementsByName('formPost')[index].submit();
             }
         </script>
-        <form action="/chatroommessage" name="formPost" method="post">
+        <form action="/chatroommessage" name="formPost" method="post" style="padding-bottom: .5rem; border-bottom:1px solid #7473ff; margin-bottom:.5rem;">
             <input type="hidden" name="sEmail" id="sEmail" value=''>
             <input type="hidden" name="sSameEmailIndex" id="sSameEmailIndex" value=''>
             <div class="message" onclick="clicked( `<%= curEmail %>`,`<%=event_data[i].sameEmailIndex%>`, `<%= count%>`)">
@@ -68,7 +67,6 @@
                 <div class="chat_room_content">매칭 신청합니다. <%=curMention%></div>
             </div>
         </form>
-        <hr class="mb-4">
         <%
                 count++;
                 }

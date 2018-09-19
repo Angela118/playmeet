@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -117,10 +117,11 @@
             <input type="hidden" name="otherEmail" id="otherEmail">
             <input type="hidden" name="application_number" id="application_number">
         </form>
+        
         <div class="message" onclick="clicked(
                 '<%=event_data[i].otherEmail%>'
                 , '<%= event_data[i].application_number%>'
-                , '<%= count%>')">
+                , '<%= count%>')" style="padding-bottom: .5rem; border-bottom:1px solid #7473ff; margin-bottom:.5rem;">
             <div class="chat_room_content">
                 <% if(event_data[i].event_time == 'none') {
                     var time = '시간 무관';
@@ -130,7 +131,6 @@
                 <div><br> <b><%= event_data[i].event_date%></b> <%= time%> 경기 with <%= event_data[i].otherTeamname%>팀<br></div>
             </div>
         </div>
-        <hr class="mb-4">
         <%
             count++;
             // 다 돌았는데 다 main_search != 1일 때
