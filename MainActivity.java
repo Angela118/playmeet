@@ -11,7 +11,9 @@ import android.webkit.WebSettings;
 import android.widget.Toast;
 
 //fcm
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 
@@ -66,9 +68,25 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mWebView.loadUrl("http://10.100.205.79:3000/login");
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( MainActivity.this,  new OnSuccessListener<InstanceIdResult>() {
+            @Override
+            public void onSuccess(InstanceIdResult instanceIdResult) {
+                String mToken = instanceIdResult.getToken();
+                Log.d("This device's Token is : ",mToken);
+             //   println("mToken : " + mToken);
+            }
+        });
+
+
+
+
+
+
+
+
+
+        mWebView.loadUrl("http://10.100.251.163:3000/login");
 
 
     }
 }
-
