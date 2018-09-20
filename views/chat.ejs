@@ -8,7 +8,6 @@
 
     <link href="./css/bootstrap.min.css" rel="stylesheet">
     <link href="./css/common.css" rel="stylesheet">
-    <link href="./css/FRAME.css" rel="stylesheet">
     <link href="./css/chat.css" rel="stylesheet">
 
     <!-- Bootstrap core JavaScript -->
@@ -28,7 +27,7 @@
             login();
         });
         function connect(){
-            var host = '10.10.2.213';  // 아이피 바꾸기!!!!!!
+            var host = '10.100.249.87';  // 아이피 바꾸기!!!!!!
             $('#hostInput').val(); //203.153.146.124
             var port = 3000;  // $('#portInput').val();
             //서버에 접속
@@ -102,14 +101,14 @@
             if (writer == 'me') {
                 contents =
                     "<li class="+ writer +">"
-                    +"<div class='msg'"+"<p>"+msg+"</p>"
+                    +"<div class='msg' style='margin-right:.5rem;'"+"<p>"+msg+"</p>"
                     +"</div></li>";
             } else {
                 var profile = '<%= event_data.otherProfile %>';
                 contents =
                     "<li class=" + writer + ">"
-                    + "<div class='img_div'" + "style='margin-left: 0rem; margin-right: 0'>" + "<img class='profile_img' src='../profile_img/" + profile + "'/>" + "</div>"
-                    + "<div class='msg'" + "<p>" + msg + "</p></div>"
+                    + "<div class='img_div'" + "style='margin-left: 0rem; margin-right: .5rem;'>" + "<img class='profile_img' src='../profile_img/" + profile + "'/>" + "</div>"
+                    + "<div class='msg' style='margin-top:auto;margin-bottom:auto;'" + "<p>" + msg + "</p></div>"
                     + "</li>";
             }
             //상대방이 리뷰했을 경우
@@ -165,18 +164,15 @@
 <!--여기선 메뉴명 채팅방으로 되어 있음-->
 
 <body>
-
 <!--메뉴 다름-->
-<nav class="navbar reco">
-    <div class="top">
-        <div>
-            <img src="../img/left-arrow.png" alt="" width="20rem" height="20rem" style="margin-right:3rem" onclick="location.href='/chatroomchat'">
-
-            <p class="logo ml-sm-3"><%= event_data.otherTeamname %>팀과의 채팅방</p>
-        </div>
-
-        <div>
-            <img src="../css/img/menu.png" width="20rem" height="20rem" class="navbar-toggler" data-toggle="collapse" data-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
+<nav class="navbar">
+    <div class="top" style="padding: .5rem;">        
+        <img src="../img/left-arrow.png" height="20rem" onclick="location.href='/chatroomchat'">
+        <div style="color:white; margin-left: -4rem;"><%= event_data.otherTeamname %>팀과의 채팅방</div>
+        
+        <div class="sets">
+            <a href="/chatroomchat"><img src="../img/update_chat.png" class="menu_img" height="20rem" style="margin-right: .3rem; visibility:hidden;"></a>
+            <img src="../css/img/menu.png" height="20rem" class="navbar-toggler" data-toggle="collapse" data-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
         </div>
     </div>
 
@@ -192,7 +188,6 @@
                     <b>매칭 중단하기</b><br>
                 </a>
             </li>
-            
             <li class="nav-item">
                 <a class="nav-link" href="" data-toggle="modal" data-target="#reportModal">
                     <b>상대방 신고하기</b><br>
@@ -201,8 +196,6 @@
         </ul>
     </div>
 </nav>
-
-<div class="py-4 text-center"></div>
 
 <!--메뉴 영역 끝 : -->
 
@@ -241,7 +234,7 @@
 </style>
 
 <div id="mydiv">
-    <div class="chatting" id="chatting" style="height:82vh; margin-bottom: 1rem"></div>
+    <div class="chatting" id="chatting" style="height:90vh; padding-top: 60px; margin-bottom: 1rem"></div>
 </div>
 
 <div class="mb-3" style="display: flex; margin-left: .5rem; margin-right: .5rem; justify-content: space-between; align-items: center">
