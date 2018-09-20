@@ -215,8 +215,8 @@
 					<div class= "events">
 				<div class="events-detail">
 					<div onclick="javascript:doShow()" class="event_content">
-						<span class="event-time"><%= curTime %></span>
-						<span class="event-name">Vs <%=curTeamname%>팀</span>
+                        <span class="event-time" style="background-color: #7473ff; color:white; padding: .3rem;"><%= curTime %> 시</span>
+                        <span class="event-name" style="margin-left:1rem;"><%=curTeamname%>팀과의 경기</span>
 						<br>
 						<span class="event-location"><%= curRegion %></span>
 					</div>
@@ -359,11 +359,11 @@
 									<div class="score_input">
 										<div class="form-group"  style="display: flex; align-items: center">
 											<%= teamname %>팀 : &nbsp;
-											<input type="text" class="form-control" style="height:1.8rem" placeholder=<%=score%> name="firstScore" value=''>
+											<input type="text" class="form-control" style="height:1.8rem" placeholder="<%=score%>" name="firstScore" value=''>
 										</div>
 										<div class="form-group"  style="display: flex; align-items: center">
 											<%= curTeamname %>팀 : &nbsp;
-											<input type="text" class="form-control" style="height:1.8rem" placeholder=<%=curScore%> name="secondScore" value=''>&nbsp;
+											<input type="text" class="form-control" style="height:1.8rem" placeholder="<%=curScore%>" name="secondScore" value=''>&nbsp;
 											<%  var today = new Date();
 												var dd = today.getDate();
 												var mm = today.getMonth()+1; //January is 0!
