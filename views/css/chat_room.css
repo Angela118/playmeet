@@ -29,11 +29,14 @@
     width: 50%;
     text-align: center;
     padding-bottom: 0.5rem;
+    color: #7473ff;
 }
 .chat_chat:hover {
+    color: white;
     text-decoration: underline;
 }
 .chat_message:hover {
+    color: white;
     text-decoration: underline;
 }
 .reco  {
