@@ -1,27 +1,35 @@
 {
   "project_info": {
-    "project_number": "311758600822",
-    "firebase_url": "https://playmeet-push.firebaseio.com",
-    "project_id": "playmeet-push",
-    "storage_bucket": "playmeet-push.appspot.com"
+    "project_number": "42964755833",
+    "firebase_url": "https://playmeet-216504.firebaseio.com",
+    "project_id": "playmeet-216504",
+    "storage_bucket": "playmeet-216504.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:311758600822:android:018109132176508e",
+        "mobilesdk_app_id": "1:42964755833:android:018109132176508e",
         "android_client_info": {
           "package_name": "com.playmeet.playmeet"
         }
       },
       "oauth_client": [
         {
-          "client_id": "311758600822-2m89ki1s2vg2jc6naqaabkt33l66lr3d.apps.googleusercontent.com",
+          "client_id": "42964755833-180at8kijkf57e3aua3jl77frgmrq8i8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.playmeet.playmeet",
+            "certificate_hash": "3e782902185b16735b9d8cbe2c47fec4feacc0d5"
+          }
+        },
+        {
+          "client_id": "42964755833-49hmb4pfd0dfvs8t8k2peqdu9homtuno.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCttZFjR4gG7NIOM_UtaIpIzemPzVkJbds"
+          "current_key": "AIzaSyDa6rl8iTLU_TtyOGzMpy7HGSIy8pRUC6k"
         }
       ],
       "services": {
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "42964755833-49hmb4pfd0dfvs8t8k2peqdu9homtuno.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2
