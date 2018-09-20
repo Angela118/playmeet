@@ -1,11 +1,12 @@
 html{
   height: 100%;
 }
-
+@import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
 body{
   height: 100%;
   background-color: #292941;  
     font-family: 'Nanum Gothic', sans-serif;
+    font-style: normal;
 }
 
 .menu_img {
