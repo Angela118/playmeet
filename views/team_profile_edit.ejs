@@ -28,8 +28,8 @@
 <body class="coloring">
 <% include ./navbar %>    
 <div class="container">
-    <div class="reco">
-        <h5 class="mb-3" style="font-weight: bold;">기본 정보</h5>
+    <div class="reco" style="margin-top:0;1">
+        <h5 class="mb-3" style="font-weight: bold; border-bottom: 1px solid white; padding-bottom: .5rem;">기본 정보</h5>
         <form class="needs-validation" action="/teamprofileedit" method="post" novalidate>
 			
             
@@ -92,9 +92,7 @@
                 <label for="region">주 경기 장소</label>	
 				<br>
                  <input placeholder="숙명여자대학교" id="keyword" size="15"> 
-                 <input type="button" onclick="searchPlaces()" value="검색하기">				
-				<input placeholder="숙명여자대학교" id="keyword" size="15"> 
-				<input type="button" onclick="searchPlaces()" value="검색하기">				
+                 <input type="button" onclick="searchPlaces()" value="검색하기">
 
 				<input type="hidden" name="resultLat" id="resultLat" placeholder="위도" class="form-control" readonly/ > 
 				<input type="hidden" name="resultLng" id="resultLng" placeholder="경도" class="form-control" readonly/ >
@@ -229,7 +227,7 @@
             </div>
 
             <hr class="mb-4">
-         <a href="/profileeditok"><button class="btn btn-block" type="submit">회원정보 수정 완료</button></a>
+         <a href="/profileeditok"><button class="btn btn-block" type="submit">회원정보 수정 완료<br>(다시 로그인해야합니다)</button></a>
         </form>
     </div>
 </div>

@@ -19,33 +19,26 @@
     <script src="../js/bootstrap.bundle.min.js"></script>
 </head>
 
-<body class="whiteB">
-
-<nav class="navbar blueB">
-	<a href="/"><p onclick="/" class="logo">축하싶</p></a>
-    <p class="logo">회원정보 수정</p>
+<body class="coloring">
+<nav class="navbar">
+    <div class="top">
+        <img src="../img/left-arrow.png" height="20rem" style="visibility:hidden;">
+		<a href="/"><img src="../img/update_playmeet3.jpg" height="50rem" style="margin-right:-1rem;"></a>
+        <div class="sets" style="visibility:hidden;">
+            <a href="/chatroomchat"><img src="../img/update_chat.png" class="menu_img" height="20rem" style="margin-right: .3rem;"></a>
+            <img src="../img/update_menu.png" height="20rem" class="navbar-toggler" data-toggle="collapse" data-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
+        </div>
+    </div>
 </nav>
-<br>
+    
 <div class="container">
-    <div class="col-md-8 order-md-1">
-
-            <div class="mb-3">
-				<div class="change"><p>회원정보가 수정되었습니다.</p></div>
-				<div class="change"><p>다시 로그인 해주세요.</p></div>
-				<!--이름-->
-                <!--<input type="text" class="form-control" id="user-name" placeholder="" value="" required>-->
-                <!--<div class="invalid-feedback">-->
-                    <!--Valid name is required.-->
-                <!--</div>-->
-            </div>            
-
-            <hr class="mb-4">
-
-        <a href="/logout"><button class="btn btn-block">다시 로그인하기</button></a>
+    <div class="reco">
+        <img src="../img/logout.png" height="70rem;" style="display:block; margin-left:auto;margin-right:auto; margin-bottom:2rem;">
+        <div class="change"><p>회원정보가 수정되었습니다.<br>다시 로그인 해주세요.</p></div>
+        
+        <a href="/logout"><button class="btn logout_btn">다시 로그인하기</button></a>
     </div>
 </div>
 </body>
-<footer class="my-5 pt-5 text-muted text-center text-small">
-
-</footer>
+    
 </html>
