@@ -46,6 +46,7 @@
     display:flex;
     justify-content: space-around;
     align-items:center;
+    margin: 0 1rem;
 }
 
 .match-teams-row{
@@ -78,7 +79,7 @@
 
 .score{
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
     width: 8rem;
     margin-left: 1rem;
@@ -117,6 +118,12 @@
     /*max-width: 75%;*/
     /*margin: 1rem auto;*/
 }
+
+.img_div {
+    height: 4rem !important;
+    width: 4rem !important;
+}
+
 h3 {padding: 0; margin: 0;}
 
 
@@ -145,7 +152,7 @@ h3 {padding: 0; margin: 0;}
 .events-detail {
     max-width: 550px;
     margin-bottom: 1.2rem;
-    paddin: .3rem !important;
+    padding: .3rem !important;
 }
 
 /*.events-detail li{
@@ -174,8 +181,8 @@ h3 {padding: 0; margin: 0;}
 
 .event-location {
     font-size: .8em;
-    color: tomato;
-    margin-left: 70px;
+    color: chartreuse;
+    float: right;
 }
 
 
