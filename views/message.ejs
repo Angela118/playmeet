@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="kr">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -8,7 +8,6 @@
 
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <link href="../css/common.css" rel="stylesheet">
-    <link href="../css/FRAME.css" rel="stylesheet">
     <link href="../css/chat.css" rel="stylesheet">
 
     <!-- Bootstrap core JavaScript -->
@@ -31,10 +30,8 @@
 </script>
 
 <% var index = sSameEmailIndex;
-
 var curGender = event_data[index].gender;
 var curMove = event_data[index].move;
-
 if(curGender == 25) {
     curGender = '무관';
 }else if(curGender == 50) {
@@ -42,49 +39,45 @@ if(curGender == 25) {
 }else if(curGender == 100){
     curGender = '여자';
 }
-
 if(curMove == 100){
     curMove = 'O';
 }else if(curMove == 50){
     curMove = 'X';
 }
-
 %>
 
+<!--메뉴 다름-->
 <nav class="navbar">
-
     <div class="top">
-        <div>
-            <img src="../img/left-arrow.png" alt="" width="20rem" height="20rem" style="margin-right:3rem" onclick="goBack()">
-
-            <p class="logo ml-sm-3"> <%= event_data[index].teamname %>팀으로부터 받은 메시지</p>
+        <img src="../img/left-arrow.png" height="20rem" onclick="goBack();">
+		<!--<a href="/"><img src="../img/update_playmeet3.jpg" height="50rem" style="margin-right:-1rem;"></a>-->
+        <div style="color:white;"> <%= event_data[index].teamname %>팀으로부터 받은 메시지</div>
+        <div class="sets" style="visibility:hidden;">
+            <a href="/chatroomchat"><img src="../img/update_chat.png" class="menu_img" height="20rem" style="margin-right: .3rem;"></a>
+            <img src="../img/update_menu.png" height="20rem" class="navbar-toggler" data-toggle="collapse" data-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
         </div>
     </div>
 </nav>
-
-<div class="py-4 text-center"></div>
-
-<!--메뉴 영역 끝  -->
-
+    
 <script>
-    function clicked(email, sameEmailIndex, match, push_user) {
+    function clicked(email, teamname, sameEmailIndex, match) {
         document.getElementById('sEmail').value = email;
+		document.getElementById('sTeamname').value = teamname;
         document.getElementById('sSameEmailIndex').value = sameEmailIndex;
         document.getElementById('match').value = match;
-		if(match == 1){		
+		if(match == 1){
         	alert('email : ' + email + '/ sameEmailIndex : ' + sameEmailIndex + '/ match : ' + match + '매칭을 승낙하였습니다.');
 		}else if(match == 2){
 			alert('email : ' + email + '/ sameEmailIndex : ' + sameEmailIndex + '/ match : ' + match + '매칭을 거절하였습니다.');
 		}
-
         document.getElementById('formPost').submit();
     }
 </script>
 
-<div class="container">
-    <div class="reco" style="margin-top: 2.3rem">
+<div class="container" style="padding-top:50px;">
+    <div class="reco">
         <div class="mb-3">
-            <p style="line-height: 2rem">
+            <p style="line-height: 2rem; border:2px solid #7473ff; padding: .5rem;">
                 주장 이메일 : <%= event_data[index].email %><br>
                 팀명 : <%= event_data[index].teamname %> 팀<br>
                 <!--팀 지역에서 add[1]값이 없는 건 회원가입할 때 add가 배열이 아니어서임-->
@@ -105,20 +98,23 @@ if(curMove == 100){
                 팀 인원수 : <%= event_data[index].nofteam %>명<br>
                 상대팀 별점 : <%= event_data[index].allRating %><br>
             </p>
-            <p><b>해당 경기 날짜에 매칭 신청합니다. 수락하시겠습니까?</b><br><br></p>
+            <p><b>해당 경기 날짜에 매칭 신청합니다. 수락하시겠습니까?</b></p>
 
             <form action="/message" method="post" id="formPost">
                 <input type="hidden" name="sEmail" id="sEmail" value=''>
+				<input type="hidden" name="sTeamname" id="sTeamname" value=''>
                 <input type="hidden" name="sSameEmailIndex" id="sSameEmailIndex" value=''>
                 <input type="hidden" name="match" id="match" value=''>
-				<input type="hidden" name="push_user" id="push_user" value=''>
 
                 <div style="text-align: center">
-                    <button type="button" class="btn" onclick="clicked( `<%= event_data[index].email %>`,`<%=index%>`, 2)">매칭 거절</button>
-                    <button type="button" class="btn" onclick="clicked( `<%= event_data[index].email %>`,`<%=index%>`, 1)">매칭 수락</button>
+                    <button type="button" class="btn" style="color:white; text-align:center; margin-left:Auto;margin-right:auto; background-color:#7473ff;" onclick="clicked( `<%= event_data[index].email %>`,`<%=index%>`, 2)">매칭 거절</button>
+                    <button type="button" class="btn" style="color:white; text-align:center; margin-left:Auto;margin-right:auto; background-color:#7473ff;" onclick="clicked( `<%= event_data[index].email %>`,`<%= event_data[index].teamname %>`,`<%=index%>`, 1)">매칭 수락</button>
                 </div>
 
             </form>
         </div>
     </div>
 </div>
+    </body>
+    <footer class="my-5 pt-5 text-muted text-center text-small"></footer>
+</html>
