@@ -10,7 +10,6 @@ module.exports = function(router, passport, upload) {
 
     var an = 0;
     var dbm = require('../database/database');
-    console.log('database 모듈 가져옴');
 
     var imgi=0;
     var profile_img=[];
@@ -419,11 +418,11 @@ module.exports = function(router, passport, upload) {
         dbm.ApplicationModel.update({email:others.sEmail, application_number:others.sApplicationNumber}, {$set: {match: 1}}, function (err) {
             if(err) throw err
             
-			
+			var push_message = event.teamname + "팀으로부터 매칭 신청이 왔습니다.";
 			dbm.UserModel.find({email:others.sEmail}, function(err, result){
 				if(err) throw err
-				pushAlert.sendPushAlert(result[0]._doc.usertoken);
-				console.log('=== send push alert ===');
+				pushAlert.sendPushAlert(result[0]._doc.usertoken, push_message);
+				console.log('=== '+ others.sEmail +' 에게 푸시 알람 ===');
 			});
 			
 			console.log('=== ApplicationModel update in main ===');
@@ -1104,7 +1103,9 @@ module.exports = function(router, passport, upload) {
 				var receiver = result1[0]._doc.others.sEmail;
 				dbm.UserModel.find({email:receiver}, function(err, result){
 					if(err) throw err
-					pushAlert.sendPushAlert(result[0]._doc.usertoken);
+					
+					var push_message = "매칭이 취소되었습니다.";
+					pushAlert.sendPushAlert(result[0]._doc.usertoken, push_message);
 					console.log('=== send push alert ===');
 				});
 				
@@ -1378,6 +1379,9 @@ module.exports = function(router, passport, upload) {
         // 매칭 신청한 애
         var otherEmail = req.body.sEmail;
         console.log('otherEmail : ' + otherEmail);
+		
+		var otherTeamname = req.body.sTeamname;
+		console.log('otherTeamname : ' + otherTeamname);
 
         // 걔 동일 이메일 인덱스 있는지 확인
         var sSameEmailIndex = req.body.sSameEmailIndex;
@@ -1388,20 +1392,16 @@ module.exports = function(router, passport, upload) {
 
 
         // 나한테 신청한 사람 이메일 받아온거로 matches에서 email 찾아서
-        dbm.MatchModel.find({email: otherEmail}, function (err, result) {
-            console.log('result.length : ' + result.length);
-
-            for (var i = 0; i < result.length; i++) {
-                console.log('req.user.email : ' + req.user.email);
-
+        dbm.MatchModel.find({email: otherEmail}, function (err, result1) {
+            for (var i = 0; i < result1.length; i++) {
                 // 그 사람이 올린 것 중 신청자가 나일 경우
-                if (result[i]._doc.others.sEmail === req.user.email) {
+                if (result1[i]._doc.others.sEmail === req.user.email) {
 
                     // 나한테 신청한 사람 정보
                     var data = {
-                        'email': result[i]._doc.email,
-                        'teamname': result[i]._doc.teamname,
-                        'others': result[i]._doc.others //내가 등록한 매칭 정보
+                        'email': result1[i]._doc.email,
+                        'teamname': result1[i]._doc.teamname,
+                        'others': result1[i]._doc.others //내가 등록한 매칭 정보
                     };
                     eventData[j++] = data;
                 }
@@ -1422,8 +1422,10 @@ module.exports = function(router, passport, upload) {
 					
 					dbm.UserModel.find({email:otherEmail}, function(err, result){
 						if(err) throw err
-						pushAlert.sendPushAlert(result[0]._doc.usertoken);
-						console.log('=== send push alert ===');
+						
+						var push_message = "매칭이 승낙되었습니다.";
+						pushAlert.sendPushAlert(result[0]._doc.usertoken, push_message);
+						console.log('=== '+ otherEmail +' 에게 푸시 알람 ===');
 					});
 					
 					res.redirect('/chatroommessage');
@@ -2234,13 +2236,9 @@ module.exports = function(router, passport, upload) {
         var event_match = new dbm.MatchModel(event);
 
         event_match.save(function (err, data) {
-            if (err) {// TODO handle the error
-                console.log("match save error");
-                console.log('err : ' + err);
-                console.log('data : ' + data);
-            }
-            console.log('New match inserted');
-            console.log('data : ' + data);
+            if (err) throw err
+			
+            console.log('=== New match inserted ===');
         });
 
         dbm.ApplicationModel.update({email:others.sEmail, application_number:others.sApplicationNumber}, {$set: {match: 1}}, function (err) {
@@ -2248,9 +2246,11 @@ module.exports = function(router, passport, upload) {
 			
 			dbm.UserModel.find({email:others.sEmail}, function(err, result){
 				if(err) throw err
-				pushAlert.sendPushAlert(result[0]._doc.usertoken);
+				
+				var push_message = teamname + "팀이 매칭 신청 하였습니다.";
+				pushAlert.sendPushAlert(result[0]._doc.usertoken, push_message);
 				console.log(result[0]._doc.email);
-				console.log('=== send push alert ===');
+				console.log('=== '+ others.sEmail +' 에게 푸시 알람 ===');
 			});
 			
 			console.log('=== application updated ===');
@@ -2941,23 +2941,25 @@ module.exports = function(router, passport, upload) {
             // score update
             dbm.MatchModel.update(
                 {email: scoreCallTeamEmail, "others.sEvent_date": scoreEventDate, "others.sEvent_time": scoreEventTime},
-                {$set: {score: firstScore, "others.sScore": secondScore}}, function (err) {
+                {$set: {score: firstScore, "others.sScore": secondScore}}, function (err, result1) {
                     if (err) throw err
+					
 					
 					if(scoreReceiveTeamEmail === req.user.email){
 						dbm.UserModel.find({email:scoreCallTeamEmail}, function(err, result){
 							if(err) throw err
-							pushAlert.sendPushAlert(result[0]._doc.usertoken);
-							pushAlert.sendPushAlert(result[0]._doc.usertoken);
-							console.log(result[0]._doc.email);
-							console.log('=== send push alert ===');
+							
+							var push_message = scoreReceiveTeamEmail + "팀과의 경기 스코어가 입력되었습니다.";
+							pushAlert.sendPushAlert(result[0]._doc.usertoken, push_message);
+							console.log('=== '+ scoreCallTeamEmail +' 에게 푸시 알람 ===');
 						});
 					}else{
 						dbm.UserModel.find({email:scoreReceiveTeamEmail}, function(err, result){
 							if(err) throw err
-							pushAlert.sendPushAlert(result[0]._doc.usertoken);
-							console.log(result[0]._doc.email);
-							console.log('=== send push alert ===');
+														
+							var push_message = scoreCallTeamEmail + "팀과의 경기 스코어가 입력되었습니다.";
+							pushAlert.sendPushAlert(result[0]._doc.usertoken, push_message);
+							console.log('=== '+ scoreReceiveTeamEmail +' 에게 푸시 알람 ===');
 						});
 					}
 					
@@ -3045,13 +3047,18 @@ module.exports = function(router, passport, upload) {
             {email: email, "others.sEmail":reviewedTeamEmail, "others.sEvent_date": eventDate, "others.sEvent_time": eventTime},
             {$set: {"others.sReceivedReview": rating, "others.sReceivedReviewComment": review_comment, "others.sReviewDate": reviewDate}}, function (err) {
                 if (err) throw err
+					
 				
-				dbm.UserModel.find({email:reviewedTeamEmail}, function(err, result){
-					if(err) throw err
-					pushAlert.sendPushAlert(result[0]._doc.usertoken);
-					console.log('=== send push alert ===');
-				});
-				
+				if(req.user.email === email){
+					dbm.UserModel.find({email:reviewedTeamEmail}, function(err, result){
+						if(err) throw err
+
+						var push_message = email + "팀이 우리 팀 경기 리뷰를 남겼습니다.";
+						pushAlert.sendPushAlert(result[0]._doc.usertoken, push_message);
+
+						console.log('=== '+ reviewedTeamEmail +' 에게 푸시 알람 ===');
+					});
+				}
 				console.log('내가 신청했을 때 review updated');
                 
             });
@@ -3062,12 +3069,16 @@ module.exports = function(router, passport, upload) {
             {$set: {received_review: rating, received_review_comment: review_comment, review_date: reviewDate}}, function (err) {
                 if (err) throw err
 				
-				dbm.UserModel.find({email:email}, function(err, result){
-					if(err) throw err
-					pushAlert.sendPushAlert(result[0]._doc.usertoken);
-					console.log('=== send push alert ===');
-				});
-                
+				
+				if(req.user.email === reviewedTeamEmail){
+					dbm.UserModel.find({email:email}, function(err, result){
+						if(err) throw err
+
+						var push_message = reviewedTeamEmail + "팀이 우리 팀 경기 리뷰를 남겼습니다.";
+						pushAlert.sendPushAlert(result[0]._doc.usertoken, push_message);
+						console.log('=== '+ email +' 에게 푸시 알람 ===');
+					});
+				}
 				console.log('내가 신청받았을 때 review updated');                
             });
 
