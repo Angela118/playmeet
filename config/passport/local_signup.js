@@ -28,6 +28,7 @@ module.exports = new LocalStrategy({
 	var introteam = req.body.introteam || req.query.introteam;
 	var profile_img = "profile_basic.png";
 	var img_flag = 0;
+	var usertoken = '';
 	
 	
 	if(!add){		//도로명주소 없는 경우 지번 주소
@@ -79,7 +80,8 @@ module.exports = new LocalStrategy({
 					'profile_img':profile_img,
 					'img_flag':img_flag,
 					'geoLat':geoLat,
-					'geoLng':geoLng
+					'geoLng':geoLng,
+					'usertoken':usertoken
                 });
                 
                 user.save(function(err) {
