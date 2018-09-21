@@ -470,8 +470,11 @@ io.sockets.on('connection', function(socket){
 			
 			database.UserModel.find({email:message.recipient}, function(err, result){
 				if(err) throw err
-				pushAlert.sendPushAlert(result[0]._doc.usertoken);
-				console.log('=== send push alert ===');
+				
+				var push_message = message.sender + " : " + message.data;
+
+				pushAlert.sendPushAlert(result[0]._doc.usertoken, push_message);
+				console.log('=== '+ message.recipient +' 에게 푸시 알람 ===');
 			});
 			
             console.log('New message is inserted');
