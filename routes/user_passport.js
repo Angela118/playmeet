@@ -5,6 +5,8 @@
 module.exports = function(router, passport, upload) {
 	console.log('=== Server open! ===')
     console.log('user_passport 호출됨.');
+		
+	var pushAlert = require('../push');
 
     var an = 0;
     var dbm = require('../database/database');
@@ -47,8 +49,39 @@ module.exports = function(router, passport, upload) {
 	}
 
 	var today = yyyy + '-' + mm + '-' + dd; // 오늘 날짜
+	
+	var userstoken;
 
+    // 기기 토큰 받아오기
+    router.route('/token').post(function(req, res) {
+        console.log('token 패스 post 요청됨.');
 
+        var chunk = '';
+
+		//데이터를 가져옵니다.
+
+        req.on('data', function(data){
+			//데이터를 JSON으로 파싱합니다.
+            chunk = JSON.parse(data);
+        });
+
+        req.on('end',function(){
+			//파싱된 데이터를 확인합니다.
+            console.log("token : "+ chunk.token);
+        });
+		
+
+        userstoken = req.body.token;
+		
+		console.log(userstoken);
+		
+
+        res.write("OK");
+        res.end();
+		
+    });
+	
+	
     //홈 화면, 추천
     router.route('/').get(function(req, res) {
         console.log('/ 패스 get 요청됨.');
@@ -57,8 +90,7 @@ module.exports = function(router, passport, upload) {
         if (!req.user) {
             console.log('사용자 인증 안된 상태임.');
             res.redirect('/login');
-        } else {
-			
+        } else {			
             // expire
             dbm.ApplicationModel.remove({'eventYear_forExpire':{$lt:yyyy}}, function(err){
                 if(err) throw err
@@ -276,7 +308,6 @@ module.exports = function(router, passport, upload) {
         }
     });
 
-
     router.route('/main').get(function(req, res){
         console.log('/main 패스 get 요청됨.');
 
@@ -294,7 +325,17 @@ module.exports = function(router, passport, upload) {
             } else{
                 profile_img[imgi] = [req.user.email, req.user.profile_img];
             }
+			
+			if(!userstoken){
+				console.log('token is null');
+			}
+			else{
+				dbm.UserModel.update({email:req.user.email},{$set: {'usertoken': userstoken}}, function (err, result) {
+					if (err) throw err
 
+					console.log('=== user token updated ===');
+				});
+			}
 
             var csvf = require('csvtojson');
 
@@ -375,9 +416,17 @@ module.exports = function(router, passport, upload) {
             console.log('New match inserted');
         });
 
-        dbm.ApplicationModel.update({email:others.sEmail, application_number:others.sApplicationNumber}, {$set: {match: 1}}, function (err, result) {
+        dbm.ApplicationModel.update({email:others.sEmail, application_number:others.sApplicationNumber}, {$set: {match: 1}}, function (err) {
             if(err) throw err
-            else console.log('ApplicationModel update in main');
+            
+			
+			dbm.UserModel.find({email:others.sEmail}, function(err, result){
+				if(err) throw err
+				pushAlert.sendPushAlert(result[0]._doc.usertoken);
+				console.log('=== send push alert ===');
+			});
+			
+			console.log('=== ApplicationModel update in main ===');
 
             res.redirect('/');
         });
@@ -529,7 +578,7 @@ module.exports = function(router, passport, upload) {
 
 
     // 로그인 인증
-    router.route('/login').post(passport.authenticate('local-login', {
+    router.route('/login').post(passport.authenticate('local-login', {		
         successRedirect : '/',
         failureRedirect : '/login',
         failureFlash : true
@@ -806,7 +855,7 @@ module.exports = function(router, passport, upload) {
 
         console.log('=== Profile edit ===');
 
-        dbm.db.collection("users6").updateOne({email: user_context.email},  {$set: user_context}, function(err, res) {
+        dbm.UserModel.update({email: user_context.email},  {$set: user_context}, function(err, res) {
             if (err) throw err;
             console.log("=== Profile updated ===");
         });
@@ -858,7 +907,6 @@ module.exports = function(router, passport, upload) {
             } else{
                 profile_img[imgi] = [req.user.email, req.user.profile_img];
             }
-
 
             var eventData = new Array();
             var j = 0;
@@ -1012,6 +1060,8 @@ module.exports = function(router, passport, upload) {
                         'profile_img': profile_photo,
                         'event_data': data
                     };
+                    console.log('profile_img : ' + user_context.profile_img);
+                    console.dir(data);
                     res.render('chat.ejs', user_context);
                 }
             });
@@ -1048,8 +1098,16 @@ module.exports = function(router, passport, upload) {
                     {$and:[
                             {"others.sEvent_date":event_date}, {"others.sEvent_time":event_time}
                         ]}
-                ]}, function(err){
+                ]}, function(err, result1){
                 if(err) throw err
+				
+				var receiver = result1[0]._doc.others.sEmail;
+				dbm.UserModel.find({email:receiver}, function(err, result){
+					if(err) throw err
+					pushAlert.sendPushAlert(result[0]._doc.usertoken);
+					console.log('=== send push alert ===');
+				});
+				
                 console.log('=== Match Deleted ===');
 
                 res.redirect('/chatroomchat');
@@ -1124,6 +1182,7 @@ module.exports = function(router, passport, upload) {
                     'profile_img': profile_photo,
                     'event_data':eventData // 메시지 보낸 상대팀 정보
                 };
+                console.dir(eventData);
                 res.render('chat_room_message.ejs', user_context);
             });
         }
@@ -1136,17 +1195,23 @@ module.exports = function(router, passport, upload) {
 
         //나한테 신청한 사람 이메일
         var otherEmail = req.body.sEmail;
-		
+        console.log('otherEmail : ' + req.body.sEmail);
+
         // 등록한 사람 나 : & 신청한 사람 : 그사람 중복되는 경우 index
         var sSameEmailIndex = req.body.sSameEmailIndex;
-		
+        console.log('sSameEmailIndex : ' + req.body.sSameEmailIndex);
+
         var j = 0;
         var eventData = new Array();
 
         // 나한테 신청한 사람 이메일 받아온거로 matches에서 email 찾아서
         dbm.MatchModel.find({email: otherEmail}, function (err, result) {
+            console.log('result.length : ' + result.length);
 
             for (var i = 0; i < result.length; i++) {
+                console.log('result[' + i + '].doc_others.email : ' + result[i]._doc.others.sEmail);
+                console.log('req.user.email : ' + req.user.email);
+
                 // 그 사람이 올린 것 중 신청자가 나일 경우
                 if (result[i]._doc.others.sEmail === req.user.email) {
 
@@ -1178,28 +1243,49 @@ module.exports = function(router, passport, upload) {
                 }
             }
             var repeatFunction = function (a, callback) {
+
+                console.log(a + '번째 eventData[' + a + '].email : ' + eventData[a].email);
+                console.log(a + '번째 eventData[' + a + '].region : ' + eventData[a].region);
+
                 dbm.MatchModel.find({$or: [{"email": eventData[a].email}, {"others.sEmail": eventData[a].email}]}, function (err, result) {
                     var sum = 0;
                     var count = 0;
 
                     for (var b = 0; b < result.length; b++) {
+                        console.log('a : ' + a + ', b : ' + b);
+                        console.log('result.length : ' + result.length);
+
                         if ((result[b]._doc.email === eventData[a].email) && (result[b]._doc.others.sEmail !== eventData[a].email)) {
+                            console.log('if');
+                            console.log('result[' + b + ']._doc.review_date : ' + result[b]._doc.review_date);
+
                             // if(parseInt(result[b]._doc.received_review) != 0) {
                             if ((result[b]._doc.review_date) != 0) {
                                 sum += parseInt(result[b]._doc.received_review);
                                 count++;
                             }
+                            console.log('if count : ' + count);
 
                         } else if ((result[b]._doc.email !== eventData[a].email) && (result[b]._doc.others.sEmail === eventData[a].email)) {
+                            console.log('elseif');
+                            console.log('result[' + b + ']._doc.review_date : ' + result[b]._doc.review_date);
+
                             // if(parseInt(result[b]._doc.others.sReceivedReview) != 0){
                             if ((result[b]._doc.others.sReviewDate) != 0) {
                                 sum += parseInt(result[b]._doc.others.sReceivedReview);
                                 count++;
                             }
+                            console.log('elseif count : ' + count);
+
                         } else {
+                            console.log('else');
                             continue;
                         }
+                        console.log('*********');
                     } //end in match for
+
+                    console.log('sum : ' + sum);
+                    console.log('count : ' + count);
 
                     var aver;
 
@@ -1209,12 +1295,17 @@ module.exports = function(router, passport, upload) {
                         aver = (sum / count).toFixed(2);
                     }
 
+                    console.log('aver : ' + aver);
                     eventData[a]['allRating'] = aver;
+
+                    console.log('eventData[a]["allRating"] : ' + eventData[a]['allRating']);
 
 
                     if (a >= eventData.length - 1) {
+                        console.log('##eventData[' + a + ']["allRating"] : ' + eventData[a]['allRating']);
                         callback();
                     } else {
+                        console.log('!!eventData[' + a + ']["allRating"] : ' + eventData[a]['allRating']);
                         repeatFunction(a + 1, callback);
                     }
 
@@ -1224,6 +1315,8 @@ module.exports = function(router, passport, upload) {
 
             if(eventData.length>0) {
                 repeatFunction(0, function () {
+                    console.log('done');
+
                     var user_context = {
                         'email': req.user.email,
                         'password': req.user.password,
@@ -1240,7 +1333,13 @@ module.exports = function(router, passport, upload) {
                         'event_data': eventData,
                         'sSameEmailIndex': sSameEmailIndex // email 중복시 index
                     };
+                    console.log(eventData);
+
+                    console.log('chatmessagepostend----------------------');
                     res.render('message.ejs', user_context);
+                    console.log('render 함');
+
+
                 }); //end repeatfunction
             } else {
                 var user_context = {
@@ -1259,22 +1358,30 @@ module.exports = function(router, passport, upload) {
                     'event_data': eventData,
                     'sSameEmailIndex': sSameEmailIndex // email 중복시 index
                 };
+                console.log(eventData);
+
+                console.log('chatmessagepostend----------------------');
                 res.render('message.ejs', user_context);
+                console.log('render 함');
             }
         });
     });
 
+
     router.route('/message').post(function(req, res) {
         console.log('/message 패스 post 요청됨');
-		
+
         // 매칭 여부 (1: 승인 / 2: 거절 / 0: 대기);
         var match = req.body.match;
+        console.log('match : ' + match);
 
         // 매칭 신청한 애
         var otherEmail = req.body.sEmail;
+        console.log('otherEmail : ' + otherEmail);
 
         // 걔 동일 이메일 인덱스 있는지 확인
         var sSameEmailIndex = req.body.sSameEmailIndex;
+        console.log('sSameEmailIndex : ' + sSameEmailIndex);
 
         var eventData = new Array();
         var j = 0;
@@ -1282,8 +1389,10 @@ module.exports = function(router, passport, upload) {
 
         // 나한테 신청한 사람 이메일 받아온거로 matches에서 email 찾아서
         dbm.MatchModel.find({email: otherEmail}, function (err, result) {
+            console.log('result.length : ' + result.length);
 
             for (var i = 0; i < result.length; i++) {
+                console.log('req.user.email : ' + req.user.email);
 
                 // 그 사람이 올린 것 중 신청자가 나일 경우
                 if (result[i]._doc.others.sEmail === req.user.email) {
@@ -1304,17 +1413,21 @@ module.exports = function(router, passport, upload) {
 
             var findEventTime = eventData[sSameEmailIndex].others.sEvent_time;
 
+
             if(match == 1){
-                dbm.MatchModel.update(
-                    {email: otherEmail, "others.sEvent_date": findEventDate, "others.sEvent_time": findEventTime},
-                    {$set: {match_success: match}}, function (err, result) {
-                        if (err) {
-                            console.log(err.message);
-                        } else {
-                            console.dir(result);
-                        }
-                        res.redirect('/chatroommessage');
-                    });
+				dbm.MatchModel.update(
+				{email: otherEmail, "others.sEvent_date": findEventDate, "others.sEvent_time": findEventTime},
+				{$set: {match_success: match}}, function (err) {
+					if (err) throw err
+					
+					dbm.UserModel.find({email:otherEmail}, function(err, result){
+						if(err) throw err
+						pushAlert.sendPushAlert(result[0]._doc.usertoken);
+						console.log('=== send push alert ===');
+					});
+					
+					res.redirect('/chatroommessage');
+				});
             }else if(match == 2){
                 dbm.ApplicationModel.update({email:req.user.email, event_date:findEventDate, event_time:findEventTime}, {$set: {match:0}}, function (err, result) {
                     if(err) throw err;
@@ -2130,8 +2243,17 @@ module.exports = function(router, passport, upload) {
             console.log('data : ' + data);
         });
 
-        dbm.ApplicationModel.update({email:others.sEmail, application_number:others.sApplicationNumber}, {$set: {match: 1}}, function (err, result) {
+        dbm.ApplicationModel.update({email:others.sEmail, application_number:others.sApplicationNumber}, {$set: {match: 1}}, function (err) {
             if(err) throw err;
+			
+			dbm.UserModel.find({email:others.sEmail}, function(err, result){
+				if(err) throw err
+				pushAlert.sendPushAlert(result[0]._doc.usertoken);
+				console.log(result[0]._doc.email);
+				console.log('=== send push alert ===');
+			});
+			
+			console.log('=== application updated ===');
             res.redirect('/');
         });
     });
@@ -2813,17 +2935,34 @@ module.exports = function(router, passport, upload) {
             firstScore = secondScore;
             secondScore = k;
         }
+		
 
         if(scoreCallTeamEmail) {
             // score update
             dbm.MatchModel.update(
                 {email: scoreCallTeamEmail, "others.sEvent_date": scoreEventDate, "others.sEvent_time": scoreEventTime},
-                {$set: {score: firstScore, "others.sScore": secondScore}}, function (err, result) {
-                    if (err) {
-						throw err
-                    } else {
-                        console.log('=== Score updated ===');
-                    }
+                {$set: {score: firstScore, "others.sScore": secondScore}}, function (err) {
+                    if (err) throw err
+					
+					if(scoreReceiveTeamEmail === req.user.email){
+						dbm.UserModel.find({email:scoreCallTeamEmail}, function(err, result){
+							if(err) throw err
+							pushAlert.sendPushAlert(result[0]._doc.usertoken);
+							pushAlert.sendPushAlert(result[0]._doc.usertoken);
+							console.log(result[0]._doc.email);
+							console.log('=== send push alert ===');
+						});
+					}else{
+						dbm.UserModel.find({email:scoreReceiveTeamEmail}, function(err, result){
+							if(err) throw err
+							pushAlert.sendPushAlert(result[0]._doc.usertoken);
+							console.log(result[0]._doc.email);
+							console.log('=== send push alert ===');
+						});
+					}
+					
+					console.log('=== Score updated ===');
+                    
                 });
 
         } // match 신청 cancel
@@ -2904,26 +3043,35 @@ module.exports = function(router, passport, upload) {
         // 내가 신청했을 때
         dbm.MatchModel.update(
             {email: email, "others.sEmail":reviewedTeamEmail, "others.sEvent_date": eventDate, "others.sEvent_time": eventTime},
-            {$set: {"others.sReceivedReview": rating, "others.sReceivedReviewComment": review_comment, "others.sReviewDate": reviewDate}}, function (err, result) {
-                if (err) {
-                    console.log(err.message);
-                } else {
-                    console.log('내가 신청했을 때 updated');
-                }
+            {$set: {"others.sReceivedReview": rating, "others.sReceivedReviewComment": review_comment, "others.sReviewDate": reviewDate}}, function (err) {
+                if (err) throw err
+				
+				dbm.UserModel.find({email:reviewedTeamEmail}, function(err, result){
+					if(err) throw err
+					pushAlert.sendPushAlert(result[0]._doc.usertoken);
+					console.log('=== send push alert ===');
+				});
+				
+				console.log('내가 신청했을 때 review updated');
+                
             });
 
         // 내가 신청받았을 때
         dbm.MatchModel.update(
             {email: reviewedTeamEmail, "others.sEmail": email, "others.sEvent_date": eventDate, "others.sEvent_time": eventTime},
-            {$set: {received_review: rating, received_review_comment: review_comment, review_date: reviewDate}}, function (err, result) {
-                if (err) {
-                    console.log(err.message);
-                } else {
-                    console.log('내가 신청받았을 때 updated');
-                }
+            {$set: {received_review: rating, received_review_comment: review_comment, review_date: reviewDate}}, function (err) {
+                if (err) throw err
+				
+				dbm.UserModel.find({email:email}, function(err, result){
+					if(err) throw err
+					pushAlert.sendPushAlert(result[0]._doc.usertoken);
+					console.log('=== send push alert ===');
+				});
+                
+				console.log('내가 신청받았을 때 review updated');                
             });
 
-        res.redirect('/teamcal');
+        res.redirect('/teamschedule');
     });
 
     // 우리팀이 받은 리뷰
@@ -3389,7 +3537,7 @@ module.exports = function(router, passport, upload) {
     // 로그아웃
     router.route('/logout').get(function(req, res) {
         console.log('/logout 패스 get 요청됨.');
-        profile_img = [];
+        profile_photo = null;
         req.logout();
         res.redirect('/login');
     });
