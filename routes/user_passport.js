@@ -1210,10 +1210,7 @@ module.exports = function(router, passport, upload) {
             console.log('result.length : ' + result.length);
 
             for (var i = 0; i < result.length; i++) {
-                console.log('result[' + i + '].doc_others.email : ' + result[i]._doc.others.sEmail);
-                console.log('req.user.email : ' + req.user.email);
-
-                // 그 사람이 올린 것 중 신청자가 나일 경우
+				// 그 사람이 올린 것 중 신청자가 나일 경우
                 if (result[i]._doc.others.sEmail === req.user.email) {
 
                     // 나한테 신청한 사람 정보
@@ -1244,49 +1241,29 @@ module.exports = function(router, passport, upload) {
                 }
             }
             var repeatFunction = function (a, callback) {
-
-                console.log(a + '번째 eventData[' + a + '].email : ' + eventData[a].email);
-                console.log(a + '번째 eventData[' + a + '].region : ' + eventData[a].region);
-
                 dbm.MatchModel.find({$or: [{"email": eventData[a].email}, {"others.sEmail": eventData[a].email}]}, function (err, result) {
                     var sum = 0;
                     var count = 0;
 
                     for (var b = 0; b < result.length; b++) {
-                        console.log('a : ' + a + ', b : ' + b);
-                        console.log('result.length : ' + result.length);
-
                         if ((result[b]._doc.email === eventData[a].email) && (result[b]._doc.others.sEmail !== eventData[a].email)) {
-                            console.log('if');
-                            console.log('result[' + b + ']._doc.review_date : ' + result[b]._doc.review_date);
-
                             // if(parseInt(result[b]._doc.received_review) != 0) {
                             if ((result[b]._doc.review_date) != 0) {
                                 sum += parseInt(result[b]._doc.received_review);
                                 count++;
                             }
-                            console.log('if count : ' + count);
 
                         } else if ((result[b]._doc.email !== eventData[a].email) && (result[b]._doc.others.sEmail === eventData[a].email)) {
-                            console.log('elseif');
-                            console.log('result[' + b + ']._doc.review_date : ' + result[b]._doc.review_date);
-
                             // if(parseInt(result[b]._doc.others.sReceivedReview) != 0){
                             if ((result[b]._doc.others.sReviewDate) != 0) {
                                 sum += parseInt(result[b]._doc.others.sReceivedReview);
                                 count++;
                             }
-                            console.log('elseif count : ' + count);
 
                         } else {
-                            console.log('else');
                             continue;
                         }
-                        console.log('*********');
                     } //end in match for
-
-                    console.log('sum : ' + sum);
-                    console.log('count : ' + count);
 
                     var aver;
 
@@ -1296,17 +1273,11 @@ module.exports = function(router, passport, upload) {
                         aver = (sum / count).toFixed(2);
                     }
 
-                    console.log('aver : ' + aver);
                     eventData[a]['allRating'] = aver;
 
-                    console.log('eventData[a]["allRating"] : ' + eventData[a]['allRating']);
-
-
                     if (a >= eventData.length - 1) {
-                        console.log('##eventData[' + a + ']["allRating"] : ' + eventData[a]['allRating']);
                         callback();
                     } else {
-                        console.log('!!eventData[' + a + ']["allRating"] : ' + eventData[a]['allRating']);
                         repeatFunction(a + 1, callback);
                     }
 
@@ -1334,13 +1305,7 @@ module.exports = function(router, passport, upload) {
                         'event_data': eventData,
                         'sSameEmailIndex': sSameEmailIndex // email 중복시 index
                     };
-                    console.log(eventData);
-
-                    console.log('chatmessagepostend----------------------');
                     res.render('message.ejs', user_context);
-                    console.log('render 함');
-
-
                 }); //end repeatfunction
             } else {
                 var user_context = {
@@ -1359,11 +1324,7 @@ module.exports = function(router, passport, upload) {
                     'event_data': eventData,
                     'sSameEmailIndex': sSameEmailIndex // email 중복시 index
                 };
-                console.log(eventData);
-
-                console.log('chatmessagepostend----------------------');
                 res.render('message.ejs', user_context);
-                console.log('render 함');
             }
         });
     });
@@ -1423,7 +1384,7 @@ module.exports = function(router, passport, upload) {
 					dbm.UserModel.find({email:otherEmail}, function(err, result){
 						if(err) throw err
 						
-						var push_message = "매칭이 승낙되었습니다.";
+						var push_message = otherTeamname + "팀으로부터 매칭이 승낙되었습니다.";
 						pushAlert.sendPushAlert(result[0]._doc.usertoken, push_message);
 						console.log('=== '+ otherEmail +' 에게 푸시 알람 ===');
 					});
@@ -2949,18 +2910,22 @@ module.exports = function(router, passport, upload) {
 						dbm.UserModel.find({email:scoreCallTeamEmail}, function(err, result){
 							if(err) throw err
 							
-							var push_message = scoreReceiveTeamEmail + "팀과의 경기 스코어가 입력되었습니다.";
+							var push_message = req.user.teamname + "팀과의 경기 스코어가 입력되었습니다.";
 							pushAlert.sendPushAlert(result[0]._doc.usertoken, push_message);
 							console.log('=== '+ scoreCallTeamEmail +' 에게 푸시 알람 ===');
 						});
 					}else{
-						dbm.UserModel.find({email:scoreReceiveTeamEmail}, function(err, result){
-							if(err) throw err
-														
-							var push_message = scoreCallTeamEmail + "팀과의 경기 스코어가 입력되었습니다.";
-							pushAlert.sendPushAlert(result[0]._doc.usertoken, push_message);
-							console.log('=== '+ scoreReceiveTeamEmail +' 에게 푸시 알람 ===');
-						});
+						dbm.UserModel.find({email:scoreCallTeamEmail}, function(err, result1){
+							var scoreCallTeamname = result1[0]._doc.teamname;
+							
+							dbm.UserModel.find({email:scoreReceiveTeamEmail}, function(err, result){
+								if(err) throw err
+
+								var push_message = scoreCallTeamname + "팀과의 경기 스코어가 입력되었습니다.";
+								pushAlert.sendPushAlert(result[0]._doc.usertoken, push_message);
+								console.log('=== '+ scoreReceiveTeamEmail +' 에게 푸시 알람 ===');
+							});
+						});						
 					}
 					
 					console.log('=== Score updated ===');
@@ -3053,7 +3018,7 @@ module.exports = function(router, passport, upload) {
 					dbm.UserModel.find({email:reviewedTeamEmail}, function(err, result){
 						if(err) throw err
 
-						var push_message = email + "팀이 우리 팀 경기 리뷰를 남겼습니다.";
+						var push_message = req.user.teamname + "팀이 우리 팀 경기 리뷰를 남겼습니다.";
 						pushAlert.sendPushAlert(result[0]._doc.usertoken, push_message);
 
 						console.log('=== '+ reviewedTeamEmail +' 에게 푸시 알람 ===');
@@ -3067,16 +3032,20 @@ module.exports = function(router, passport, upload) {
         dbm.MatchModel.update(
             {email: reviewedTeamEmail, "others.sEmail": email, "others.sEvent_date": eventDate, "others.sEvent_time": eventTime},
             {$set: {received_review: rating, received_review_comment: review_comment, review_date: reviewDate}}, function (err) {
-                if (err) throw err
-				
+                if (err) throw err				
 				
 				if(req.user.email === reviewedTeamEmail){
-					dbm.UserModel.find({email:email}, function(err, result){
-						if(err) throw err
+					dbm.UserModel.find({email:reviewedTeamEmail}, function(err, result1){
+						var reviewedTeamname = result1[0]._doc.teamname;
+						
+						dbm.UserModel.find({email:email}, function(err, result){
+							if(err) throw err
 
-						var push_message = reviewedTeamEmail + "팀이 우리 팀 경기 리뷰를 남겼습니다.";
-						pushAlert.sendPushAlert(result[0]._doc.usertoken, push_message);
-						console.log('=== '+ email +' 에게 푸시 알람 ===');
+							var push_message = reviewedTeamname + "팀이 우리 팀 경기 리뷰를 남겼습니다.";
+							pushAlert.sendPushAlert(result[0]._doc.usertoken, push_message);
+							console.log('=== '+ email +' 에게 푸시 알람 ===');
+						});
+						
 					});
 				}
 				console.log('내가 신청받았을 때 review updated');                
