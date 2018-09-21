@@ -12,6 +12,7 @@ Schema.createSchema = function(mongoose) {
 	// 스키마 정의
 	var UserSchema = mongoose.Schema({		//18개
 		email: {type: String, 'default':''},
+		userstoken:{type:String, 'default':''},
 	    hashed_password: {type: String, required: true, 'default':''},
 	    teamname: {type: String, index: 'hashed', 'default':''},
 	    salt: {type:String, required:true},
@@ -31,6 +32,7 @@ Schema.createSchema = function(mongoose) {
 		//img_flag[1]:post,	0:회원가입, 1:로그인, 2:프로필 이미지 수정
 		geoLng:{type:Number, 'default':''},
 		geoLat:{type:Number, 'default':''},
+		usertoken:{type:String, 'default':''},
 		created_at: {type: Date, index: {unique: false}, 'default': Date.now},
 	    updated_at: {type: Date, index: {unique: false}, 'default': Date.now},
 	});
