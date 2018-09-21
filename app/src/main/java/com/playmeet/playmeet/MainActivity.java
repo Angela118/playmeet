@@ -1,93 +1,84 @@
 package com.playmeet.playmeet;
 
-import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.webkit.WebSettings;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
+
 //fcm
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
-import com.google.firebase.messaging.FirebaseMessaging;
 
-import org.json.JSONArray;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.protocol.HTTP;
+import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 
 public class MainActivity extends AppCompatActivity {
-    EditText messageInput;
-    TextView messageOutput;
-    TextView log;
-
     WebView mWebView;
-    String regId;
-
-    RequestQueue queue;
+    String mToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        mWebView = (WebView) findViewById(R.id.webView);
+        mWebView = (WebView)findViewById(R.id.webView);
 
-        //fcm
-        FirebaseMessaging.getInstance().subscribeToTopic("news");
-        FirebaseInstanceId.getInstance().getToken();
-
-        /*WebSettings webSettings = mWebView.getSettings();
+        WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setLoadWithOverviewMode(true);
-        webSettings.setDefaultZoom(WebSettings.ZoomDensity.FAR);*/
+        webSettings.setDefaultZoom(WebSettings.ZoomDensity.FAR);
 
-        messageInput = (EditText) findViewById(R.id.messageInput);
-        messageOutput = (TextView) findViewById(R.id.messageOutput);
-        log = (TextView) findViewById(R.id.log);
-
-        Button sendButton = (Button) findViewById(R.id.sendButton);
-        sendButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String input = messageInput.getText().toString();
-                send(input);
-            }
-        });
-
-        queue = Volley.newRequestQueue(getApplicationContext());
-
-//        getRegistrationId();
         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( MainActivity.this,  new OnSuccessListener<InstanceIdResult>() {
             @Override
             public void onSuccess(InstanceIdResult instanceIdResult) {
-                String mToken = instanceIdResult.getToken();
-                Log.d("Token",mToken);
-                println("mToken : " + mToken);
+                mToken = instanceIdResult.getToken();
+                Log.d("Token-------------",mToken);
+                updateUserInfo();
+//                new JSONTask().execute("http://172.30.1.36:3000/token");
+//                sendHttpWithMsg("http://172.30.1.36:3000/token");
             }
         });
 
-
-/*
         //alert 대응
         mWebView.setWebChromeClient(new WebChromeClient(){
             @Override
@@ -108,143 +99,204 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mWebView.loadUrl("http://192.168.19.138:3000/login");*/
-
-
+        mWebView.loadUrl("http://172.30.1.36:3000/login");
     }
 
 
-/*    public void getRegistrationId() {
-        println("getRegistrationId() 호출됨.");
+    public void updateUserInfo(){
+        OkHttpClient client = new OkHttpClient();
 
-//        regId = FirebaseInstanceId.getInstance().getToken();
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( MainActivity.this,  new OnSuccessListener<InstanceIdResult>() {
-            @Override
-            public void onSuccess(InstanceIdResult instanceIdResult) {
-                String mToken = instanceIdResult.getToken();
-                Log.e("Token",mToken);
-                regId = mToken;
-                println("regId : " + regId);
-//                println("regId : " + mToken);
-//                println("test1");
-            }
-        });
-    }*/
+        RequestBody formBody = new FormBody.Builder()
+                .add("token", mToken)
+                .build();
 
-    public void send(String input) {
+        Request request = new Request.Builder()
+                .url("http://172.30.1.36:3000/token")
+                .post(formBody)
+                .build();
 
-        JSONObject requestData = new JSONObject();
+        client.newCall(request).enqueue(updateUserInfoCallback);
+    }
+
+    private Callback updateUserInfoCallback = new Callback() {
+        @Override
+        public void onFailure(Call call, IOException e) {
+            Log.d("TEST", "ERROR Message : " + e.getMessage());
+        }
+
+        @Override
+        public void onResponse(Call call, Response response) throws IOException {
+            final String responseData = response.body().string();
+            Log.d("TEST", "responseData : " + responseData);
+        }
+    };
+
+
+    public String sendHttpWithMsg(String url){
+
+//기본적인 설정
+        DefaultHttpClient client = new DefaultHttpClient();
+        HttpPost post = new HttpPost(url);
+        HttpParams params = client.getParams();
+        HttpConnectionParams.setConnectionTimeout(params, 3000);
+        HttpConnectionParams.setSoTimeout(params, 3000);
+        post.setHeader("Content-type", "application/json; charset=utf-8");
+
+// JSON OBject를 생성하고 데이터를 입력합니다.
+//여기서 처음에 봤던 데이터가 만들어집니다.
+
+        JSONObject jObj = new JSONObject();
 
         try {
-            requestData.put("priority", "high");
+            jObj.put("name", "hong");
+            jObj.put("phone", "000-0000");
 
-            JSONObject dataObj = new JSONObject();
-            dataObj.put("contents", input);
-            requestData.put("data", dataObj);
+        } catch (JSONException e1) {
+            e1.printStackTrace();
+        }
 
-            JSONArray idArray = new JSONArray();
-            idArray.put(0, regId);
-            requestData.put("registration_ids", idArray);
+        try {
 
-        } catch(Exception e) {
+// JSON을 String 형변환하여 httpEntity에 넣어줍니다.
+
+            StringEntity se;
+            se = new StringEntity(jObj.toString());
+            HttpEntity he=se;
+            post.setEntity(he);
+
+        } catch (UnsupportedEncodingException e1) {
+            e1.printStackTrace();	}
+
+        try {
+
+//httpPost 를 서버로 보내고 응답을 받습니다.
+
+            HttpResponse response = client.execute(post);
+
+// 받아온 응답으로부터 내용을 받아옵니다.
+
+// 단순한 string으로 읽어와 그내용을 리턴해줍니다.
+
+            BufferedReader bufReader =
+                    new BufferedReader(new InputStreamReader(
+                            response.getEntity().getContent(),
+                            "utf-8"
+                    )
+                    );
+
+            String line = null;
+            String result = "";
+
+            while ((line = bufReader.readLine())!=null){
+                result +=line;
+            }
+
+            return result;
+
+
+        } catch (ClientProtocolException e) {
             e.printStackTrace();
+            return "Error"+e.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "Error"+e.toString();
         }
-
-        sendData(requestData, new SendResponseListener() {
-            @Override
-            public void onRequestCompleted() {
-                println("onRequestCompleted() 호출됨.");
-            }
-
-            @Override
-            public void onRequestStarted() {
-                println("onRequestStarted() 호출됨.");
-            }
-
-            @Override
-            public void onRequestWithError(VolleyError error) {
-                println("onRequestWithError() 호출됨.");
-            }
-        });
-
     }
 
-    public interface SendResponseListener {
-        public void onRequestStarted();
-        public void onRequestCompleted();
-        public void onRequestWithError(VolleyError error);
-    }
 
-    public void sendData(JSONObject requestData, final SendResponseListener listener) {
-        JsonObjectRequest request = new JsonObjectRequest(
-                Request.Method.POST,
-                "https://fcm.googleapis.com/fcm/send",
-                requestData,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        listener.onRequestCompleted();
+     //post
+    public class JSONTask extends AsyncTask<String, String, String> {
+        @Override
+        protected String doInBackground(String... urls) {
+            try {
+                //JSONObject를 만들고 key value 형식으로 값을 저장해준다.
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.accumulate("token", mToken);
+                jsonObject.accumulate("user_id", "androidTest");
+
+                Log.d("jsonObject--------- : ", jsonObject.toString());
+
+                HttpURLConnection con = null;
+                BufferedReader reader = null;
+
+                try{
+                    URL url = new URL(urls[0]);
+                    //연결을 함
+                    /*con = (HttpURLConnection) url.openConnection();
+
+                    con.setRequestMethod("POST");//POST방식으로 보냄
+                    con.setRequestProperty("Cache-Control", "no-cache");//캐시 설정
+                    con.setRequestProperty("Content-Type", "application/json");//application JSON 형식으로 전송
+                    con.setRequestProperty("Accept", "text/html");//서버에 response 데이터를 html로 받음
+                    con.setDoOutput(true);//Outstream으로 post 데이터를 넘겨주겠다는 의미
+                    con.setDoInput(true);//Inputstream으로 서버로부터 응답을 받겠다는 의미
+                    con.connect();
+
+                    //서버로 보내기위해서 스트림 만듬
+                    OutputStream outStream = con.getOutputStream();
+                    //버퍼를 생성하고 넣음
+                    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outStream));
+                    writer.write(jsonObject.toString());
+                    writer.flush();
+                    writer.close();//버퍼를 받아줌*/
+
+                    DefaultHttpClient client = new DefaultHttpClient();
+                    HttpPost post = new HttpPost("http://172.30.1.36:3000/token");
+
+                    StringEntity entity = new StringEntity(jsonObject.toString(), HTTP.UTF_8);
+                    post.setEntity(entity);
+                    post.setHeader("Accept", "application/json");
+                    post.setHeader("content-type", "application/json");
+
+                    HttpResponse response = (HttpResponse)client.execute(post);
+
+
+
+                    /*//서버로 부터 데이터를 받음
+                    InputStream stream = con.getInputStream();
+
+                    reader = new BufferedReader(new InputStreamReader(stream));
+
+                    StringBuffer buffer = new StringBuffer();
+
+                    String line = "";
+                    while((line = reader.readLine()) != null){
+                        buffer.append(line);
                     }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                listener.onRequestWithError(error);
+
+                    return buffer.toString();//서버로 부터 받은 값을 리턴해줌 아마 OK!!가 들어올것임*/
+
+                } catch (MalformedURLException e){
+                    Log.e("MalformedURLException--", "here");
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    Log.e("IOException---", "here");
+                    e.printStackTrace();
+                } finally {
+                    if(con != null){
+                        con.disconnect();
+                    }
+                    try {
+                        if(reader != null){
+                            reader.close();//버퍼를 닫아줌
+                        }
+                    } catch (IOException e) {
+                        Log.e("IOException---", "herehere");
+                        e.printStackTrace();
+                    }
+                }
+            } catch (Exception e) {
+                Log.e("Exception--", "here");
+                e.printStackTrace();
             }
+
+            return null;
         }
-        ) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String,String> params = new HashMap<String,String>();
-
-                return params;
-            }
-
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String,String> headers = new HashMap<String,String>();
-                headers.put("Authorization"
-                        ,"key=AAAACgDmJXk:APA91bHwNjQcIeWEkiLuOKQWJKNzsiWbh5Fk0CfpUwSXHRv9t-acdcGJvZ_NBAkvSFex3nUwEU0QpOnQteczkP6ry-x_7x1_Y9odqxTgY3ijJ6vUUFBdEWtBcsZsbJGMO46wx9cMA-BP");
-
-                return headers;
-            }
-
-            @Override
-            public String getBodyContentType() {
-                return "application/json";
-            }
-        };
-
-        request.setShouldCache(false);
-        listener.onRequestStarted();
-        queue.add(request);
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        println("onNewIntent() called.");
-
-        if (intent != null) {
-            processIntent(intent);
-        }
-
-        super.onNewIntent(intent);
+       /* @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+        }*/
     }
 
 
-    private void processIntent(Intent intent) {
-        String from = intent.getStringExtra("from");
-        if (from == null) {
-            println("from is null.");
-            return;
-        }
-
-        String contents = intent.getStringExtra("contents");
-
-        println("DATA : " + from + ", " + contents);
-        messageOutput.setText("[" + from + "]로부터 수신한 데이터 : " + contents);
-    }
-
-    public void println(String data){
-        log.append(data + "\n");
-    }
 }
