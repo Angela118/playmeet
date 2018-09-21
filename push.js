@@ -11,14 +11,14 @@ var serverKey = 'AAAACgDmJXk:APA91bHwNjQcIeWEkiLuOKQWJKNzsiWbh5Fk0CfpUwSXHRv9t-a
 /** 아래는 푸시메시지 발송절차 */
 var fcm = new FCM(serverKey);
 
-exports.sendPushAlert = function(client_token){
+exports.sendPushAlert = function(client_token, push_message){
 	var push_data = {
 		// 수신대상
 		to: client_token,
 		// App이 실행중이지 않을 때 상태바 알림으로 등록할 내용
 		notification: {
 			title: "Play Meet",
-			body: "새 소식이 있습니다.",
+			body: push_message,
 			sound: "default",
 			click_action: "FCM_PLUGIN_ACTIVITY",
 			icon: "fcm_push_icon"
@@ -28,10 +28,12 @@ exports.sendPushAlert = function(client_token){
 		// App 패키지 이름
 		restricted_package_name: "com.playmeet.playmeet",
 		// App에게 전달할 데이터
-		data: {
+/*		data: {
 			num1: 2000,
 			num2: 3000
 		}
+		
+		*/
 	};
 	
 	fcm.send(push_data, function(err, response) {
