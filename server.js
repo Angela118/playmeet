@@ -106,6 +106,12 @@ var cors = require('cors');
 
 
 
+// push 알림
+
+var pushAlert = require('./push');
+
+
+
 
 
 // 익스프레스 객체 생성
@@ -349,6 +355,10 @@ io.sockets.on('connection', function(socket){
         login_ids[input.id] = socket.id;
         socket.login_id = input.id;
 
+        console.log('input.id : ' + input.id);
+        console.log('input.otherId : ' + input.otherId);
+        console.log('input.application_number : ' + input.application_number);
+
         var matchFunction = function(dbData){
             var reviewed;
 
@@ -456,9 +466,14 @@ io.sockets.on('connection', function(socket){
         var chat = new database.ChatModel({ email:message.email, teamname: message.sender, message: message.data, recipient: message.recipient, application_number: message.application_number, cancel:message.cancel});
 
         chat.save(function (err, data) {
-            if (err) {// TODO handle the error
-                console.log("chat save error");
-            }
+            if (err) throw err
+			
+			database.UserModel.find({email:message.recipient}, function(err, result){
+				if(err) throw err
+				pushAlert.sendPushAlert(result[0]._doc.usertoken);
+				console.log('=== send push alert ===');
+			});
+			
             console.log('New message is inserted');
         });
     });
@@ -477,3 +492,5 @@ function sendResponse(socket, command, code, message){
 
     };
 };
+
+
