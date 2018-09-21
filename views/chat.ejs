@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="kr">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -8,7 +8,6 @@
 
     <link href="./css/bootstrap.min.css" rel="stylesheet">
     <link href="./css/common.css" rel="stylesheet">
-    <link href="./css/FRAME.css" rel="stylesheet">
     <link href="./css/chat.css" rel="stylesheet">
 
     <!-- Bootstrap core JavaScript -->
@@ -28,7 +27,7 @@
             login();
         });
         function connect(){
-            var host = '192.168.26.26';  // 아이피 바꾸기!!!!!!
+            var host = '192.168.0.102';  // 아이피 바꾸기!!!!!!
             $('#hostInput').val(); //203.153.146.124
             var port = 3000;  // $('#portInput').val();
             //서버에 접속
@@ -102,14 +101,14 @@
             if (writer == 'me') {
                 contents =
                     "<li class="+ writer +">"
-                    +"<div class='msg'"+"<p>"+msg+"</p>"
+                    +"<div class='msg' style='margin-right:.5rem;'"+"<p>"+msg+"</p>"
                     +"</div></li>";
             } else {
                 var profile = '<%= event_data.otherProfile %>';
                 contents =
                     "<li class=" + writer + ">"
-                    + "<div class='img_div'" + "style='margin-left: 0rem; margin-right: 0'>" + "<img class='profile_img' src='../profile_img/" + profile + "'/>" + "</div>"
-                    + "<div class='msg'" + "<p>" + msg + "</p></div>"
+                    + "<div class='img_div'" + "style='margin-left: 0rem; margin-right: .5rem;'>" + "<img class='profile_img' src='../profile_img/" + profile + "'/>" + "</div>"
+                    + "<div class='msg' style='margin-top:auto;margin-bottom:auto;'" + "<p>" + msg + "</p></div>"
                     + "</li>";
             }
             //상대방이 리뷰했을 경우
@@ -164,19 +163,16 @@
 <!--메뉴 영역 시작 : 나중에 파일로 따로 빼기 -->
 <!--여기선 메뉴명 채팅방으로 되어 있음-->
 
-<body class="">
-
+<body style="background-color:#0C0C1C;">
 <!--메뉴 다름-->
-<nav class="navbar reco">
-    <div class="top">
-        <div>
-            <img src="../img/left-arrow.png" alt="" width="20rem" height="20rem" style="margin-right:3rem" onclick="location.href='/chatroomchat'">
-
-            <p class="logo ml-sm-3"><%= event_data.otherTeamname %>팀과의 채팅방</p>
-        </div>
-
-        <div>
-            <img src="../css/img/menu.png" width="20rem" height="20rem" class="navbar-toggler" data-toggle="collapse" data-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
+<nav class="navbar">
+    <div class="top" style="padding: .5rem;">        
+        <img src="../img/left-arrow.png" height="20rem" onclick="location.href='/chatroomchat'">
+        <div style="color:white; margin-left: -4rem;"><%= event_data.otherTeamname %>팀과의 채팅방</div>
+        
+        <div class="sets">
+            <a href="/chatroomchat"><img src="../img/update_chat.png" class="menu_img" height="20rem" style="margin-right: .3rem; visibility:hidden;"></a>
+            <img src="../css/img/menu.png" height="20rem" class="navbar-toggler" data-toggle="collapse" data-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
         </div>
     </div>
 
@@ -200,8 +196,6 @@
         </ul>
     </div>
 </nav>
-
-<div class="py-4 text-center"></div>
 
 <!--메뉴 영역 끝 : -->
 
@@ -232,21 +226,14 @@
     <!--Modal end-->
 </form>
 
-
-<style>
-    #mydiv{
-        background-color:#e5e5e5;
-    }
-</style>
-
 <div id="mydiv">
-    <div class="chatting" id="chatting" style="height:82vh; margin-bottom: 1rem"></div>
+    <div class="chatting" id="chatting" style="height:91vh; padding-top: 60px;"></div>
 </div>
 
-<div class="mb-3" style="display: flex; margin-left: .5rem; margin-right: .5rem; justify-content: space-between; align-items: center">
-    <img src="./css/img/add.png" id="add_button" width="30rem" height="30rem" alt="" style="margin-right: 1rem">
-    <input type="text" class="form-control" id="dataInput" placeholder="내용을 입력해주세요."  style="margin-right: .5rem" onFocus="clearText(this)">
-    <button type="submit" class="btn btn-warning" id="text_button" onclick="send();">전송</button>
+<div style="position:fixed; bottom:0; display: flex; width:100%; justify-content: space-between; align-items: center; background-color:#292941; padding: 1rem;">
+    <img src="./css/img/add.png" id="add_button" width="30rem" height="30rem" alt="" style="margin-right:.5rem;">
+    <input type="text" class="form-control" id="dataInput" placeholder="내용을 입력해주세요."  style="margin-right: .5rem; border-radius:15px;" onFocus="clearText(this)">
+    <button type="submit" class="btn" id="text_button" style="color:white; background-color:#292941; border:1px solid white; border-radius: 10px;" onclick="send();">전송</button>
 
     <script>
         function goBack(){
@@ -320,35 +307,36 @@
     <input type="hidden" name="application_number" value="<%=event_data.application_number%>">
 </form>
 
-<div id="add_button_content" style="display: none; margin-left: .5rem; margin-right: .5rem; justify-content: space-around;" class="mb-3">
+<div id="add_button_content" style="display: none; color: white; margin:0; justify-content: space-around; padding: .5rem 1rem 0 1rem; position: fixed; bottom: 70px; z-index:2; background-color:#292941;">
 
     <% if(event_data.event_time == 'none') {
         var time = '시간 무관';
     }else {
         var time = event_data.event_time + '시'
-    }
-	
-	var add1 = event_data.event_add[0].replace(/\"/g, "");
-	add1 = add1.replace(/\[/g, "");
-	add1 = add1.replace(/\]/g, "");
-	add1 = add1.replace(/\,/g, " ");
-	
-	var add2 = event_data.event_add[1].replace(/\"/g, "");
-	add2 = add2.replace(/\[/g, "");
-	add2 = add2.replace(/\]/g, "");
-	add2 = add2.replace(/\,/g, " ");
-	
-	%>
+    }%>
 
+    <!-- add에 "" 표시 검사 -->
+    <% var add = /d/.exec(event_data.event_add);
+    %>
 
-    <h4>경기 정보</h4>
-    <div>경기 날짜 : <%=event_data.event_date%></div>
-    <div>경기 시간 : <%=time%></div>
-    <div>경기 장소 : <%=add1%> <%=add2%> <%=event_data.event_region%></div>
-    <div>상대팀 경기 인원 : <%=event_data.other_nofteam%>명</div>
-    <div>우리팀 경기 인원 : <%=event_data.nofteam%>명</div>
-    <p style="font-size: 0.9rem">상대방이 업데이트 한 정보는 새로고침해야 확인 가능</p>
-    <button type="button" class="btn" value="페이지 새로 고침" onClick="reloadChat()">새로고침</button>
+    <h4 style="font-size:1.2rem; text-align:center;"> § 경기 정보 § </h4>
+    <div style="width:40%; float:left;">경기 날짜</div> 
+    <div style="width:60%; float:right;"> : <%=event_data.event_date%></div>
+    
+    <div style="width:40%; float:left;">경기 시간 </div> 
+    <div style="width:60%; float:right;">: <%=time%></div>
+    
+    <div style="display:inline-block;"><div style="width:40%; float:left;">경기 장소 </div> 
+    <div style="width:60%; float:right;">: <%=event_data.event_add[0]%> <%=event_data.event_add[1]%> <%=event_data.event_region%></div></div>
+    
+    <div style="width:40%; float:left;">상대팀 경기 인원 </div> 
+    <div style="width:60%; float:right;">: <%=event_data.other_nofteam%>명</div>
+    
+    <div style="width:40%; float:left;">우리팀 경기 인원</div> 
+    <div style="width:60%; float:right;">: <%=event_data.nofteam%>명</div>
+    
+    <p style="font-size: 0.9rem; margin-bottom: 0;">(상대방이 업데이트 한 정보는 새로고침해야 확인 가능합니다.)</p>
+    <button type="button" class="btn" value="페이지 새로 고침" style="display: block; color:white; text-align:center; margin-left:Auto;margin-right:auto; background-color:#7473ff;" onClick="reloadChat()">새로고침</button>
 </div>
 
 <form action="/chatappointment" method="get" id="formPost_appoint">
@@ -387,6 +375,7 @@
     <!--reportModal end-->
 
 </form>
+
 
 
 </body>
