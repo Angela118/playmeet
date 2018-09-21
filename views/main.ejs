@@ -29,15 +29,7 @@
         </div>
         <div style="display:flex; justify-content: space-between; align-items: center;" class="mb-3">
             <span style="font-weight: bold; color: white;">매칭추천</span>
-<!--
-			<form action="/main" name="changesubmit" method="post">
-            <select class="custom-select" name="sort" id="sort" style="width: 8rem;">
-                <option selected value="0">정렬 기준</option>
-				<option value="1">지역</option>
-				<option value="2">성별</option>
-				<option value="3">평균 연령대</option>
-            </select>
-			</form>-->
+            
 				 <script type="text/javascript">
 					 
   						jQuery(function() {
@@ -214,8 +206,8 @@
             <input type="hidden" name="sNofteam" id="sNofteam" value=''>
             <input type="hidden" name="sApplicationNumber" id="sApplicationNumber" value=''>
             <div style="text-align: center">
-                <!--<button type="button" class="btn btn-primary" onclick='clicked()'>매칭 신청</button>-->
-                <button type="button" class="btn btn-primary" name="modal_open_button" onclick="modal_open_clicked(
+                
+                <button type="button" class="btn" style="display: block; color:white; text-align:center; margin-left:Auto;margin-right:auto; background-color:#7473ff;" name="modal_open_button" onclick="modal_open_clicked(
                         '<%= event_data[i].email %>',
                         '<%= event_data[i].teamname %>',
                         '<%= event_data[i].add %>',

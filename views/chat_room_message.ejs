@@ -18,15 +18,15 @@
 </head>
 <body class="coloring">
 <% include ./navbar %>
-<div class="container" style="padding-top:6rem">
+<div class="container" style="padding-top:7.5rem">
     <div class = "chat_tab">
         <div class="chat_chat" onclick="location='./chatroomchat'">채팅</div>
-        <div class="chat_message" onclick="location='./chatroommessage'">메시지</div>
+        <div class="chat_message" style="background-color:#7473ff; padding: .5rem 0;" onclick="location='./chatroommessage'">메시지</div>
     </div>
     
     <div class="reco">
         <% if(event_data.length == 0) { %>
-        <p style="font-weight: bold">우리 팀에게 온 메시지가 없습니다.</p>
+        <p style="font-weight: bold;">우리 팀에게 온 메시지가 없습니다.</p>
         <%}else{
             var notZeroCount = 0; // 나한테 신청왔는데 매칭 수락이나 거절한거
             var count = 0; // 띄워지는 값 count
@@ -43,7 +43,7 @@
             if(event_data[i].match_success != 0) {
                 // event_data 다 돌았는데 다 매칭 수락이나 거절했으면
                 if((i == (event_data.length - 1)) && ((notZeroCount) == i)) {%>
-                    <p style="font-weight: bold">우리 팀에게 온 메시지가 없습니다.</p>
+                    <p style="font-weight: bold; margin-left:2rem;">우리 팀에게 온 메시지가 없습니다.</p>
                 <%}
                 notZeroCount++;
             }else{
@@ -56,16 +56,18 @@
                 document.getElementsByName('formPost')[index].submit();
             }
         </script>
-        <form action="/chatroommessage" name="formPost" method="post" style="padding-bottom: .5rem; border-bottom:1px solid #7473ff; margin-bottom:.5rem;">
+        <form action="/chatroommessage" name="formPost" method="post" style="padding-bottom: .5rem; border-bottom:1.5px solid #7473ff; margin-bottom:.5rem;">
             <input type="hidden" name="sEmail" id="sEmail" value=''>
             <input type="hidden" name="sSameEmailIndex" id="sSameEmailIndex" value=''>
             <div class="message" onclick="clicked( `<%= curEmail %>`,`<%=event_data[i].sameEmailIndex%>`, `<%= count%>`)">
-                <div class="chat_room_name mb-2">
-                    <span style="font-weight:bold"> <%=curTeamname%> 팀</span>
-                    <span class="chat_room_date"> </span>
+            <div style="padding:.5rem 1rem;">
+                <div class="chat_room_name mb-2" >
+                    <span style="font-weight:bold; color:#CFD1E3; font-size:1.2rem;"> <%=curTeamname%> 팀</span>
+                    <span class="chat_room_date" style="float:right;"> </span>
                 </div>
                 <div class="chat_room_content">매칭 신청합니다. <%=curMention%></div>
             </div>
+         </div>
         </form>
         <%
                 count++;

@@ -73,10 +73,10 @@ if(curMove == 100){
     }
 </script>
 
-<div class="container" style="padding-top:40px;">
-    <div class="reco" style="border:2px solid #7473ff; padding:.5rem;">
+<div class="container" style="padding-top:50px;">
+    <div class="reco">
         <div class="mb-3">
-            <p style="line-height: 2rem">
+            <p style="line-height: 2rem; border:2px solid #7473ff; padding: .5rem;">
                 주장 이메일 : <%= event_data[index].email %><br>
                 팀명 : <%= event_data[index].teamname %> 팀<br>
                 <!--팀 지역에서 add[1]값이 없는 건 회원가입할 때 add가 배열이 아니어서임-->
@@ -97,7 +97,7 @@ if(curMove == 100){
                 팀 인원수 : <%= event_data[index].nofteam %>명<br>
                 상대팀 별점 : <%= event_data[index].allRating %><br>
             </p>
-            <p><b>해당 경기 날짜에 매칭 신청합니다. 수락하시겠습니까?</b><br><br></p>
+            <p><b>해당 경기 날짜에 매칭 신청합니다. 수락하시겠습니까?</b></p>
 
             <form action="/message" method="post" id="formPost">
                 <input type="hidden" name="sEmail" id="sEmail" value=''>
@@ -105,11 +105,14 @@ if(curMove == 100){
                 <input type="hidden" name="match" id="match" value=''>
 
                 <div style="text-align: center">
-                    <button type="button" class="btn" onclick="clicked( `<%= event_data[index].email %>`,`<%=index%>`, 2)">매칭 거절</button>
-                    <button type="button" class="btn" onclick="clicked( `<%= event_data[index].email %>`,`<%=index%>`, 1)">매칭 수락</button>
+                    <button type="button" class="btn" style="color:white; text-align:center; margin-left:Auto;margin-right:auto; background-color:#7473ff;" onclick="clicked( `<%= event_data[index].email %>`,`<%=index%>`, 2)">매칭 거절</button>
+                    <button type="button" class="btn" style="color:white; text-align:center; margin-left:Auto;margin-right:auto; background-color:#7473ff;" onclick="clicked( `<%= event_data[index].email %>`,`<%=index%>`, 1)">매칭 수락</button>
                 </div>
 
             </form>
         </div>
     </div>
 </div>
+    </body>
+    <footer class="my-5 pt-5 text-muted text-center text-small"></footer>
+</html>

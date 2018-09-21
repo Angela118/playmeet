@@ -88,9 +88,9 @@
 
 <body class="coloring">
 <% include ./navbar %>
-<div class="container" style="padding-top:6rem">
+<div class="container" style="padding-top:7.5rem">
     <div class = "chat_tab">
-        <div class="chat_chat" onclick="location='./chatroomchat'">채팅</div>
+        <div class="chat_chat" style="background-color:#7473ff; padding: .5rem 0;" onclick="location='./chatroomchat'">채팅</div>
         <div class="chat_message" onclick="location='./chatroommessage'">메시지</div>
     </div>
     
@@ -98,7 +98,7 @@
         
         <!--event_data는 내게 신청한 상대팀 정보-->
         <!--event_data.others는 선택된 (내가 올렸던) 경기 날짜 & 시간 등 들어있음 -->
-
+        
         <% if(event_data.length == 0){ %>
             <p style="font-weight: bold">진행중인 매칭이 없습니다.</p>
         <%}else{
@@ -121,21 +121,22 @@
         <div class="message" onclick="clicked(
                 '<%=event_data[i].otherEmail%>'
                 , '<%= event_data[i].application_number%>'
-                , '<%= count%>')" style="padding-bottom: .5rem; border-bottom:1px solid #7473ff; margin-bottom:.5rem;">
+                , '<%= count%>')" style="padding-bottom: .5rem; border-bottom:1.5px solid #7473ff; margin-bottom:.5rem;">
             <div class="chat_room_content">
                 <% if(event_data[i].event_time == 'none') {
                     var time = '시간 무관';
                 }else {
                     var time = event_data[i].event_time + '시'
                 }%>
-                <div><br> <b><%= event_data[i].event_date%></b> <%= time%> 경기 with <%= event_data[i].otherTeamname%>팀<br></div>
+                <div style="padding:.5rem 1rem;"><b style="color:#CFD1E3; font-size:1.2rem;"><%= event_data[i].otherTeamname%>팀 <br></b>
+                <b style="float:right;"> <%= event_data[i].event_date%> <%= time%> 경기 </b></div>
             </div>
         </div>
         <%
             count++;
             // 다 돌았는데 다 main_search != 1일 때
         } else if((i == event_data.length - 1) && (count == 0)) {%>
-            <p style="font-weight: bold">진행중인 매칭이 없습니다.</p>
+            <p style="font-weight: bold; margin-left:2rem;">진행중인 매칭이 없습니다.</p>
         <%}
         }
         }
