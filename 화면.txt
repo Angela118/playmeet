@@ -1,0 +1,29 @@
+	
+	예림씨한테 부탁한 화면 (~주말)
+		1. mymatch
+		2. teamprofile (-> teamprofile_edit)
+		3. mainsearch
+		4. mainsearchresult
+
+
+	그 외 총 화면구성
+	-통일할것: 지도/버튼 	-손볼것: 모달창!!!!
+		1. chat
+		2. chatappointment
+		3. chatroomchat
+		4. chatroommessage
+		5. contact (시간되면 form 형식으로 바꾸기)
+		6. find_password (안해도됨)
+		7. loading (센터 위치 다시잡기_지금은 약간 왼쪽아래)
+		8. login 
+		9. main
+		10. match application edit
+		11. match application form
+		12. message
+		13. navbar
+		14. profile edit ok
+		15. team_cal
+		16. team received review
+		17. team schedule (today날짜도 누르면 alert뜸)
+		18. team signup	
+		19. upload img
