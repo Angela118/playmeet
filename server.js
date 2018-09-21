@@ -341,13 +341,15 @@ io.sockets.on('connection', function(socket){
     socket.remotePort = socket.request.connection._peername.port;
 
     socket.on('login', function(input){
-
         console.log('login 받음 -> ' + JSON.stringify(input));
 
         //socket의 id를 가지고 login id를 찾아낼 수 있다. (반대로도 가능)
 
         login_ids[input.id] = socket.id;
         socket.login_id = input.id;
+
+        console.log('login_ids : ')
+        console.dir(login_ids);
 
         console.log('input.id : ' + input.id);
         console.log('input.otherId : ' + input.otherId);
@@ -367,7 +369,7 @@ io.sockets.on('connection', function(socket){
                             dbData['email'] = input.otherId;
                             dbData['recipient'] = input.id;
                             dbData['reviewed'] = reviewed;
-                            dbData['message'] = '상대방이 우리 팀을 평가하였습니다. 리뷰한 후 채팅방을 삭제하세요.';
+                            dbData['message'] = '상대방이 우리 팀을 평가하고 채팅방을 삭제하였습니다. 리뷰한 후 채팅방을 삭제하세요.';
 
                             io.sockets.sockets[socket.id].emit('preload', dbData);
                         }
@@ -378,7 +380,7 @@ io.sockets.on('connection', function(socket){
                             dbData['email'] = input.otherId;
                             dbData['recipient'] = input.id;
                             dbData['reviewed'] = reviewed;
-                            dbData['message'] = '상대방이 우리 팀을 평가하였습니다. 더 이상 채팅방을 사용할 수 없습니다.';
+                            dbData['message'] = '상대방이 우리 팀을 평가하고 채팅방을 삭제하였습니다. 리뷰한 후 채팅방을 삭제하세요.';
                             io.sockets.sockets[socket.id].emit('preload', dbData);
                         }
                     }
@@ -429,6 +431,8 @@ io.sockets.on('connection', function(socket){
     });
 
 
+    // var beforeNumber = '';
+    // var beforeId = '';
     socket.on('message', function(message){
 
         console.log('message 받음 -> ' + JSON.stringify(message.data));
@@ -442,16 +446,22 @@ io.sockets.on('connection', function(socket){
         // } else{      //특정 client에게 메세지 보내기
 
         console.log('message.recipient : ' + message.recipient);
+        console.log('login_ids[message.recipient] : ' + login_ids[message.recipient]);
 
         try{
             if(login_ids[message.recipient]){
                 io.sockets.connected[login_ids[message.recipient]].emit('message', message);
-                sendResponse(socket, 'message', 200, 'OK');
+                // sendResponse(socket, 'message', 200, 'OK');
+/*                if((login_ids[message.application_number] == beforeNumber) && (login_ids[message.recipient == beforeId])) {
+
+
+                }
+                beforeNumber = login_ids[message.application_number];*/
             } else{
-                sendResponse(socket, 'message', 400, '수신자 ID를 찾을 수 없습니다.');
+                // sendResponse(socket, 'message', 400, '수신자 ID를 찾을 수 없습니다.');
             }
         } catch(e) {
-            console.log('상대방 안 접속 중임');
+            console.log('상대방 어느 채팅방에도 안 접속 중임');
         }
 
         //}

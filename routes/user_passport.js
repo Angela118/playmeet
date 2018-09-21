@@ -47,6 +47,31 @@ module.exports = function(router, passport, upload) {
 	}
 
 	var today = yyyy + '-' + mm + '-' + dd; // 오늘 날짜
+    var token;
+
+    // 기기 토큰 받아오기
+    router.route('/token').post(function(req, res) {
+        console.log('token 패스 post 요청됨.');
+
+        var chunk = '';
+
+//데이터를 가져옵니다.
+
+        req.on('data', function(data){
+//데이터를 JSON으로 파싱합니다.
+            chunk = JSON.parse(data);
+        });
+
+        req.on('end',function(){
+//파싱된 데이터를 확인합니다.
+            console.log("token : "+ chunk.token);
+        });
+
+        console.log(req.body.token);
+
+        res.write("OK");
+        res.end();
+    });
 
 
     //홈 화면, 추천
