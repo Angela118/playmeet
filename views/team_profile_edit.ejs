@@ -34,7 +34,7 @@
 			
             
             <%
-                    if(gender == 25) {
+                    if(gender == 75) {
                         var curGender = '무관';
                     }else if(gender == 50) {
                         var curGender = '남자';
@@ -91,8 +91,8 @@
              <div class="mb-3">
                 <label for="region">주 경기 장소</label>	
 				<br>
-                 <input placeholder="숙명여자대학교" id="keyword" size="15"> 
-                    <input type="button" onclick="searchPlaces()" value="검색하기">            
+                    <input placeholder="<%= region %>" id="keyword" size="15"> 
+                    <input type="button" onclick="searchPlaces()" value="검색하기" style="color:white; background-color:#7473ff; border-color:white; margin-left: .5rem;">            
 
                     <input type="hidden" name="resultLat" id="resultLat" placeholder="위도" class="form-control" readonly/ > 
                     <input type="hidden" name="resultLng" id="resultLng" placeholder="경도" class="form-control" readonly/ >
@@ -100,7 +100,7 @@
                     <input name="add" id="add" class="form-control" style="background-color: transparent; color:white; border:none; border-bottom: 1px dotted white; font-size:0.8rem;" readonly/>
                     <input name="add2" id="add2" class="form-control" style="background-color: transparent; color:white; border:none; border-bottom: 1px dotted white; font-size:0.8rem; margin-bottom: .5rem;" readonly/>
 
-                    <div id="map" style="width:100%;height:300px; border-radius:15px;"></div>
+                    <div id="map" style="width:145%;height:300px; margin-left: -6rem; border-radius:15px;"></div>
 
                     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=df8f5565b51994aa9c71d2128dcdfec5&libraries=services"></script>
                     <script>
@@ -115,7 +115,7 @@
                     var map = new daum.maps.Map(mapContainer, mapOption); 
                     // 장소 검색 객체를 생성합니다
                     var ps = new daum.maps.services.Places(); 
-                     ps.keywordSearch('숙명여자대학교', placesSearchCB); 
+                     ps.keywordSearch('<%= region %>', placesSearchCB); 
                     // 키워드로 장소를 검색합니다
                     //searchPlaces();
                     // 키워드 검색을 요청하는 함수입니다
