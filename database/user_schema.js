@@ -16,7 +16,6 @@ Schema.createSchema = function(mongoose) {
 	    hashed_password: {type: String, required: true, 'default':''},
 	    teamname: {type: String, index: 'hashed', 'default':''},
 	    salt: {type:String, required:true},
- //     nickname: {type:String, index:'hashed', 'default':''},
         gender: {type:String, 'default':''},
         age: {type:Number, 'default':''},
 		region: {type:String, 'default':''},
@@ -28,8 +27,6 @@ Schema.createSchema = function(mongoose) {
 		introteam: {type:String, default:''},
 		profile_img: {type:String, 'default':'profile_basic.png'},
 		img_flag: {type:Number, 'default':0},
-		//img_flag[0]: get,	0:from 회원가입, 1:from 프로필 이미지 수정
-		//img_flag[1]:post,	0:회원가입, 1:로그인, 2:프로필 이미지 수정
 		geoLng:{type:Number, 'default':''},
 		geoLat:{type:Number, 'default':''},
 		usertoken:{type:String, 'default':''},
