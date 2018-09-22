@@ -110,7 +110,7 @@ module.exports = function(router, passport, upload) {
             var fs = require('fs');
 
             const Json2csvParser = require('json2csv').Parser;
-            const fields = ['email', 'age', 'gender', 'nofteam', 'career_year', 'career_count', 'geoLng', 'geoLat', 'perRating', 'allRating',/*여기까지*/ 'teamname', 'region', 'add', 'move', 'event_date', 'event_time', 'event_day', 'event_day', 'mention', 'created_month', 'created_day', 'application_number', 'eventYear_forExpire', 'eventMonth_forExpire', 'eventDate_forExpire'];
+            const fields = ['email', 'age', 'gender', 'nofteam', 'career_year', 'career_count', 'geoLng', 'geoLat', 'allRating', 'perRating',/*여기까지*/ 'teamname', 'region', 'add', 'move', 'event_date', 'event_time', 'event_day', 'event_day', 'mention', 'created_month', 'created_day', 'application_number', 'eventYear_forExpire', 'eventMonth_forExpire', 'eventDate_forExpire'];
 
             const eventData = [];
 
@@ -123,8 +123,8 @@ module.exports = function(router, passport, upload) {
                 'career_count':req.user.career_count,
                 'geoLng':req.user.geoLng,
                 'geoLat':req.user.geoLat,
-				'perRating':5.00, 
-				'allRating':5.00
+				'allRating':5.00,
+				'perRating':5.00
             };
             var j=1;
             eventData[0] = userdata;
@@ -152,8 +152,8 @@ module.exports = function(router, passport, upload) {
                         'created_month' : result[i]._doc.created_month,
                         'created_day' : result[i]._doc.created_day,
                         'application_number' : result[i]._doc.application_number,
-                        'allRating': '',
-						'perRating': ''
+						'perRating': '',
+                        'allRating': ''
                     };
                     eventData[j] = data;
                     j+=1;
@@ -193,8 +193,6 @@ module.exports = function(router, passport, upload) {
                         }
 					   
                         eventData[a]['allRating'] = aver;
-
-
 					   
 					   
 						dbm.MatchModel.find({$or:[ {$and:[{"email": eventData[a].email}, {"others.sEmail":req.user.email}]}, {$and:[{"others.sEmail": eventData[a].email}, {"email":req.user.email}]}]}, function (err, result) {
@@ -248,26 +246,6 @@ module.exports = function(router, passport, upload) {
 							
 							
 						});
-					   
-					   /*
-
-                        if(a>=eventData.length-1) {
-                            const json2csvParser = new Json2csvParser({ fields });
-                            const csv = json2csvParser.parse(eventData);
-
-                            fs.writeFile('recEvent.csv', csv, 'utf8', function(err){
-                                if(err) throw err
-                                console.log('File Write.');
-                            });
-
-                            callback();	
-                        }else{
-                            repeatFunction(a+1, callback);
-                        }
-                    });
-					
-					*/
-					
 					
 					});
 				}
@@ -433,142 +411,6 @@ module.exports = function(router, passport, upload) {
     });
 
 
-    /*
-    router.route('/').post(function(req, res){
-        var kofsort = req.body.sort || req.query.sort;
-        console.log(kofsort);
-
-            if(kofsort == 1){
-                res.redirect('/regionsort');
-            }else if(kofsort == 2){
-                res.redirect('gendersort');
-            }else if(kofsort == 3){
-                res.redirect('/agesort');
-            }
-    });
-
-    router.route('/regionsort').get(function(req, res){
-
-    });
-
-    router.route('/gendersort').get(function(req, res){
-        console.log('Search by gender');
-
-        // 인증 안된 경우
-        if (!req.user) {
-            console.log('사용자 인증 안된 상태임.');
-            res.redirect('/login');
-        } else {
-            var dbm = require('../database/database');
-            console.log('database 모듈 가져옴');
-            const eventData = [];
-
-            dbm.ApplicationModel.find({gender:req.user.gender},function (err, result) {
-                for(var i = 0 ; i < result.length ; i++) {
-                        var data = {
-                            'email' : result[i]._doc.email,
-                            'teamname' : result[i]._doc.teamname,
-                            'region' : result[i]._doc.region,
-                            'place' : result[i]._doc.place,
-                            'move' : result[i]._doc.move,
-                            'age' : result[i]._doc.age,
-                            'gender' : result[i]._doc.gender,
-                            'event_date' : result[i]._doc.event_date,
-                            'event_time' : result[i]._doc.event_time,
-                            'event_day' : result[i]._doc.event_day,
-                            'mention' : result[i]._doc.mention,
-                            'nofteam' : result[i]._doc.nofteam,
-                            'geoLng' : result[i]._doc.geoLng,
-                            'geoLat' : result[i]._doc.geoLat,
-                            'created_month' : result[i]._doc.created_month,
-                            'created_day' : result[i]._doc.created_day
-                        };
-                    eventData[i] = data;
-                    }
-
-                var user_context = {
-                    'email':req.user.email,
-                    'teamname':req.user.teamname,
-                    'gender':req.user.gender,
-                    'age':req.user.age,
-                    'region':req.user.region,
-                    'move':req.user.move,
-                    'nofteam':req.user.nofteam,
-                    'career_year':req.user.career_year,
-                    'career_count':req.user.career_count,
-                    'introteam':req.user.introteam,
-                    'profile_img':profile_photo,
-                    'event_data':eventData
-                };
-
-                console.dir(user_context);
-
-
-                res.render('main.ejs', user_context);
-            });
-        }
-
-    });
-
-    router.route('/agesort').get(function(req, res){
-        console.log('Search by age');
-        // 인증 안된 경우
-        if (!req.user) {
-            console.log('사용자 인증 안된 상태임.');
-            res.redirect('/login');
-        } else {
-            var dbm = require('../database/database');
-            console.log('database 모듈 가져옴');
-            const eventData = [];
-
-            dbm.ApplicationModel.find({age: { $gt: req.user.age-5 , $lte: req.user.age+5 } },function (err, result) {
-                for(var i = 0 ; i < result.length ; i++) {
-                        var data = {
-                            'email' : result[i]._doc.email,
-                            'teamname' : result[i]._doc.teamname,
-                            'region' : result[i]._doc.region,
-                            'place' : result[i]._doc.place,
-                            'move' : result[i]._doc.move,
-                            'age' : result[i]._doc.age,
-                            'gender' : result[i]._doc.gender,
-                            'event_date' : result[i]._doc.event_date,
-                            'event_time' : result[i]._doc.event_time,
-                            'event_day' : result[i]._doc.event_day,
-                            'mention' : result[i]._doc.mention,
-                            'nofteam' : result[i]._doc.nofteam,
-                            'geoLng' : result[i]._doc.geoLng,
-                            'geoLat' : result[i]._doc.geoLat,
-                            'created_month' : result[i]._doc.created_month,
-                            'created_day' : result[i]._doc.created_day
-                        };
-                    eventData[i] = data;
-                    }
-
-                var user_context = {
-                    'email':req.user.email,
-                    'teamname':req.user.teamname,
-                    'gender':req.user.gender,
-                    'age':req.user.age,
-                    'region':req.user.region,
-                    'move':req.user.move,
-                    'nofteam':req.user.nofteam,
-                    'career_year':req.user.career_year,
-                    'career_count':req.user.career_count,
-                    'introteam':req.user.introteam,
-                    'profile_img':profile_photo,
-                    'event_data':eventData
-                };
-
-                console.dir(user_context);
-
-
-                res.render('main.ejs', user_context);
-            });
-        }
-
-    });
-    */
-
     // 로그인 화면
     router.route('/login').get(function(req, res) {
         console.log('/login 패스 get 요청됨.');
@@ -623,8 +465,6 @@ module.exports = function(router, passport, upload) {
                 'teamname':req.user.teamname,
                 'gender':req.user.gender,
                 'age':req.user.age,
-                //			'region':req.user.region,
-                //			'add':req.user.add,
                 'move':req.user.move,
                 'nofteam':req.user.nofteam,
                 'career_year':req.user.career_year,
@@ -673,16 +513,16 @@ module.exports = function(router, passport, upload) {
 
             dbm.UserModel.update({email: req.user.email}, {$set: {'profile_img':profile_img[imgi][1]}}, function (err, result) {
                 if(err) throw err
+				
+				console.log("======== set profile image =======");
             });
 
             imgi++;
 
-
-            console.log("======== set profile image =======");
-
         }catch(err){
             console.dir(err.stack);
         }
+		
 
         setTimeout(function(){
             if(req.user.img_flag == 0){	//from 회원가입
@@ -772,8 +612,6 @@ module.exports = function(router, passport, upload) {
                 'introteam':req.user.introteam,
                 'profile_img':profile_photo
             };
-
-            console.log('사용자 인증된 상태임.');
             res.render('team_profile_edit.ejs', user_context);
         }
 
@@ -974,7 +812,6 @@ module.exports = function(router, passport, upload) {
                         'profile_img': profile_photo,
                         'event_data': eventData
                     };
-                    console.dir(eventData);
                     res.render('chat_room_chat.ejs', user_context);
                 });
             });
@@ -1029,7 +866,6 @@ module.exports = function(router, passport, upload) {
                 for (var i = 0; i < result.length; i++) {
                     data['otherProfile'] = result[i]._doc.profile_img;
                 }
-                console.log('otherProfile : ' + data.otherProfile);
 
                 if (!req.user) {
                     console.log('사용자 인증 안된 상태임.');
@@ -1059,8 +895,6 @@ module.exports = function(router, passport, upload) {
                         'profile_img': profile_photo,
                         'event_data': data
                     };
-                    console.log('profile_img : ' + user_context.profile_img);
-                    console.dir(data);
                     res.render('chat.ejs', user_context);
                 }
             });
@@ -1080,7 +914,6 @@ module.exports = function(router, passport, upload) {
         // application number 찾아서 삭제해야 함
         dbm.ApplicationModel.update({application_number:application_number}, {$set: {match:0}}, function (err) {
                 if(err) throw err;
-                console.log('application db match:1->0 update');
             }
         )
 
@@ -1155,7 +988,6 @@ module.exports = function(router, passport, upload) {
                             'match_success' : result[i]._doc.match_success
                         };
                         eventData[j++] = data;
-                        console.log(data);
                     }
                 }
 
@@ -1183,7 +1015,6 @@ module.exports = function(router, passport, upload) {
                     'profile_img': profile_photo,
                     'event_data':eventData // 메시지 보낸 상대팀 정보
                 };
-                console.dir(eventData);
                 res.render('chat_room_message.ejs', user_context);
             });
         }
@@ -1196,19 +1027,15 @@ module.exports = function(router, passport, upload) {
 
         //나한테 신청한 사람 이메일
         var otherEmail = req.body.sEmail;
-        console.log('otherEmail : ' + req.body.sEmail);
 
         // 등록한 사람 나 : & 신청한 사람 : 그사람 중복되는 경우 index
         var sSameEmailIndex = req.body.sSameEmailIndex;
-        console.log('sSameEmailIndex : ' + req.body.sSameEmailIndex);
 
         var j = 0;
         var eventData = new Array();
 
         // 나한테 신청한 사람 이메일 받아온거로 matches에서 email 찾아서
         dbm.MatchModel.find({email: otherEmail}, function (err, result) {
-            console.log('result.length : ' + result.length);
-
             for (var i = 0; i < result.length; i++) {
 				// 그 사람이 올린 것 중 신청자가 나일 경우
                 if (result[i]._doc.others.sEmail === req.user.email) {
@@ -1335,18 +1162,14 @@ module.exports = function(router, passport, upload) {
 
         // 매칭 여부 (1: 승인 / 2: 거절 / 0: 대기);
         var match = req.body.match;
-        console.log('match : ' + match);
 
         // 매칭 신청한 애
         var otherEmail = req.body.sEmail;
-        console.log('otherEmail : ' + otherEmail);
 		
 		var otherTeamname = req.body.sTeamname;
-		console.log('otherTeamname : ' + otherTeamname);
 
         // 걔 동일 이메일 인덱스 있는지 확인
         var sSameEmailIndex = req.body.sSameEmailIndex;
-        console.log('sSameEmailIndex : ' + sSameEmailIndex);
 
         var eventData = new Array();
         var j = 0;
@@ -1511,15 +1334,12 @@ module.exports = function(router, passport, upload) {
         var flag = req.body.flag; // 신청한건지 받은건지 여부
         var add = req.body.add || req.body.add2;
         var add2 = req.body.add2;
-        console.log('body.add : ' + add);
-        console.log('body.add2 : ' + add2);
 
         if(add) {
             var add_array = [add.split(' ')[0], add.split(' ')[1]];
         }else {
             var add_array = undefined;
         }
-        console.log('add_array : ' + add_array);
 
         // 신청 받음 / others.sNofteam이 내꺼
         if (flag == 0) {
@@ -1541,16 +1361,11 @@ module.exports = function(router, passport, upload) {
             }
         }
 
-        console.log('1. update');
-        console.dir(update);
 
         if((update['others.sRegion']) && (update['others.sAdd'] == undefined)) {
             update['others.sAdd'] = '';
         }
 
-/*         if((!update['others.sAdd']) && (update['others.sRegion'])){		//도로명주소 없는 경우 지번 주소
-             update.add = req.body.add2 || req.query.add2;
-         }*/
 
         if(update['others.sEvent_date'] == undefined)
             delete update['others.sEvent_date'];
@@ -1570,12 +1385,6 @@ module.exports = function(router, passport, upload) {
                 delete update.nofteam;
         }
 
-        console.log('2. update');
-        console.dir(update);
-
-        console.log('update["others.sAdd"] : ');
-        console.dir(update['others.sAdd']);
-
         if(update['others.sAdd'] != null) {
             var addr = (update['others.sAdd']);
 
@@ -1587,14 +1396,12 @@ module.exports = function(router, passport, upload) {
         update['event_add'] = addr;
 
         var updateFunction = function () {
-            console.log('------updateFunction------');
             if(flag == 0) {
                 dbm.MatchModel.update({$and:[
                             {"email":otherEmail}, {"others.sEmail":email}, {"others.sEvent_date":preEvent_date}, {"others.sEvent_time":preEvent_time}
                         ]},
                     {$set : update}, function (err) {
                         if(err) throw err
-                        console.log("(flag=0)chatAppointment -> Match db updated")
                     });
                 // 신청함
             }else {
@@ -1603,14 +1410,12 @@ module.exports = function(router, passport, upload) {
                         ]},
                     {$set : update}, function (err) {
                         if(err) throw err
-                        console.log("(flag=1)chatAppointment -> Match db updated")
                     });
             }
             chatpostFunction();
         }
 
         var chatpostFunction = function () {
-            console.log('------chatpostFunction------');
             var data;
 
             dbm.MatchModel.find({"others.sApplicationNumber": application_number}, function (err, result) {
@@ -1649,9 +1454,6 @@ module.exports = function(router, passport, upload) {
                     }
                 }
 
-                console.log('data[\'event_add\'] : ');
-                console.dir(data['event_add']);
-
                 if(data['event_add'][0] != null) {
                     var addr = (data['event_add']);
 
@@ -1667,7 +1469,6 @@ module.exports = function(router, passport, upload) {
                     for (var i = 0; i < result.length; i++) {
                         data['otherProfile'] = result[i]._doc.profile_img;
                     }
-                    console.log('otherProfile : ' + data.otherProfile);
 
                     if (!req.user) {
                         console.log('사용자 인증 안된 상태임.');
@@ -1698,8 +1499,6 @@ module.exports = function(router, passport, upload) {
                             'profile_img': profile_photo,
                             'event_data': data
                         };
-                        console.log('profile_img : ' + user_context.profile_img);
-                        console.log(data);
                         res.render('chat.ejs', user_context);
                     }
                 });
@@ -1920,7 +1719,6 @@ module.exports = function(router, passport, upload) {
 
     router.route('/mainsearch').post(function(req, res){
         console.log('/mainsearch 패스 post 요청됨.');
-
 
         var event_search = {
             'email':req.user.email,
@@ -3168,7 +2966,6 @@ module.exports = function(router, passport, upload) {
 
     router.route('/matchapplication').post(function(req, res){
         console.log('/match_application 패스 post 요청됨.');
-
 
         var event = {
             'email': req.user.email,
