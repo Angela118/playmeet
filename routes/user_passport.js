@@ -914,6 +914,15 @@ module.exports = function(router, passport, upload) {
         // application number 찾아서 삭제해야 함
         dbm.ApplicationModel.update({application_number:application_number}, {$set: {match:0}}, function (err) {
                 if(err) throw err;
+			
+				
+				dbm.UserModel.find({email:otherEmail}, function(err, result){
+					if(err) throw err
+
+					var push_message = req.user.email + "팀과의 경기가 취소되었습니다.";
+					pushAlert.sendPushAlert(result[0]._doc.usertoken, push_message);
+					console.log('=== '+ otherEmail +' 에게 푸시 알람 ===');
+				});
             }
         )
 
@@ -930,20 +939,10 @@ module.exports = function(router, passport, upload) {
                     {$and:[
                             {"others.sEvent_date":event_date}, {"others.sEvent_time":event_time}
                         ]}
-                ]}, function(err, result1){
+                ]}, function(err){
                 if(err) throw err
 				
-				var receiver = result1[0]._doc.others.sEmail;
-				dbm.UserModel.find({email:receiver}, function(err, result){
-					if(err) throw err
-					
-					var push_message = "매칭이 취소되었습니다.";
-					pushAlert.sendPushAlert(result[0]._doc.usertoken, push_message);
-					console.log('=== send push alert ===');
-				});
-				
                 console.log('=== Match Deleted ===');
-
                 res.redirect('/chatroomchat');
             });
         }, 500);
