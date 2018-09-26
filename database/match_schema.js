@@ -21,7 +21,7 @@ Schema.createSchema = function(mongoose) {
         move : {type:String, 'default':''},
 		age: {type:Number, default:''},
 		gender:{type:String, default:2},
-		career_count: {type:Number, default:''},
+		team_talent: {type:Number, default:''},
 		career_year: {type:Number, default:''},
         nofteam : {type:String, 'default':''},
         created_month: {type: String, 'default': monthString},

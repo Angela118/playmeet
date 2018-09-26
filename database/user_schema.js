@@ -23,7 +23,7 @@ Schema.createSchema = function(mongoose) {
 		move: {type:String, 'default':''},
 		nofteam: {type:Number, 'default':''},
 		career_year: {type:Number, 'default':''},
-		career_count: {type:Number, 'default':''},
+		team_talent: {type:Number, 'default':''},
 		introteam: {type:String, default:''},
 		profile_img: {type:String, 'default':'profile_basic.png'},
 		img_flag: {type:Number, 'default':0},

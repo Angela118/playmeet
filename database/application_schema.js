@@ -19,7 +19,7 @@ Schema.createSchema = function(mongoose) {
 		email: {type: String, 'default':''},
 		teamname: {type: String, index: 'hashed', 'default':''},
 		career_year: {type:Number, 'default':''},
-		career_count: {type:Number, 'default':''},
+		team_talent: {type:Number, 'default':''},
 		add: [{type: String, 'default':''}],
 		region : {type:String, 'default':''},
 		move : {type:String, 'default':''},
