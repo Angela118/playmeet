@@ -74,6 +74,7 @@
             dd = Number(dd);
             var mm = today.getMonth()+1;
             mm = Number(mm);
+			var yyyy = today.getFullYear();
             var month = Number(matchMonth);
             var date = Number(matchDay);
             var dday = 0;
@@ -119,11 +120,12 @@
             </div>
         </div>
 		<script>
-            function clicked(email, teamname, add, region, move, age, gender, careerYear, careerCount, date, time, day, mention, createdMonth, createdDay, geoLng, geoLat, nofteam, application_number, index) {
+            function clicked(email, teamname, add, region, move, age, gender, careerYear, teamTalent, date, time, day, mention, createdMonth, createdDay, geoLng, geoLat, nofteam, application_number, index) {
                 var add_rep = add.replace(/\"/g, "");
                 add_rep = add_rep.replace(/\[/g, "");
                 add_rep = add_rep.replace(/\]/g, "");
                 add_rep = add_rep.replace(/\,/g, " ");
+								
                 document.getElementsByName('sEmail')[index].value = email;
                 document.getElementsByName('sTeamname')[index].value = teamname;
                 document.getElementsByName('sAdd0')[index].value = add_rep.split(' ')[0];
@@ -133,7 +135,7 @@
                 document.getElementsByName('sAge')[index].value = age;
                 document.getElementsByName('sGender')[index].value = gender;
                 document.getElementsByName('sCareerYear')[index].value = careerYear;
-                document.getElementsByName('sCareerCount')[index].value = careerCount;
+                document.getElementsByName('sCareerCount')[index].value = teamTalent;
                 document.getElementsByName('sDate')[index].value = date;
                 document.getElementsByName('sTime')[index].value = time;
                 document.getElementsByName('sDay')[index].value = day;
@@ -146,7 +148,7 @@
                 document.getElementsByName('sApplicationNumber')[index].value = application_number;
                 alert(teamname + '팀에게 매칭 신청하였습니다. 상대팀에서 수락하면 채팅방이 열리게 됩니다.')
             }
-            function modal_open_clicked(email, teamname, add, region, move, age, gender, careerYear, careerCount, date, time, day, mention, createdMonth, createdDay, geoLng, geoLat, nofteam, allRating, index) {
+            function modal_open_clicked(email, teamname, add, region, move, age, gender, careerYear, teamTalent, date, time, day, mention, createdMonth, createdDay, geoLng, geoLat, nofteam, allRating, index) {
                 if(gender == 25) {
                     gender = '무관'
                 }else if(gender == 50) {
@@ -163,6 +165,21 @@
                 add_rep = add_rep.replace(/\[/g, "");
                 add_rep = add_rep.replace(/\]/g, "");
                 add_rep = add_rep.replace(/\,/g, " ");
+				
+				careerYear = yyyy-careerYear;
+				
+				if(teamTalent == 10){
+					var curTalent = '최상';
+				}else if(teamTalent == 8){
+					var curTalent = '상';
+				}else if(teamTalent == 6){
+					var curTalent = '중';
+				}else if(teamTalent == 4){
+					var curTalent = '하';
+				}else if(teamTalent == 2){
+					var curTalent = '최하';
+				}
+				
                 // alert(region + email + city);
                 $("div[name=email]").eq(index).text('주장 이메일 : ' + email);
                 $("div[name=teamname]").eq(index).text('팀명: ' + teamname + '팀');
@@ -172,7 +189,7 @@
                 $("div[name=age]").eq(index).text('연령대 : ' + age +'대');
                 $("div[name=gender]").eq(index).text('성별 : ' + gender);
                 $("div[name=careerYear]").eq(index).text('경기 경력(년수) : ' + careerYear + '년');
-                $("div[name=careerCount]").eq(index).text('경기 경력(횟수) : ' + careerCount + '번');
+                $("div[name=careerCount]").eq(index).text('경기 실력 : ' + curTalent);
                 $("div[name=date]").eq(index).text('날짜 : ' + date);
                 $("div[name=time]").eq(index).text('시간 : ' + time + '시');
                 $("div[name=day]").eq(index).text('요일 : ' + day + '요일');
@@ -216,7 +233,7 @@
                         '<%= event_data[i].age %>',
                         '<%= event_data[i].gender %>',
                         '<%= event_data[i].career_year %>',
-                        '<%= event_data[i].career_count %>',
+                        '<%= event_data[i].team_talent %>',
                         '<%= event_data[i].event_date %>',
                         '<%= event_data[i].event_time %>',
                         '<%= event_data[i].event_day %>',
@@ -272,7 +289,7 @@
                                     '<%= event_data[i].age %>',
                                     '<%= event_data[i].gender %>',
                                     '<%= event_data[i].career_year %>',
-                                    '<%= event_data[i].career_count %>',
+                                    '<%= event_data[i].team_talent %>',
                                     '<%= event_data[i].event_date %>',
                                     '<%= event_data[i].event_time %>',
                                     '<%= event_data[i].event_day %>',
