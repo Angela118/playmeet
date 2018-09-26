@@ -110,7 +110,7 @@ module.exports = function(router, passport, upload) {
             var fs = require('fs');
 
             const Json2csvParser = require('json2csv').Parser;
-            const fields = ['email', 'age', 'gender', 'nofteam', 'career_year', 'career_count', 'geoLng', 'geoLat', 'allRating', 'perRating',/*여기까지*/ 'teamname', 'region', 'add', 'move', 'event_date', 'event_time', 'event_day', 'event_day', 'mention', 'created_month', 'created_day', 'application_number', 'eventYear_forExpire', 'eventMonth_forExpire', 'eventDate_forExpire'];
+            const fields = ['email', 'age', 'gender', 'nofteam', 'career_year' /*'career_count'*/, 'team_talent', 'geoLng', 'geoLat', 'allRating', 'perRating',/*여기까지*/ 'teamname', 'region', 'add', 'move', 'event_date', 'event_time', 'event_day', 'event_day', 'mention', 'created_month', 'created_day', 'application_number', 'eventYear_forExpire', 'eventMonth_forExpire', 'eventDate_forExpire'];
 
             const eventData = [];
 
@@ -119,8 +119,8 @@ module.exports = function(router, passport, upload) {
                 'age':req.user.age,
                 'gender':req.user.gender,
                 'nofteam':req.user.nofteam,
-                'career_year':req.user.career_year,
-                'career_count':req.user.career_count,
+                'career_year':yyyy-req.user.career_year,
+                'team_talent':req.user.team_talent,
                 'geoLng':req.user.geoLng,
                 'geoLat':req.user.geoLat,
 				'allRating':5.00,
@@ -135,8 +135,8 @@ module.exports = function(router, passport, upload) {
                     var data = {
                         'email' : result[i]._doc.email,
                         'teamname' : result[i]._doc.teamname,
-                        'career_year' : result[i]._doc.career_year,
-                        'career_count' : result[i]._doc.career_count,
+                        'career_year' : yyyy-result[i]._doc.career_year,
+                        'team_talent' : result[i]._doc.team_talent,
                         'region' : result[i]._doc.region,
                         'add' : result[i]._doc.add,
                         'move' : result[i]._doc.move,
@@ -329,8 +329,8 @@ module.exports = function(router, passport, upload) {
                         'add':req.user.add,
                         'move':req.user.move,
                         'nofteam':req.user.nofteam,
-                        'career_year':req.user.career_year,
-                        'career_count':req.user.career_count,
+                        'career_year':yyyy-req.user.career_year,
+                        'team_talent':req.user.team_talent,
                         'introteam':req.user.introteam,
                         'profile_img':profile_photo,
                         'event_data':output
@@ -377,8 +377,8 @@ module.exports = function(router, passport, upload) {
             'gender': req.user.gender,
             'age': req.user.age,
             'nofteam': req.user.nofteam,
-            'career_year': req.user.career_year,
-            'career_count': req.user.career_count,
+            'career_year': yyyy-req.user.career_year,
+            'team_talent': req.user.team_talent,
             'introteam': req.user.introteam,
             'profile_img': profile_photo,
             'others':others
@@ -467,8 +467,8 @@ module.exports = function(router, passport, upload) {
                 'age':req.user.age,
                 'move':req.user.move,
                 'nofteam':req.user.nofteam,
-                'career_year':req.user.career_year,
-                'career_count':req.user.career_count,
+                'career_year':yyyy-req.user.career_year,
+                'team_talent':req.user.team_talent,
                 'introteam':req.user.introteam,
                 'profile_img':profile_photo
             };
@@ -568,8 +568,8 @@ module.exports = function(router, passport, upload) {
                 'add':req.user.add,
                 'move':req.user.move,
                 'nofteam':req.user.nofteam,
-                'career_year':req.user.career_year,
-                'career_count':req.user.career_count,
+                'career_year':yyyy-req.user.career_year,
+                'team_talent':req.user.team_talent,
                 'introteam':req.user.introteam,
                 'profile_img':profile_photo
             };
@@ -608,7 +608,7 @@ module.exports = function(router, passport, upload) {
                 'move':req.user.move,
                 'nofteam':req.user.nofteam,
                 'career_year':req.user.career_year,
-                'career_count':req.user.career_count,
+                'team_talent':req.user.team_talent,
                 'introteam':req.user.introteam,
                 'profile_img':profile_photo
             };
@@ -642,7 +642,7 @@ module.exports = function(router, passport, upload) {
             'move':req.user.move,
             'nofteam':req.user.nofteam,
             'career_year':req.user.career_year,
-            'career_count':req.user.career_count,
+            'team_talent':req.user.team_talent,
             'introteam':req.user.introteam,
             'profile_img':profile_photo
         };
@@ -683,8 +683,8 @@ module.exports = function(router, passport, upload) {
         if(req.body.career_year || req.query.career_year){
             user_context.career_year = req.body.career_year || req.query.career_year;
         }
-        if(req.body.career_count || req.query.career_count){
-            user_context.career_count = req.body.career_count || req.query.career_count;
+        if(req.body.team_talent || req.query.team_talent){
+            user_context.team_talent = req.body.team_talent || req.query.team_talent;
         }
         if(req.body.introteam || req.query.introteam){
             user_context.introteam = req.body.introteam || req.query.introteam;
@@ -806,8 +806,8 @@ module.exports = function(router, passport, upload) {
                         'region': req.user.region,
                         'move': req.user.move,
                         'nofteam': req.user.nofteam,
-                        'career_year': req.user.career_year,
-                        'career_count': req.user.career_count,
+                        'career_year':yyyy-req.user.career_year,
+                        'team_talent': req.user.team_talent,
                         'introteam': req.user.introteam,
                         'profile_img': profile_photo,
                         'event_data': eventData
@@ -889,8 +889,8 @@ module.exports = function(router, passport, upload) {
                         'region': req.user.region,
                         'move': req.user.move,
                         'nofteam': req.user.nofteam,
-                        'career_year': req.user.career_year,
-                        'career_count': req.user.career_count,
+                        'career_year': yyyy-req.user.career_year,
+                        'team_talent': req.user.team_talent,
                         'introteam': req.user.introteam,
                         'profile_img': profile_photo,
                         'event_data': data
@@ -1008,8 +1008,8 @@ module.exports = function(router, passport, upload) {
                     'region': req.user.region,
                     'move': req.user.move,
                     'nofteam': req.user.nofteam,
-                    'career_year': req.user.career_year,
-                    'career_count': req.user.career_count,
+                    'career_year': yyyy-req.user.career_year,
+                    'team_talent': req.user.team_talent,
                     'introteam': req.user.introteam,
                     'profile_img': profile_photo,
                     'event_data':eventData // 메시지 보낸 상대팀 정보
@@ -1043,8 +1043,8 @@ module.exports = function(router, passport, upload) {
                     var data = {
                         'email': result[i]._doc.email,
                         'teamname': result[i]._doc.teamname,
-                        'career_year': result[i]._doc.career_year,
-                        'career_count': result[i]._doc.career_count,
+                        'career_year': yyyy-result[i]._doc.career_year,
+                        'team_talent': result[i]._doc.team_talent,
                         'add': result[i]._doc.add,
                         'region': result[i]._doc.region,
                         'move': result[i]._doc.move,
@@ -1124,8 +1124,8 @@ module.exports = function(router, passport, upload) {
                         'region': req.user.region,
                         'move': req.user.move,
                         'nofteam': req.user.nofteam,
-                        'career_year': req.user.career_year,
-                        'career_count': req.user.career_count,
+                        'career_year': yyyy-req.user.career_year,
+                        'team_talent': req.user.team_talent,
                         'introteam': req.user.introteam,
                         'profile_img': profile_photo,
                         'event_data': eventData,
@@ -1143,8 +1143,8 @@ module.exports = function(router, passport, upload) {
                     'region': req.user.region,
                     'move': req.user.move,
                     'nofteam': req.user.nofteam,
-                    'career_year': req.user.career_year,
-                    'career_count': req.user.career_count,
+                    'career_year': yyyy-req.user.career_year,
+                    'team_talent': req.user.team_talent,
                     'introteam': req.user.introteam,
                     'profile_img': profile_photo,
                     'event_data': eventData,
@@ -1309,8 +1309,8 @@ module.exports = function(router, passport, upload) {
                     'add': req.user.add,
                     'move': req.user.move,
                     'nofteam': req.user.nofteam,
-                    'career_year': req.user.career_year,
-                    'career_count': req.user.career_count,
+                    'career_year':yyyy-req.user.career_year,
+                    'team_talent': req.user.team_talent,
                     'introteam': req.user.introteam,
                     'profile_img': profile_photo,
                     'event_data': data
@@ -1492,8 +1492,8 @@ module.exports = function(router, passport, upload) {
                             'region': req.user.region,
                             'move': req.user.move,
                             'nofteam': req.user.nofteam,
-                            'career_year': req.user.career_year,
-                            'career_count': req.user.career_count,
+                            'career_year': yyyy-req.user.career_year,
+                            'team_talent': req.user.team_talent,
                             'introteam': req.user.introteam,
                             'profile_img': profile_photo,
                             'event_data': data
@@ -1601,8 +1601,8 @@ module.exports = function(router, passport, upload) {
                                    'region': req.user.region,
                                    'move': req.user.move,
                                    'nofteam': req.user.nofteam,
-                                   'career_year': req.user.career_year,
-                                   'career_count': req.user.career_count,
+                                   'career_year': yyyy-req.user.career_year,
+                                   'team_talent': req.user.team_talent,
                                    'introteam': req.user.introteam,
                                    'profile_img': profile_photo,
                                    'event_data': data
@@ -1705,8 +1705,8 @@ module.exports = function(router, passport, upload) {
                 'add':req.user.add,
                 'move':req.user.move,
                 'nofteam':req.user.nofteam,
-                'career_year':req.user.career_year,
-                'career_count':req.user.career_count,
+                'career_year':yyyy-req.user.career_year,
+                'team_talent':req.user.team_talent,
                 'introteam':req.user.introteam,
                 'profile_img':profile_photo
             };
@@ -1824,8 +1824,8 @@ module.exports = function(router, passport, upload) {
                         var data = {
                             'email': result[i]._doc.email,
                             'teamname': result[i]._doc.teamname,
-                            'career_year': result[i]._doc.career_year,
-                            'career_count': result[i]._doc.career_count,
+                            'career_year': yyyy-result[i]._doc.career_year,
+                            'team_talent': result[i]._doc.team_talent,
                             'region': result[i]._doc.region,
                             'add': [result[i]._doc.add[0], result[i]._doc.add[1]],
                             'move': result[i]._doc.move,
@@ -1909,8 +1909,8 @@ module.exports = function(router, passport, upload) {
                                 'add': req.user.add,
                                 'move': req.user.move,
                                 'nofteam': req.user.nofteam,
-                                'career_year': req.user.career_year,
-                                'career_count': req.user.career_count,
+                                'career_year': yyyy-req.user.career_year,
+                                'team_talent': req.user.team_talent,
                                 'introteam': req.user.introteam,
                                 'profile_img': profile_photo,
                                 'event_data': eventData
@@ -1931,8 +1931,8 @@ module.exports = function(router, passport, upload) {
                             'add': req.user.add,
                             'move': req.user.move,
                             'nofteam': req.user.nofteam,
-                            'career_year': req.user.career_year,
-                            'career_count': req.user.career_count,
+                            'career_year': yyyy-req.user.career_year,
+                            'team_talent': req.user.team_talent,
                             'introteam': req.user.introteam,
                             'profile_img': profile_photo,
                             'event_data': eventData
@@ -1984,8 +1984,8 @@ module.exports = function(router, passport, upload) {
             'gender': req.user.gender,
             'age': req.user.age,
             'nofteam': req.user.nofteam,
-            'career_year': req.user.career_year,
-            'career_count': req.user.career_count,
+            'career_year': yyyy-req.user.career_year,
+            'team_talent': req.user.team_talent,
             'introteam': req.user.introteam,
             'profile_img': profile_photo,
             'others':others
@@ -2161,8 +2161,8 @@ module.exports = function(router, passport, upload) {
                                 eventData[a]["otherMove"] = result[i]._doc.move;
                                 eventData[a]["otherAge"] = result[i]._doc.age;
                                 eventData[a]["otherGender"] = result[i]._doc.gender;
-                                eventData[a]["otherCareerYear"] = result[i]._doc.career_year;
-                                eventData[a]["otherCareerCount"] = result[i]._doc.career_count;
+                                eventData[a]["otherCareerYear"] = yyyy-result[i]._doc.career_year;
+                                eventData[a]["otherCareerCount"] = result[i]._doc.team_talent;
                                 eventData[a]["otherNofteam"] = result[i]._doc.nofteam;
                             }
 
@@ -2294,8 +2294,8 @@ module.exports = function(router, passport, upload) {
                             'gender': req.user.gender,
                             'age': req.user.age,
                             'nofteam': req.user.nofteam,
-                            'career_year': req.user.career_year,
-                            'career_count': req.user.career_count,
+                            'career_year': yyyy-req.user.career_year,
+                            'team_talent': req.user.team_talent,
                             'introteam': req.user.introteam,
                             'profile_img': profile_photo,
                             'event_data':eventData,
@@ -2326,8 +2326,8 @@ module.exports = function(router, passport, upload) {
                             'gender': req.user.gender,
                             'age': req.user.age,
                             'nofteam': req.user.nofteam,
-                            'career_year': req.user.career_year,
-                            'career_count': req.user.career_count,
+                            'career_year': yyyy-req.user.career_year,
+                            'team_talent': req.user.team_talent,
                             'introteam': req.user.introteam,
                             'profile_img': profile_photo,
                             'event_data':eventData,
@@ -2511,8 +2511,8 @@ module.exports = function(router, passport, upload) {
                                 eventData[a]["otherMove"] = result[i]._doc.move;
                                 eventData[a]["otherAge"] = result[i]._doc.age;
                                 eventData[a]["otherGender"] = result[i]._doc.gender;
-                                eventData[a]["otherCareerYear"] = result[i]._doc.career_year;
-                                eventData[a]["otherCareerCount"] = result[i]._doc.career_count;
+                                eventData[a]["otherCareerYear"] = yyyy-result[i]._doc.career_year;
+                                eventData[a]["otherCareerCount"] = result[i]._doc.team_talent;
                                 eventData[a]["otherNofteam"] = result[i]._doc.nofteam;
                             }
 
@@ -2614,8 +2614,8 @@ module.exports = function(router, passport, upload) {
                                     'gender': req.user.gender,
                                     'age': req.user.age,
                                     'nofteam': req.user.nofteam,
-                                    'career_year': req.user.career_year,
-                                    'career_count': req.user.career_count,
+                                    'career_year': yyyy-req.user.career_year,
+                                    'team_talent': req.user.team_talent,
                                     'introteam': req.user.introteam,
                                     'profile_img': profile_photo,
                                     'event_data':eventData,
@@ -2646,8 +2646,8 @@ module.exports = function(router, passport, upload) {
                             'gender': req.user.gender,
                             'age': req.user.age,
                             'nofteam': req.user.nofteam,
-                            'career_year': req.user.career_year,
-                            'career_count': req.user.career_count,
+                            'career_year': yyyy-req.user.career_year,
+                            'team_talent': req.user.team_talent,
                             'introteam': req.user.introteam,
                             'profile_img': profile_photo,
                             'event_data':eventData,
@@ -2778,8 +2778,8 @@ module.exports = function(router, passport, upload) {
                 'gender': req.user.gender,
                 'age': req.user.age,
                 'nofteam': req.user.nofteam,
-                'career_year': req.user.career_year,
-                'career_count': req.user.career_count,
+                'career_year': yyyy-req.user.career_year,
+                'team_talent': req.user.team_talent,
                 'introteam': req.user.introteam,
                 'profile_img': profile_photo,
                 'event_data':eventData
@@ -2913,8 +2913,8 @@ module.exports = function(router, passport, upload) {
                         'region': req.user.region,
                         'move': req.user.move,
                         'nofteam': req.user.nofteam,
-                        'career_year': req.user.career_year,
-                        'career_count': req.user.career_count,
+                        'career_year': yyyy-req.user.career_year,
+                        'team_talent': req.user.team_talent,
                         'introteam': req.user.introteam,
                         'profile_img': profile_photo,
                         'event_data': eventData
@@ -2953,8 +2953,8 @@ module.exports = function(router, passport, upload) {
                 'region':req.user.region,
                 'move':req.user.move,
                 'nofteam':req.user.nofteam,
-                'career_year':req.user.career_year,
-                'career_count':req.user.career_count,
+                'career_year':yyyy-req.user.career_year,
+                'team_talent':req.user.team_talent,
                 'introteam':req.user.introteam,
                 'profile_img':profile_photo
             };
@@ -2969,8 +2969,8 @@ module.exports = function(router, passport, upload) {
         var event = {
             'email': req.user.email,
             'teamname': req.user.teamname,
-            'career_year':req.user.career_year,
-            'career_count':req.user.career_count,
+            'career_year':yyyy-req.user.career_year,
+            'team_talent':req.user.team_talent,
             'region': req.body.region || req.query.region,
             'add':req.body.add ||req.query.add,
             'place' : req.body.place || req.query.place,
@@ -3049,8 +3049,8 @@ module.exports = function(router, passport, upload) {
                     var data = {
                         'email' : result[i]._doc.email,
                         'teamname' : result[i]._doc.teamname,
-                        'career_year' : result[i]._doc.career_year,
-                        'career_count' : result[i]._doc.career_count,
+                        'career_year' : yyyy-result[i]._doc.career_year,
+                        'team_talent' : result[i]._doc.team_talent,
                         'region' : result[i]._doc.region,
                         'add' : result[i]._doc.add,
                         'move' : result[i]._doc.move,
@@ -3080,8 +3080,8 @@ module.exports = function(router, passport, upload) {
                     'add':req.user.add,
                     'move':req.user.move,
                     'nofteam':req.user.nofteam,
-                    'career_year':req.user.career_year,
-                    'career_count':req.user.career_count,
+                    'career_year':yyyy-req.user.career_year,
+                    'team_talent':req.user.team_talent,
                     'introteam':req.user.introteam,
                     'profile_img':profile_photo,
                     'event_data':eventData
@@ -3151,8 +3151,8 @@ module.exports = function(router, passport, upload) {
                     var data = {
                         'email' : result[i]._doc.email,
                         'teamname' : result[i]._doc.teamname,
-                        'career_year' : result[i]._doc.career_year,
-                        'career_count' : result[i]._doc.career_count,
+                        'career_year' : yyyy-result[i]._doc.career_year,
+                        'team_talent' : result[i]._doc.team_talent,
                         'region' : result[i]._doc.region,
                         'add' : result[i]._doc.add,
                         'move' : result[i]._doc.move,
@@ -3184,8 +3184,8 @@ module.exports = function(router, passport, upload) {
                     'add':req.user.add,
                     'move':req.user.move,
                     'nofteam':req.user.nofteam,
-                    'career_year':req.user.career_year,
-                    'career_count':req.user.career_count,
+                    'career_year':yyyy-req.user.career_year,
+                    'team_talent':req.user.team_talent,
                     'introteam':req.user.introteam,
                     'profile_img':profile_photo,
                     'event_data':eventData
@@ -3299,8 +3299,8 @@ module.exports = function(router, passport, upload) {
                 'add':req.user.add,
                 'move':req.user.move,
                 'nofteam':req.user.nofteam,
-                'career_year':req.user.career_year,
-                'career_count':req.user.career_count,
+                'career_year':yyyy-req.user.career_year,
+                'team_talent':req.user.team_talent,
                 'introteam':req.user.introteam,
                 'profile_img':profile_photo
             };
