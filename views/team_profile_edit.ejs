@@ -46,6 +46,18 @@
                     }else if(move == 50){
                         var curMove = 'X';
                     }
+			
+					if(team_talent == 10){
+						var curTalent = '최상';
+					}else if(team_talent == 8){
+						var curTalent = '상';
+					}else if(team_talent == 6){
+						var curTalent = '중';
+					}else if(team_talent == 4){
+						var curTalent = '하';
+					}else if(team_talent == 2){
+						var curTalent = '최하';
+					}
             %>
 
             <div class="mb-3"> <!--아이디-->
@@ -214,11 +226,15 @@
             </div>
 
             <div class="mb-3">
-                <label for="">여태까지 경기 횟수</label>
-                <div class="enter">
-                    <input type="text" class="form-control one" name="career_count" id="career_count" placeholder="<%= career_count %>" onkeydown='return onlyNumber(event)' onkeyup='removeChar(event)' style='ime-mode:disabled;' required>
-                <div class="two">번</div>
-                </div>
+                <label for="team_talent">팀의 실력</label>
+                    <select class="custom-select d-block w-100" name="team_talent" id="" required>
+                        <option value="" disabled selected hidden><%= curTalent %></option>
+                        <option value="10">최상</option>
+                        <option value="8">상</option>
+                  		<option value="6">중</option>
+						<option value="4">하</option>
+                        <option value="2">최하</option>
+                    </select>
             </div>
 
             <div class="mb-3">

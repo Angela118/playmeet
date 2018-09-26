@@ -17,20 +17,20 @@
 
     <script src="../js/jquery.js"></script>
     <script src="../js/bootstrap.bundle.min.js"></script>
-	
+   
     <script>
         function goBack(){
             window.history.back();
         }
     </script>
     
-	 <style>
-		.map_wrap {position:relative;width:100%;height:350px;}
-		.title {font-weight:bold;display:block;}
-		.hAddr {position:absolute;left:10px;top:10px;border-radius: 2px;background:#fff;background:rgba(255,255,255,0.8);z-index:1;padding:5px;}
-		#centerAddr {display:block;margin-top:2px;font-weight: normal;}
-		.bAddr {padding:5px;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
-	</style>
+    <style>
+      .map_wrap {position:relative;width:100%;height:350px;}
+      .title {font-weight:bold;display:block;}
+      .hAddr {position:absolute;left:10px;top:10px;border-radius: 2px;background:#fff;background:rgba(255,255,255,0.8);z-index:1;padding:5px;}
+      #centerAddr {display:block;margin-top:2px;font-weight: normal;}
+      .bAddr {padding:5px;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
+   </style>
 
 <!--숫자만 입력-->
 <script>
@@ -50,13 +50,13 @@
         else
             event.target.value = event.target.value.replace(/[^0-9]/g, "");
     }
-</script>	
+</script>   
 </head>
 <body class="coloring">
 <nav class="navbar">
     <div class="top">
         <img src="../img/left-arrow.png" height="20rem" onclick="goBack();">
-		<a href="/"><img src="../img/update_playmeet3.jpg" height="50rem" style="margin-right:-1rem;"></a>
+      <a href="/"><img src="../img/update_playmeet3.jpg" height="50rem" style="margin-right:-1rem;"></a>
         <div class="sets" style="visibility:hidden;">
             <a href="/chatroomchat"><img src="../img/update_chat.png" class="menu_img" height="20rem" style="margin-right: .3rem;"></a>
             <img src="../img/update_menu.png" height="20rem" class="navbar-toggler" data-toggle="collapse" data-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
@@ -67,8 +67,8 @@
 <div class="container">    
     <div class="reco">
         <h5 class="mb-3" style="font-weight: bold">기본 정보</h5>
-		
-		  <form class="" action="/teamsignup" method="post">
+      
+        <form class="" action="/teamsignup" method="post">
               <div class="mb-3">
                 <label for="user-name">팀 이름</label>
                 <input type="text" class="form-control" name="teamname" id="user-name" placeholder="" value="" required>
@@ -99,7 +99,7 @@
                     <option value="" disabled selected hidden>Choose...</option>
                     <option value="75">혼성</option>
                     <option value="100">여자</option>
-          			<option value="50">남자</option>
+                   <option value="50">남자</option>
                 </select>
             </div>
 
@@ -108,22 +108,22 @@
                 <select class="custom-select d-block w-100" name="age" id="" required>
                     <option value="" disabled selected hidden>Choose...</option>
                     <option value="10">10대</option>
-					<option value="20">20대</option>
-					<option value="30">30대</option>
-					<option value="40">40대</option>
-					<option value="50">50대</option>
-					<option value="60">60대</option>
-					<option value="70">70대</option>
+               <option value="20">20대</option>
+               <option value="30">30대</option>
+               <option value="40">40대</option>
+               <option value="50">50대</option>
+               <option value="60">60대</option>
+               <option value="70">70대</option>
                     <option value="80">80대 이상</option>
                 </select>
             </div>
 
-			  
-			  
-			  <div class="mb-3">
-                <label for="region">주 경기 장소</label>	
-				<br>	
-					<input placeholder="숙명여자대학교" id="keyword" size="15"> 
+           
+           
+           <div class="mb-3">
+                <label for="region">주 경기 장소</label>   
+            <br>   
+               <input placeholder="숙명여자대학교" id="keyword" size="15"> 
                     <input type="button" onclick="searchPlaces()" value="검색하기" style="color:white; background-color:#7473ff; border-color:white; margin-left: .5rem;">            
 
                     <input type="hidden" name="resultLat" id="resultLat" placeholder="위도" class="form-control" readonly/ > 
@@ -132,7 +132,7 @@
                     <input name="add" id="add" class="form-control" style="background-color: transparent; color:white; border:none; border-bottom: 1px dotted white; font-size:0.8rem;" readonly/>
                     <input name="add2" id="add2" class="form-control" style="background-color: transparent; color:white; border:none; border-bottom: 1px dotted white; font-size:0.8rem; margin-bottom: .5rem;" readonly/>
 
-                    <div id="map" style="width:145%;height:300px; margin-left: -6rem; border-radius:15px;"></div>
+                    <div id="map" style="width:100%;height:300px; border-radius:15px;"></div>
 
                     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=df8f5565b51994aa9c71d2128dcdfec5&libraries=services"></script>
                     <script>
@@ -217,12 +217,12 @@
                         }
                     }
                     </script>
-				</div>
-			  
-			  
-			  
+            </div>
+           
+           
+           
 
-            <div class="mb-3">				
+            <div class="mb-3">            
                 <label for="move">원정 가능 유무</label>
                 <select class="custom-select d-block w-100" name="move" id="" required>
                     <option value="" disabled selected hidden>Choose...</option>
@@ -239,17 +239,22 @@
             </div>
 
             <div class="mb-3">
-                <label for="career_year">경기 경력</label>
+                <label for="career_year">팀을 결성한 년도</label>
                 <div class="enter">
                     <input type="text" class="form-control one" name="career_year" id="career_year" placeholder="숫자 입력" onkeydown='return onlyNumber(event)' onkeyup='removeChar(event)' style='ime-mode:disabled;' required><div class="two">년</div>
                 </div>
             </div>
 
             <div class="mb-3">
-                <label for="career_count">여태까지 경기 횟수</label>
-                <div class="enter">
-                    <input type="text" class="form-control one" name="career_count" id="career_count" placeholder="숫자 입력" onkeydown='return onlyNumber(event)' onkeyup='removeChar(event)' style='ime-mode:disabled;' required><div class="two">번</div>
-                </div>
+                <label for="team_talent">팀의 실력</label>
+                    <select class="custom-select d-block w-100" name="team_talent" id="" required>
+                        <option value="" disabled selected hidden>Choose...</option>
+                        <option value="10">최상</option>
+                        <option value="8">상</option>
+                  		<option value="6">중</option>
+						<option value="4">하</option>
+                        <option value="2">최하</option>
+                    </select>
             </div>
 
             <div class="mb-3">
@@ -257,7 +262,7 @@
                 <textarea class="form-control" name="introteam" rows="5" placeholder="100자 내로 입력"></textarea>
             </div>
 
-			  <a href="/uploadimg"><button class="btn btn-block" type="submit">팀 가입 완료</button></a>
+           <a href="/uploadimg"><button class="btn btn-block" type="submit">팀 가입 완료</button></a>
         </form>
     </div>
 </div>
