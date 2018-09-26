@@ -24,7 +24,7 @@ module.exports = new LocalStrategy({
 	var move = req.body.move || req.query.move;
 	var nofteam = req.body.nofteam || req.query.nofteam;
 	var career_year = req.body.career_year || req.query.career_year;
-	var career_count = req.body.career_count || req.query.career_count;
+	var team_talent = req.body.team_talent || req.query.team_talent;
 	var introteam = req.body.introteam || req.query.introteam;
 	var profile_img = "profile_basic.png";
 	var img_flag = 0;
@@ -75,7 +75,7 @@ module.exports = new LocalStrategy({
 					'move':move,
 					'nofteam':nofteam,
 					'career_year':career_year,
-					'career_count':career_count,
+					'team_talent':team_talent,
 					'introteam':introteam,
 					'profile_img':profile_img,
 					'img_flag':img_flag,
