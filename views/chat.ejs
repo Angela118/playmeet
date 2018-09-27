@@ -27,7 +27,7 @@
             login();
         });
         function connect(){
-            var host = '192.168.29.233';  // 아이피 바꾸기!!!!!!
+            var host = '192.168.0.105';  // 아이피 바꾸기!!!!!!
             $('#hostInput').val(); //203.153.146.124
             var port = 3000;  // $('#portInput').val();
             //서버에 접속
@@ -168,7 +168,7 @@
 <nav class="navbar">
     <div class="top" style="padding: .5rem;">        
         <img src="../img/left-arrow.png" height="20rem" onclick="location.href='/chatroomchat'">
-        <div style="color:white; margin-left: -4rem;"><%= event_data.otherTeamname %>팀과의 채팅방</div>
+        <div style="color:white; margin-left: -4rem;"> <%= event_data.otherTeamname %> 팀과의 채팅방</div>
         
         <div class="sets">
             <a href="/chatroomchat"><img src="../img/update_chat.png" class="menu_img" height="20rem" style="margin-right: .3rem; visibility:hidden;"></a>
@@ -255,7 +255,7 @@
         var recipient = '<%= event_data.otherEmail %>';
         var application_number = '<%=event_data.application_number%>';
         function cancel() {
-            var data = '매칭을 취소하였습니다.'
+            var data = '매칭 신청을 취소 하였습니다.'
             var chattype = $('#chattype option:selected').val();
             var message = {
                 email:email,
