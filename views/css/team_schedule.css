@@ -163,3 +163,7 @@ h3 {padding: 0; margin: 0;}
         margin:0;
     }
 }
+
+.fc-scroller{
+    overflow: visible !important;
+}

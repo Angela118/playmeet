@@ -19,9 +19,9 @@
 
     <div class="collapse navbar-collapse" id="navbarsExample01">
         <div class="mypage">
-            <img src="../profile_img/<%= profile_img %>" id="profile_pic" style="width:3.5rem; height: 3.5rem">
-            <div id="name" style="font-weight: bold; margin-right: 2rem; color:#292941;"><%= teamname %> 팀</div>
-            <div style="display: flex; flex-direction: row; align-items: center; background-color: #7473ff;">
+            <div><img src="../profile_img/<%= profile_img %>" id="profile_pic" style="width:3.5rem; height: 3.5rem;"></div>
+            <div id="name" style="font-weight: bold; color:#292941;"><%= teamname %> 팀</div>
+            <div style="display: flex; flex-direction: row; align-items: center; background-color: #7473ff; float:right;">
                 <a href="/teamprofile"><button class="btn" type="submit" style="background-color: transparent; color: white; font-size: .8rem; font-weight: bold;">내 정보</button></a>
                 <a href="/logout"><button class="btn" type="submit" style="background-color: transparent; color: white; font-size: .8rem; font-weight: bold;">로그아웃</button></a>
             </div>

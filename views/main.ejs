@@ -41,7 +41,10 @@
 			
         </div>
 		
-		<% if(event_data[0] == null) { %>
+		
+		
+        <div class="list mb-3">
+            <% if(event_data[0] == null) { %>
         <p style="font-weight: bold">등록된 매칭이 없습니다.</p>
         <%} else{ %>
 		
@@ -77,15 +80,18 @@
 			var yyyy = today.getFullYear();
             var month = Number(matchMonth); //매칭날짜의 달
             var date = Number(matchDay);
-            
+                
+            /* 여기 오늘날짜=디데이 일때 에러나는듯,,,,*/
             var dday = new Date(yyyy, month-1, date);
             var gap = dday.getTime() - today.getTime();
-            if(gap == 0){
+            if(dday === today){
                 var D_day = "DAY";
-            } else if (gap > 0){
+            } else if (dday > today){
                 var D_day = Math.floor((gap)/(1000*60*60*24))+1;
-            } else
+            } else if(dday < today){
+                alert(gap);
                 var D_day = "X";
+            }
             
 			if(curGender == 75) {
                 curGender = '무관';
@@ -101,8 +107,6 @@
 				curMove = 'X';
 			}
         %>
-		
-        <div class="list mb-3">
             <div class="list_item">
                 <div class="list_divide">
                     <div class="list_item_teamname"><%= curTeamname %></div>
@@ -229,7 +233,7 @@
             <input type="hidden" name="sApplicationNumber" id="sApplicationNumber" value=''>
             <div style="text-align: center">
                 
-                <button type="button" class="btn" style="display: block; color:white; text-align:center; margin-left:Auto;margin-right:auto; background-color:#7473ff;" name="modal_open_button" onclick="modal_open_clicked(
+                <button type="button" class="btn" style="display: block; color:white; text-align:center; margin-left:auto;margin-right:auto; background-color:#7473ff; margin-bottom:2rem;" name="modal_open_button" onclick="modal_open_clicked(
                         '<%= event_data[i].email %>',
                         '<%= event_data[i].teamname %>',
                         '<%= event_data[i].add %>',
@@ -309,12 +313,12 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> 
         </form>
-    </div>
+    </div>  
+<%}%>
+<%}%>
 </div>
-<%}%>
-<%}%>
 
 </body>
 </html>

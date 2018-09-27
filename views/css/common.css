@@ -2,10 +2,15 @@ html{
   height: 100%;
 }
 
+/*@font-face { font-family: 'YunGothic'; src: url('./fonts/SeoulNamsanEB.otf') format('truetype'); }*/
+
+@font-face { font-family: 'YunGothic'; src: url('./fonts/YunGothic.ttf') format('truetype'); }
+
 body{
   height: 100%;
   background-color: #292941;  
-    font-family: 'Nanum Gothic', sans-serif;
+    /*font-family: 'Nanum Gothic', sans-serif;*/
+  font-family: 'YunGothic' !important;
 }
 
 .menu_img {
@@ -49,8 +54,8 @@ a{color:white;text-decoration:none;-webkit-text-decoration-skip:objects}a:hover{
 
 .mypage{
   display: flex;
-  width: 100%;
-  flex-wrap: wrap;
+  width: 100% !important;
+  flex-wrap: wrap !important;
   align-items: center;
     margin-top: .5rem;
   padding: .3rem;

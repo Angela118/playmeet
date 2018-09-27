@@ -29,12 +29,12 @@
 <% include ./navbar %>    
 <div class="container">
     <div class="reco" style="margin-top:0;1">
-        <h5 class="mb-3" style="font-weight: bold; border-bottom: 1px solid white; padding-bottom: .5rem;">기본 정보</h5>
+        <h5 class="mb-3" style="font-weight: bold; border-bottom: 1px solid white; padding-bottom: .5rem;">My Page</h5>
         <form class="needs-validation" action="/teamprofileedit" method="post" novalidate>
 			
             
             <%
-                    if(gender == 25) {
+                    if(gender == 75) {
                         var curGender = '무관';
                     }else if(gender == 50) {
                         var curGender = '남자';
@@ -46,25 +46,37 @@
                     }else if(move == 50){
                         var curMove = 'X';
                     }
+			
+					if(team_talent == 10){
+						var curTalent = '최상';
+					}else if(team_talent == 8){
+						var curTalent = '상';
+					}else if(team_talent == 6){
+						var curTalent = '중';
+					}else if(team_talent == 4){
+						var curTalent = '하';
+					}else if(team_talent == 2){
+						var curTalent = '최하';
+					}
             %>
 
-            <div class="mb-3"> <!--아이디-->
-                <label for="user-ID">아이디</label>
-					<div class="change" type="email" name="email" id=email style="text-align:left;"><p> <%= email %></p></div>
+            <div class="mb-3" style="display:flex;"> <!--아이디-->
+                <label for="user-ID" style="float:left; width:30%;">아이디</label>
+					<div type="email" name="email" id=email class="noborder"><p> <%= email %></p></div>
             </div>
          
-			<div class="mb-3">
-                <label for="user-name">팀 이름</label> <!--이름-->
-                <input type="text" class="form-control" name="teamname" id="user-name" placeholder="<%= teamname %>" value="" required>
+			<div class="mb-3" style="display:flex;">
+                <label for="user-name" style="float:left; width:30%;">팀 이름</label> <!--이름-->
+                <input type="text" class="form-control noborder" name="teamname" id="user-name" placeholder="<%= teamname %>" value="" required>
                 <div class="invalid-feedback">
                     Valid name is required.
                 </div>
             </div>
          
 
-            <div class="mb-3">
-                <label for="user-gender">성별</label>
-                <select class="custom-select d-block w-100" name="gender" id="user-gender" required>
+            <div class="mb-3" style="display:flex;">
+                <label for="user-gender" style="float:left; width:30%;">성별</label>
+                <select class="noborder custom-select d-block w-100" name="gender" id="user-gender" required>
                     <option value="" disabled selected hidden><%= curGender %></option>
                     <option value="25">혼성</option>
                     <option value="100">여자</option>
@@ -72,9 +84,9 @@
                 </select>
             </div>
 
-            <div class="mb-3">
-                <label for="">평균 연령</label>
-                <select class="custom-select d-block w-100" name="age" id="age" required>
+            <div class="mb-3" style="display:flex;">
+                <label for="" style="float:left; width:30%;">평균 연령</label>
+                <select class="noborder custom-select d-block w-100" name="age" id="age" required>
                     <option value="" disabled selected hidden><%= age %></option>
                     <option value="10">10대</option>
 					<option value="20">20대</option>
@@ -91,8 +103,8 @@
              <div class="mb-3">
                 <label for="region">주 경기 장소</label>	
 				<br>
-                 <input placeholder="숙명여자대학교" id="keyword" size="15"> 
-                    <input type="button" onclick="searchPlaces()" value="검색하기">            
+                    <input placeholder="<%= region %>" id="keyword" size="30"> 
+                    <input type="button" onclick="searchPlaces()" value="검색하기" style="color:grey; background-color:#292941; border:none;">            
 
                     <input type="hidden" name="resultLat" id="resultLat" placeholder="위도" class="form-control" readonly/ > 
                     <input type="hidden" name="resultLng" id="resultLng" placeholder="경도" class="form-control" readonly/ >
@@ -115,7 +127,7 @@
                     var map = new daum.maps.Map(mapContainer, mapOption); 
                     // 장소 검색 객체를 생성합니다
                     var ps = new daum.maps.services.Places(); 
-                     ps.keywordSearch('숙명여자대학교', placesSearchCB); 
+                     ps.keywordSearch('<%= region %>', placesSearchCB); 
                     // 키워드로 장소를 검색합니다
                     //searchPlaces();
                     // 키워드 검색을 요청하는 함수입니다
@@ -188,37 +200,35 @@
 				</div>
 			
 
-            <div class="mb-3">
-                <label for="">원정 가능 유무</label>
-                <select class="custom-select d-block w-100" name="move" id="move" required>
+            <div class="mb-3" style="display:flex;">
+                <label for="" style="float:left; width:30%;">원정 가능 유무</label>
+                <select class="noborder custom-select d-block w-100" name="move" id="move" required>
                     <option value="" disabled selected hidden><%= curMove %></option>
                     <option value="100">O</option>
                     <option value="50">X</option>
                 </select>
             </div>
 
-            <div class="mb-3">
-                <label for="">팀원 수</label>
-                <div class="enter">
-                    <input type="text" class="form-control one" name="nofteam" id="nofteam" placeholder="<%= nofteam %>"onkeydown='return onlyNumber(event)' onkeyup='removeChar(event)' style='ime-mode:disabled;' required>
-                    <div class="two">명</div>
-                </div>
+            <div class="mb-3" style="display:flex;">
+                <label for="" style="float:left; width:30%;">팀원 수(명)</label>
+                    <input type="text" class="noborder form-control one" name="nofteam" id="nofteam" placeholder="<%= nofteam %>"onkeydown='return onlyNumber(event)' onkeyup='removeChar(event)' style='ime-mode:disabled;' required>
             </div>
 
-            <div class="mb-3">
-                <label for="">경기 경력</label>
-                <div class="enter">
-                    <input type="text" class="form-control one" name="career_year" id="career_year" placeholder="<%= career_year %>" onkeydown='return onlyNumber(event)' onkeyup='removeChar(event)' style='ime-mode:disabled;' required>
-                <div class="two">년</div>
-                </div>
+            <div class="mb-3" style="display:flex;">
+                <label for="" style="float:left; width:30%;">팀을 결성한 년도</label>
+                    <input type="text" class="noborder form-control one" name="career_year" id="career_year" placeholder="<%= career_year %>" onkeydown='return onlyNumber(event)' onkeyup='removeChar(event)' style='ime-mode:disabled;' required>
             </div>
 
-            <div class="mb-3">
-                <label for="">여태까지 경기 횟수</label>
-                <div class="enter">
-                    <input type="text" class="form-control one" name="career_count" id="career_count" placeholder="<%= career_count %>" onkeydown='return onlyNumber(event)' onkeyup='removeChar(event)' style='ime-mode:disabled;' required>
-                <div class="two">번</div>
-                </div>
+            <div class="mb-3" style="display:flex;">
+                <label for="team_talent" style="float:left; width:30%;">팀의 실력</label>
+                    <select class="noborder custom-select d-block w-100" name="team_talent" id="" required>
+                        <option value="" disabled selected hidden><%= curTalent %></option>
+                        <option value="10">최상</option>
+                        <option value="8">상</option>
+                  		<option value="6">중</option>
+						<option value="4">하</option>
+                        <option value="2">최하</option>
+                    </select>
             </div>
 
             <div class="mb-3">
@@ -227,7 +237,7 @@
             </div>
 
             <hr class="mb-4">
-         <a href="/profileeditok"><button class="btn logout_btn" type="submit" style="width:100%;">회원정보 수정 완료<br>(다시 로그인해야합니다)</button></a>
+         <a href="/profileeditok"><button class="btn btn-block" style="color:white; text-align:center; margin-left:Auto;margin-right:auto;margin-top:2rem; background-color:#7473ff;">회원정보 수정완료<br>(다시 로그인해야합니다)</button></a>
         </form>
     </div>
 </div>
