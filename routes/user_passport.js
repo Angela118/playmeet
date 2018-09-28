@@ -75,7 +75,7 @@ module.exports = function(router, passport, upload) {
 		console.log(userstoken);
 		
 
-        res.write("OK");
+  //      res.write("OK");
         res.end();
 		
     });
@@ -414,12 +414,36 @@ module.exports = function(router, passport, upload) {
     // 로그인 화면
     router.route('/login').get(function(req, res) {
         console.log('/login 패스 get 요청됨.');
-        res.render('login.ejs', {message: req.flash('loginMessage')});
+		var session = require('express-session');		
+
+		let exsession = req.session.passport;
+
+		if(exsession){
+			console.log('등록된 session 있음');
+			
+			res.redirect('/');
+			
+		}else{
+			console.log('등록된 session 없음');
+			res.render('login.ejs',{message: req.flash('loginMessage')});
+		}
+		
+		/*
+		if(exsession){
+			console.log('등록된 session 있음');
+			let session = req.session.passport;
+			console.log(session.user);
+			
+			res.render('login.ejs', {session:session});
+		}else{
+			console.log('등록된 session 없음');
+			res.render('login.ejs',{message: req.flash('loginMessage')});
+		}
+		*/
     });
 
-
     // 로그인 인증
-    router.route('/login').post(passport.authenticate('local-login', {		
+    router.route('/login').post(passport.authenticate('local-login',{
         successRedirect : '/',
         failureRedirect : '/login',
         failureFlash : true
@@ -438,6 +462,7 @@ module.exports = function(router, passport, upload) {
         failureRedirect : '/teamsignup',
         failureFlash : true
     }));
+	
 
 
     // 프로필 사진
@@ -3314,7 +3339,8 @@ module.exports = function(router, passport, upload) {
     router.route('/logout').get(function(req, res) {
         console.log('/logout 패스 get 요청됨.');
         profile_photo = null;
-        req.logout();
+		req.session.destroy();
+   //     req.logout();
         res.redirect('/login');
     });
 
