@@ -174,16 +174,25 @@ app.use(cookieParser());
 
 // 세션 설정
 
+var mongoose = require('mongoose');
+
+mongoose.connect(config.db_url);
+
 app.use(expressSession({
 
     secret:'my key',
 
-    resave:true,
+    resave:false,
 
     saveUninitialized:true
+	
+//	cookie: {
+//		maxAge: 24000 * 60 * 60 // 쿠키 유효기간 24시간
+//	}
+	
+//	store:require('mongoose-session')(mongoose)
 
 }));
-
 
 
 //===== cors 초기화 =====//
