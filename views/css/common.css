@@ -1,16 +1,12 @@
 html{
   height: 100%;
 }
-
-/*@font-face { font-family: 'YunGothic'; src: url('./fonts/SeoulNamsanEB.otf') format('truetype'); }*/
-
-@font-face { font-family: 'YunGothic'; src: url('./fonts/YunGothic.ttf') format('truetype'); }
-
+@import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
 body{
   height: 100%;
   background-color: #292941;  
-    /*font-family: 'Nanum Gothic', sans-serif;*/
-  font-family: 'YunGothic' !important;
+    font-family: 'Nanum Gothic', sans-serif;
+    font-style: normal;
 }
 
 .menu_img {
@@ -23,7 +19,7 @@ body{
 
 .navbar{
   justify-content:space-between;
-  width: 100% !important;
+  width: 100%;
   position:fixed;
     background-color: #292941;
     z-index: 2;
@@ -32,7 +28,7 @@ body{
 .top{
   display:flex;
   justify-content: space-between;
-  width: 100% !important;
+  width: 100%;
   align-items: center;
     background-color: #292941;
     margin-top: 3px;
@@ -53,23 +49,22 @@ a{color:white;text-decoration:none;-webkit-text-decoration-skip:objects}a:hover{
 }
 
 .mypage{
-  display: flex;
-  width: 100% !important;
-  flex-wrap: wrap !important;
-  align-items: center;
+  width: 100%;
+    display: flex;
+  flex-wrap: wrap;
     margin-top: .5rem;
   padding: .3rem;
-  justify-content: space-between;
     background-color: #7473ff;
 }
 
-.name{
+#name{
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  width: 6rem;
+  width: 100%;
+    margin-left:1rem;
   font-weight: bold;
-  text-align: center;
+    padding:.5rem;
 }
 .img_div{
   overflow:hidden;
@@ -103,7 +98,7 @@ a{color:white;text-decoration:none;-webkit-text-decoration-skip:objects}a:hover{
 }
 .reco {
     color: white;
-    margin-top: 1rem;
+    margin-top: 0;
 }
 
 #load {

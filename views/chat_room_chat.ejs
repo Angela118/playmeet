@@ -100,7 +100,7 @@
         <!--event_data.others는 선택된 (내가 올렸던) 경기 날짜 & 시간 등 들어있음 -->
         
         <% if(event_data.length == 0){ %>
-            <p style="font-weight: bold">진행중인 매칭이 없습니다.</p>
+            <p style="font-weight: bold; margin-left:2rem;">진행중인 매칭이 없습니다.</p>
         <%}else{
         var count = 0; // 띄워지는 값 count
         for(var i = 0; i < event_data.length; i++) {

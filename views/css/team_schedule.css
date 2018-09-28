@@ -1,3 +1,41 @@
+/* 달력 속성 important로 */
+.fc-day-grid-container {
+    height: 100% !important;
+}
+
+.fc th, .fc td {
+    border: none !important;
+    vertical-align: middle !important;
+}
+
+.fc-head {
+    font-size: .7rem !important;
+}
+.fc-body {
+    font-size: .7rem !important;
+}
+
+.fc-day-number {
+    float: none !important;
+    color: #7473ff;
+}
+
+.fc-left {
+    float: right !important;
+    position: relative !important;
+    left: -50% !important;
+}
+.fc-left > h2 {
+    color: #7473ff;
+    font-size: 1.7rem !important;
+    padding-bottom: .5rem !important;
+    
+    float: left !important;
+    position: relative !important;
+    left: 50% !important;
+}
+
+
 /*schedule---------------------------------------------------*/
 .navbar {
     position: relative;
@@ -8,6 +46,7 @@
     display:flex;
     justify-content: space-around;
     align-items:center;
+    margin: 0 1rem;
 }
 
 .match-teams-row{
@@ -35,12 +74,16 @@
 }
 
 .score_input_form{
+    margin-left: 0 1rem;
     display:flex;
+}
+.score_input {
+    width: 70%;
 }
 
 .score{
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
     width: 8rem;
     margin-left: 1rem;
@@ -79,13 +122,18 @@
     /*max-width: 75%;*/
     /*margin: 1rem auto;*/
 }
+
+.img_div {
+    height: 4rem !important;
+    width: 4rem !important;
+}
+
 h3 {padding: 0; margin: 0;}
 
 
 .date {
     width: 17%;
     float: left;
-    margin-top: 1rem;
 }
 
 .date h3 {
@@ -108,6 +156,7 @@ h3 {padding: 0; margin: 0;}
 .events-detail {
     max-width: 550px;
     margin-bottom: 1.2rem;
+    padding: .3rem !important;
 }
 
 /*.events-detail li{
@@ -136,8 +185,8 @@ h3 {padding: 0; margin: 0;}
 
 .event-location {
     font-size: .8em;
-    color: tomato;
-    margin-left: 70px;
+    color:#D2D0DE;
+    float: right;
 }
 
 
@@ -145,25 +194,20 @@ h3 {padding: 0; margin: 0;}
 @media all and (max-width: 641px) {
     .date {
         width: 100%;
-        border-bottom: 1px solid #ccc;
-        margin-top: 1rem;
+        padding-bottom: .3rem;
+        border-bottom: 1px solid #7473ff;
     }
 
     .events {
         border:none;
         width: 100%;
         margin-top: 0;
+        padding-top: 0;
     }
 
     .events-detail {
-        padding: 0;
+        margin-top: 0;
+        padding: .3rem;
     }
 
-    .date p {
-        margin:0;
-    }
-}
-
-.fc-scroller{
-    overflow: visible !important;
 }

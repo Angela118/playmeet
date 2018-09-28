@@ -27,37 +27,38 @@
     text-align: center;
 }
 
-.img_div{
-    overflow:hidden;
-    height: 6rem;
-    width: 6rem;
-    border-radius: 50%;
-    display: block;
-    margin: 0 auto;
-}
-
 #profile_img {
     max-height: 100%;
     position:relative;
     margin: 0 auto;
 }
 
+
 .filebox label { display: inline-block; padding: .5em .75em; color: #999; font-size: inherit; line-height: normal; vertical-align: middle; background-color: #fdfdfd; cursor: pointer; border: 1px solid #ebebeb; border-bottom-color: #e2e2e2; border-radius: .25em; } .filebox input[type="file"] { /* 파일 필드 숨기기 */ position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip:rect(0,0,0,0); border: 0; }
 
-
-.bordering {
-    display: block;
-    width: 70% !important;
-    float: right;
-    border: 1px solid #7473ff;
-    padding: .3rem;
+.change {
+   font-size: 1em;
+   font-weight: bold;
     text-align: center;
 }
 
-.noborder {
-    display: block;
-    width: 70% !important;
-    float: right;
-    padding: .3rem;
+.logout_btn {
+    display:block;
     text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2rem;
+    background-color: #7473ff;
+    color:white;
+}
+
+.enter {
+    display: flex;
+    width: 100%;
+}
+.one two {
+    display: block;
+}
+.two {
+    padding-left: 0.3em;
 }

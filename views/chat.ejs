@@ -27,7 +27,7 @@
             login();
         });
         function connect(){
-            var host = '10.100.26.130';  // 아이피 바꾸기!!!!!!
+            var host = '192.168.1.89';  // 아이피 바꾸기!!!!!!
             $('#hostInput').val(); //203.153.146.124
             var port = 3000;  // $('#portInput').val();
             //서버에 접속
@@ -320,19 +320,19 @@
     %>
 
     <h4 style="font-size:1.2rem; text-align:center;"> 경기 정보 </h4>
-    <div style="width:40%; float:left;">경기 날짜</div> 
+    <div style="width:40%; float:left; color:#D2D0DE;">경기 날짜</div> 
     <div style="width:60%; float:right;"> : <%=event_data.event_date%></div>
     
-    <div style="width:40%; float:left;">경기 시간 </div> 
+    <div style="width:40%; float:left; color:#D2D0DE;">경기 시간 </div> 
     <div style="width:60%; float:right;">: <%=time%></div>
     
-    <div style="display:inline-block;"><div style="width:40%; float:left;">경기 장소 </div> 
+    <div style="display:inline-block;"><div style="width:40%; float:left; color:#D2D0DE;">경기 장소 </div> 
     <div style="width:60%; float:right;">: <%=event_data.event_add[0]%> <%=event_data.event_add[1]%> <%=event_data.event_region%></div></div>
     
-    <div style="width:40%; float:left;">상대팀 경기 인원 </div> 
+    <div style="width:40%; float:left; color:#D2D0DE;">상대팀 경기 인원 </div> 
     <div style="width:60%; float:right;">: <%=event_data.other_nofteam%>명</div>
     
-    <div style="width:40%; float:left;">우리팀 경기 인원</div> 
+    <div style="width:40%; float:left; color:#D2D0DE;">우리팀 경기 인원</div> 
     <div style="width:60%; float:right;">: <%=event_data.nofteam%>명</div>
     
     <p style="font-size: 0.9rem; margin-bottom: 0;">(상대방이 업데이트 한 정보는 새로고침해야 확인 가능합니다.)</p>

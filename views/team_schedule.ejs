@@ -215,7 +215,7 @@
 					<div class= "events">
 				<div class="events-detail">
 					<div onclick="javascript:doShow()" class="event_content">
-                        <span class="event-time" style="background-color: #7473ff; color:white; padding: .3rem;"><%= curTime %> 시</span>
+                        <span class="event-time" style="color:#9933dd; padding: .3rem; font-size:1.2rem;"><%= curTime %> 시</span>
                         <span class="event-name" style="margin-left:1rem;"><%=curTeamname%>팀과의 경기</span>
 						<br>
 						<span class="event-location"><%= curRegion %></span>
@@ -223,9 +223,9 @@
 				</div>
 				<div class="score_content">
 					<div class="match-teams mb-3">
-						<div class="match-team">
-							<div class="img_div" style="margin-left: 0rem; margin-right: 0; margin-bottom: 0.3rem"><img class="profile_img" src="../profile_img/<%= profile_img %>" id="profile_pic"/></div>
-							<button class="btn btn-sm" style="color:black"><%= teamname %>팀</button>
+						<div class="match-team" style="margin-left:auto; margin-right:auto;">
+							<div class="img_div" style="margin-left: auto; margin-right: auto; margin-bottom: 0.3rem"><img class="profile_img" src="../profile_img/<%= profile_img %>" id="profile_pic"/></div>
+							<button class="btn btn-sm" style="color:white; background-color:transparent;"><%= teamname %>팀</button>
 						</div>
 						<div class="score">
 							<h3 id="team-1-score" class="match-team" style="font-weight: bold"><%=score%></h3>
@@ -233,8 +233,8 @@
 							<h3 id="team-2-score" class="match-team" style="font-weight: bold"><%=curScore%></h3>
 						</div>
 						<div class="match-team">
-							<div class="img_div" style="margin-left: 0rem; margin-right: 0; margin-bottom: 0.3rem"><img class="profile_img" src="../profile_img/<%= curProfileImg %>" id="profile_pic"/></div>
-							<button class="btn btn-sm" style="color:black" onclick="team_inform_clicked(
+							<div class="img_div" style="margin-left: auto; margin-right: auto; margin-bottom: 0.3rem"><img class="profile_img" src="../profile_img/<%= curProfileImg %>" id="profile_pic"/></div>
+							<button class="btn btn-sm" style="color:white; background-color:transparent;" onclick="team_inform_clicked(
 									'<%= curEmail %>',
 									'<%= curTeamname %>',
 									'<%= event_data[i].otherRealAdd %>',
@@ -251,10 +251,7 @@
 						</div>
 					</div>
 					<div class = "schedule-detail">
-						<p class="schedule-detail-content">
-							<span class="bold">인원수 | </span>
-							<span><%= teamname%>팀 : <%= nofteam %>명 / <span><%=curTeamname%>팀 : <%=curNofteam%>명</span></span>
-						</p>
+						<!-- 인원수 빼버림 -->
 						<script>
                             function clicked(callTeamEmail, receiveTeamEmail, event_date, event_time, count) {
                                 alert('callTeamEmail : ' + callTeamEmail + ', receiveTeamEmail : ' + receiveTeamEmail + ', event_date : ' + event_date + ', event_time : ' + event_time + ', count : ' + count);
@@ -265,14 +262,14 @@
                                 document.getElementsByName('formPost')[count].submit();
                             }
                             function reviewClicked(callTeamEmail, receiveTeamEmail, eventDate, eventTime, count) {
-                                alert('callTeamEmail : ' + callTeamEmail + ', receiveTeamEmail : ' + receiveTeamEmail + ', event_date : ' + eventDate + ', eventTime : ' + eventTime + ', count : ' + count);
+                                /*alert('callTeamEmail : ' + callTeamEmail + ', receiveTeamEmail : ' + receiveTeamEmail + ', event_date : ' + eventDate + ', eventTime : ' + eventTime + ', count : ' + count);*/
                                 var reviewedTeamEmail;
                                 if(callTeamEmail === '<%=email%>') {
                                     reviewedTeamEmail = receiveTeamEmail;
                                 }else {
                                     reviewedTeamEmail = callTeamEmail;
                                 }
-                                alert('reviewedTeamEmail : ' + reviewedTeamEmail +  ', eventDate : ' + eventDate + ', eventTime : ' + eventTime + ', count : ' + count);
+                                /*alert('reviewedTeamEmail : ' + reviewedTeamEmail +  ', eventDate : ' + eventDate + ', eventTime : ' + eventTime + ', count : ' + count);*/
                                 document.getElementsByName('reviewedTeamEmail')[count].value = reviewedTeamEmail;
                                 document.getElementsByName('eventDate')[count].value = eventDate;
                                 document.getElementsByName('eventTime')[count].value = eventTime;
@@ -355,15 +352,15 @@
 							<input type="hidden" name="event_time" id="event_time" value=''>
 							<div class="schedule-detail-content" >
 								<div class="score_input_form">
-									<span class="bold" style="margin-top: .3rem">스코어 입력 | &nbsp;</span>
+									<span class="bold" style="margin-top: .3rem; width:30%;">스코어 입력 &nbsp;  | </span>
 									<div class="score_input">
-										<div class="form-group"  style="display: flex; align-items: center">
-											<%= teamname %>팀 : &nbsp;
-											<input type="text" class="form-control" style="height:1.8rem" placeholder="<%=score%>" name="firstScore" value=''>
+										<div class="form-group"  style="display: flex; align-items: center; width: 100%;">
+											<div style="width:50%;"> <%= teamname %>팀 : </div>
+											<input type="text" class="form-control" style="height:1.8rem" placeholder="<%=score%>" name="firstScore" value='' style="width:50%; text-align:center;">
 										</div>
-										<div class="form-group"  style="display: flex; align-items: center">
-											<%= curTeamname %>팀 : &nbsp;
-											<input type="text" class="form-control" style="height:1.8rem" placeholder="<%=curScore%>" name="secondScore" value=''>&nbsp;
+										<div class="form-group"  style="display: flex; align-items: center; width:100%;">
+											<div style="width:50%;"> <%= curTeamname %>팀 : </div>
+											<input type="text" class="form-control" style="height:1.8rem" placeholder="<%=curScore%>" name="secondScore" value='' style="width:50%; text-align:center;">&nbsp;
 											<%  var today = new Date();
 												var dd = today.getDate();
 												var mm = today.getMonth()+1; //January is 0!
@@ -386,11 +383,11 @@
 											%><button type="button" class="btn btn-sm" style="color:black">경기 후에 스코어 입력</button><%
 											}else{
 											%>
-											<button class="btn btn-sm" style="color:black" onclick="clicked( `<%=event_data[i].email%>`, `<%=event_data[i].otherEmail%>`, `<%=event_data[i].event_date%>`,`<%=event_data[i].event_time%>`, `<%=count%>`)">제출</button>
+											<button class="btn btn-sm" style="color:white; background-color:#292941; border:1px solid white; border-radius: 10px; margin-left:auto; margin-right:auto;" onclick="clicked( `<%=event_data[i].email%>`, `<%=event_data[i].otherEmail%>`, `<%=event_data[i].event_date%>`,`<%=event_data[i].event_time%>`, `<%=count%>`)">제출</button>
 											<%}%>
 										</div>
 									</div>
-								</div>
+                                </div>
 							</div>
 						</form>
 						<form action="/teamreview" method="get" name="formPost2">
@@ -404,9 +401,9 @@
 								}else{
 								%>
 									<%if(curReviewDate == 0) {%>
-									<button type="button" class="btn btn-block blueB" onclick="reviewClicked( `<%=event_data[i].email%>`, `<%=event_data[i].otherEmail%>`, `<%=event_data[i].event_date%>`,`<%=event_data[i].event_time%>`, `<%=count%>`)">상대팀 평가/채팅방 삭제하기</button>
+									<button type="button" class="btn btn-block" style="color:white; text-align:center; margin-left:auto;margin-right:auto;margin-top:2rem; margin-bottom:1.5rem; background-color:#7473ff;" onclick="reviewClicked( `<%=event_data[i].email%>`, `<%=event_data[i].otherEmail%>`, `<%=event_data[i].event_date%>`,`<%=event_data[i].event_time%>`, `<%=count%>`)">상대팀 평가/채팅방 삭제하기</button>
 									<%}else {%>
-									<button type="button" class="btn btn-block blueB">상대팀 평가 완료</button>
+									<button type="button" class="btn btn-block" style="color:white; text-align:center; margin-left:auto;margin-right:auto;margin-top:2rem; background-color:#7473ff;">상대팀 평가 완료</button>
 									<%}%>
 								<%}%>
 							</div>

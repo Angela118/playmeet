@@ -26,7 +26,7 @@
   <div class="reco">
 	  
 	 <% if(event_data[0] == null) { %>
-       <p style="font-weight: bold">등록된 매칭이 없습니다.</p>
+       <p style="font-weight: bold; margin-left:2rem; margin-top:1rem;">등록한 매칭이 없습니다.</p>
      <%} else{ %>
 	  
 		<% for(var i = 0; i < event_data.length; i++) {
@@ -57,11 +57,11 @@
 			curTime = '시간 무관';
 		}
 		%>
-    <div class="content mb-3"> <!--content-->
-      <div class="date">
-        <h3 style="font-weight: bold"><%= matchMonth %> / <%= matchDay %></h3>
+    <div class="content"> <!--content-->
+      <div class="date" style="padding:0 .5rem;">
+        <h3 style="font-weight: bold"><%= matchMonth %>/<%= matchDay %></h3>
       </div>
-      <div class= "events mb-3">
+      <div class= "events" style="padding: 0 .5rem; margin-bottom:1.5rem;">
         <div class="score_content">
           <div class = "schedule-detail">
             <p class="schedule-detail-content">
@@ -73,7 +73,7 @@
               <span><%= curRegion %></span>
             </p>
             <p class="schedule-detail-content">
-              <span class="bold">원정가능 유무 | </span>
+              <span class="bold">원정경기 | </span>
               <span><%= curMove %></span>
             </p>
             <p class="schedule-detail-content">
@@ -93,7 +93,7 @@
               <span><%= curTime %></span>
             </p>
             <p class="schedule-detail-content">
-              <span class="bold">기타 할 말 | </span>
+              <span class="bold">한마디 | </span>
               <span><%= curMention %></span>
             </p>
             <div>
@@ -104,8 +104,8 @@
 					<input type="hidden" name="event_region" id="event_region" class="form-control" value="<%= curRegion %>" readonly/>
 					<input type="hidden" name="event_application_number" id="event_application_number" class="form-control" value="<%= curApplicationNumber %>" readonly/>
 					
-					<a href="/matchapplicationedit"><button value="mod" class="btn btn-block blueB mt-3" onclick="href='/matchapplicationedit'" id="opt" name="opt" value="mod">수정하기</button></a>
-					<a href="/mymatch"><button class="btn btn-block blueB mt-3" onclick="alert('삭제되었습니다.')" id="opt" name="opt" value="del">삭제하기</button></a>
+					<a href="/matchapplicationedit"><button value="mod" class="btn btn-block" onclick="href='/matchapplicationedit'" id="opt" name="opt" value="mod" style="color:white; text-align:center; margin-left:auto;margin-right:auto;margin-top:1rem; background-color:#7473ff;">수정하기</button></a>
+					<a href="/mymatch"><button class="btn btn-block" onclick="alert('삭제되었습니다.')" id="opt" name="opt" value="del" style="color:white; text-align:center; margin-left:auto;margin-right:auto; margin-top:.5rem; background-color:#7473ff;">삭제하기</button></a>
 				</form>
             </div>
           </div>
