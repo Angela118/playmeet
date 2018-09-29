@@ -27,7 +27,7 @@
             login();
         });
         function connect(){
-            var host = '192.168.1.89';  // 아이피 바꾸기!!!!!!
+            var host = '10.100.42.160';  // 아이피 바꾸기!!!!!!
             $('#hostInput').val(); //203.153.146.124
             var port = 3000;  // $('#portInput').val();
             //서버에 접속
@@ -203,10 +203,10 @@
     <!-- The Modal -->
     <div class="modal" id="myModal">
         <div class="modal-dialog modal-dialog-centered modal-sm">
-            <div class="modal-content">
+            <div class="modal-content" style="background-color:#292941; color:white;">
                 <!--&lt;!&ndash; Modal body &ndash;&gt;-->
                 <div class="modal-body">
-                    <p style="color:black"></p>매칭을 중단하시겠습니까? 상대방과의 모든 매칭 정보가 삭제됩니다.
+                    <p>매칭을 중단하시겠습니까? 상대방과의 모든 매칭 정보가 삭제됩니다.</p>
                 </div>
 
                 <input type="hidden" name="otherEmail" value="<%= event_data.otherEmail%>">
@@ -216,8 +216,8 @@
 
                 <!--&lt;!&ndash; Modal footer &ndash;&gt;-->
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal" >닫기</button>
-                    <button type="button" class="btn" onclick="cancel()" data-dismiss="modal" data-toggle="collapse" data-target="#navbarsExample01" >매칭 중단</button>
+                    <button type="button" class="btn" data-dismiss="modal" style="background-color:transparent; color:white; border:1px solid white;">닫기</button>
+                    <button type="button" class="btn btn-danger" onclick="cancel()" data-dismiss="modal" data-toggle="collapse" data-target="#navbarsExample01" >매칭 중단</button>
                 </div>
 
             </div>
@@ -356,7 +356,7 @@
     <!-- The report Modal -->
     <div class="modal" id="reportModal">
         <div class="modal-dialog modal-dialog-centered modal-sm">
-            <div class="modal-content">
+            <div class="modal-content" style="background-color:#292941; color:white;">
                 <div class="modal-body" style="border-top:1px solid black">
                     관리자에게 신고할 내용을 입력<br>
                     신고할 팀 : <b><%=event_data.otherTeamname%>팀</b> <br>(id : <%=event_data.otherEmail%>)
@@ -365,8 +365,8 @@
                 <textarea name="report_content" id="" cols="7" rows="4" placeholder="여기 입력"></textarea>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal" >닫기</button>
-                    <button type="button" class="btn" onclick="report()" data-dismiss="modal" data-toggle="collapse" data-target="#navbarsExample01">제출</button>
+                    <button type="button" class="btn" data-dismiss="modal" style="background-color:transparent; color:white; border:1px solid white;">닫기</button>
+                    <button type="button" class="btn btn-danger" onclick="report()" data-dismiss="modal" data-toggle="collapse" data-target="#navbarsExample01">제출</button>
                 </div>
 
             </div>
