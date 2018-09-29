@@ -54,14 +54,16 @@
             <p>프로필 사진 등록</p> <!--프로필 사진-->
             <div class="profile_img_upload">
                 <div class="img_div mb-1"><img id="profile_img" src="../profile_img/<%= profile_img %>"></div>
-                <div class="filebox"> <label for="new_profile_img" style="background-color:#7473ff; color:white; border:none; opacity:0.8;">업로드</label> <input type="file" name="photo" id="new_profile_img" accept="image/*" capture="gallery"> </div>
+                <div class="filebox">
+                    <label for="new_profile_img" style="background-color:#7473ff; color:white; border:none;">업로드</label>
+                    <input type="file" name="photo" id="new_profile_img" accept="image/*" capture="filesystem">
+                </div>
             </div>
          </div>
       
-      
             <hr class="mb-4">
 
-         <a href="/"><button class="btn btn-block" style="color:white; text-align:center; margin-left:Auto;margin-right:auto;margin-top:2rem; background-color:#7473ff;">확인</button></a>
+         <a href="/"><button class="btn btn-block" type="submit" style="color:white; text-align:center; margin-left:Auto;margin-right:auto;margin-top:2rem; background-color:#7473ff;">확인</button></a>
       </form>
     </div>
 </body>

@@ -215,7 +215,7 @@
 					<div class= "events">
 				<div class="events-detail">
 					<div onclick="javascript:doShow()" class="event_content">
-                        <span class="event-time" style="color:#9933dd; padding: .3rem; font-size:1.2rem;"><%= curTime %> 시</span>
+                        <span class="event-time" style="color:burlywood; padding: .3rem; font-size:1.2rem;"><%= curTime %> 시</span>
                         <span class="event-name" style="margin-left:1rem;"><%=curTeamname%>팀과의 경기</span>
 						<br>
 						<span class="event-location"><%= curRegion %></span>
@@ -396,10 +396,10 @@
 							<input type="hidden" name="eventTime" id="eventTime" value=''>
 							<div>
 								 <!--경기날짜 전에 안되게 하려면 < 임-->
-								<%if(firstDate > secondDate){
-									%><button type="button" class="btn btn-block blueB">경기 후에 평가</button><%
-								}else{
-								%>
+								<%if(firstDate < secondDate){
+                           %><button type="button" class="btn btn-block" style="color:white; text-align:center; margin-left:auto;margin-right:auto;margin-top:1rem; margin-bottom:1.5rem; background-color:#7473ff;">경기 후에 평가</button><%
+                        }else{
+                        %>
 									<%if(curReviewDate == 0) {%>
 									<button type="button" class="btn btn-block" style="color:white; text-align:center; margin-left:auto;margin-right:auto;margin-top:2rem; margin-bottom:1.5rem; background-color:#7473ff;" onclick="reviewClicked( `<%=event_data[i].email%>`, `<%=event_data[i].otherEmail%>`, `<%=event_data[i].event_date%>`,`<%=event_data[i].event_time%>`, `<%=count%>`)">상대팀 평가/채팅방 삭제하기</button>
 									<%}else {%>
