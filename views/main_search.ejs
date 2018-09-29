@@ -37,19 +37,18 @@
 <div class="container">
 	<div class="reco">
 		<!--매칭 팀 찾기-->
-		<div class="search">
-			<div><img src="../img/soccer_30.png" style="margin-right: 1rem; vertical-align:baseline;"></div>
-			<div class="p_title">매칭팀 찾기</div>
-		</div>
+        <h5 class="mb-3" style="font-weight: bold; border-bottom: 1px solid white; padding-bottom: .5rem;">Search Match</h5>
+		
 
 		<form action="/mainsearch" method="post" class="search_team">
 			<div class="wrapper zero">
 				<label for="search_team" class="one">팀명</label>
-				<input type="text" class="search_team form-control two" name="search_team" value="none">
+				<input type="text" class="search_team form-control two boxing" name="search_team" value="none">
 			</div>
 			<div class="wrapper zero">
 				<label for="search_team" class="one">지역</label>
-				<select name="add" onchange="regionChange(this.selectedIndex);" class="form-control">
+                <div class="two" style="display:flex; width:100%;">
+				<select name="add" onchange="regionChange(this.selectedIndex);" class="form-control boxing">
 					<option value="none">지역무관</option>
 					<option>서울</option>
 					<option>부산</option>
@@ -69,13 +68,14 @@
 					<option>제주도</option>
 				</select>
 
-				<select name="add" class="form-control">
+				<select name="add" class="form-control boxing">
 					<option>상세 검색</option>
 				</select>
+                </div>
 			</div>
 			<div class="wrapper zero">
 				<label for="search_team" class="one">성별</label>
-				<select name="gender" class="form-control">
+				<select name="gender" class="form-control boxing">
 					<option value="0"> 성별 무관 </option>
 					<option value="100">여자</option>
 					<option value="50">남자</option>
@@ -84,7 +84,7 @@
 
 			<div class="wrapper zero">
 				<label for="search_team" class="one">나이</label>
-				<select name="age" class="form-control">
+				<select name="age" class="form-control boxing">
 					<option value="0"> 나이 무관 </option>
 					<option value="10">10대</option>
 					<option value="20">20대</option>
@@ -97,15 +97,15 @@
 				</select>
 			</div>
 
-			<div class="wrapper">
+			<div class="wrapper zero">
 				<label for="search_team" class="one">날짜</label>
-				<input type="date" id="theDate" name="event_date" class="form-control">
+				<input type="date" id="theDate" name="event_date" class="form-control boxing">
 			</div>
 
 
 			<div class="wrapper zero">
 				<label for="search_team" class="one">시간대</label>
-				<select name="event_time" class="form-control">
+				<select name="event_time" class="form-control boxing">
 					<option value="none">시간무관</option>
 					<option>00</option>
 					<option>01</option>
@@ -139,7 +139,7 @@
 
 			<div class="wrapper zero">
 				<label for="search_team" class="one">요일</label>
-				<select name="event_day" class="form-control">
+				<select name="event_day" class="form-control boxing">
 					<option value="none">요일무관</option>
 					<option>월</option>
 					<option>화</option>

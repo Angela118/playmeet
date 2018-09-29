@@ -164,15 +164,6 @@ select.custom-select option{
 
 
 /*main_search-------------------------------------------*/
-.search {
-    display: flex;
-    width: 100%;
-    margin-bottom: 1rem;
-}
-.p_title {
-    font-weight: bold;
-    font-size: 1.5rem;
-}
 
 .wrapper {
   margin-bottom:1rem;
@@ -190,6 +181,12 @@ select {
   width: 100%;
   height: 50px;
   text-align: center;
+}
+
+.boxing {
+    border: 2px solid #7473ff;
+    background-color:#292941;
+    color:white;
 }
 
 /*match_application_form-------------------------------------------*/

@@ -25,18 +25,11 @@
 <% include ./navbar %>
 <div class="container">
     <div class="reco">
-        <div class="search">
-            <div style="display: flex; align-items: center">
-                <img src="../img/soccer_30.png" alt="" style="margin-right: 1rem; padding-top: .55rem; padding-bottom: .55rem;">
-                <p class="logo whiteW">매칭팀 찾기</p>
-            </div>
-            
-            <a href="/mainsearch"><img src="../img/down_60.png" class="btn" width="60" style="float: right;"></a>
-        </div>
-        
-        <div style="display:flex; justify-content: space-between; align-items: center" class="mb-3">
-            <span style="font-weight: bold; font-size: 1.2rem">매칭신청 : 달력 클릭</span>
-            
+        <div class="search_match">
+            <a href="/mainsearch" style="background-color:#7473ff; width:100%;">
+                <div class="search_text">&nbsp; &nbsp; &nbsp; &nbsp; Search Match</div>
+                <div class="search_img"><img src="../img/update_findteam.png" height="25rem" style="padding:1px;"> &nbsp; </div>
+            </a>
             <script type="text/javascript">
                 jQuery(function() {
                     jQuery('#sort').change(function() {
@@ -44,13 +37,17 @@
                     });
                 });
             </script>
-
         </div>
+        
+        <!--<div style="display:flex; justify-content: space-between; align-items: center" class="mb-3">
+            <span style="font-weight: bold; font-size: 1.2rem">매칭신청 : 달력 클릭</span>->
+            <!-- 여기에 스크립트 있었음 (위로 올림) -->
+        <!--</div>-->
 
         <!---------------------------------->
 
         <% if(event_data.length == 0) { %>
-        <p style="font-weight: bold">등록된 매칭이 없습니다.</p>
+        <p style="font-weight: bold; margin-left:2rem;">등록된 매칭이 없습니다.</p>
         <%} else{ %>
         <% for(var i=0; i<event_data.length; i++){
             var curEmail = event_data[i].email;
@@ -68,7 +65,14 @@
             var matchYear = curDate.substring(0,4);
             var matchMonth = curDate.substring(5,7);
             var matchDay = curDate.substring(8,10);
-			
+            
+			var careerYear = event_data[i].career_year;
+            var teamTalent = event_data[i].team_talent;
+            var curTalent = "";
+            var today = new Date();
+            var yyyy = today.getFullYear();
+            careerYear = yyyy - careerYear;
+            
             if(curGender == 75) {
                 curGender = '무관';
             }else if(curGender == 50) {
@@ -81,19 +85,33 @@
             }else if(curMove == 50){
                 curMove = 'X';
             }
+            
+        if(teamTalent == 10){
+            curTalent = '최상';
+        }else if(teamTalent == 8){
+            curTalent = '상';
+        }else if(teamTalent == 6){
+            curTalent = '중';
+        }else if(teamTalent == 4){
+            curTalent = '하';
+        }else if(teamTalent == 2){
+            curTalent = '최하';
+        }
+            
         %>
         <div>
-            <div style="display: flex; justify-content: space-around; margin-left: 1rem; margin-right: 1rem">
+            <div style="display: flex; justify-content: space-around; margin-left: 1rem; margin-right: 1rem; margin-top:auto; margin-bottom:auto;">
                 <!--일정 달력-->
-                <div style="width: 8rem; height: 7rem; background-color: #f8f9fa;">
-                    <div style="width: 8rem; height: 2.5rem; background-color: black;">
-                        <p class="whiteW" style="text-align: center; font-size: 1.3rem; font-weight: bold; padding-top: .2rem;" ><%=curDay%></p>
+                <div style="width: 8rem; height: 7rem; margin-top:auto; margin-bottom:auto;">
+                    <div style="width: 8rem; height: 2.5rem;">
+                        <p style="text-align: center; font-size: 1.2rem; font-weight: bold; padding: .2rem 0;margin-bottom:0; background-color:#66668C;color:white;border-radius:15px 15px 0 0; height:100%;"><%=curDay%></p>
                     </div>
-                    <p style="text-align: center; font-size: 2.5rem; font-weight: bold"><%= matchMonth %>/<%= matchDay%></p>
+                        <p style="text-align: center; font-size: 2.3rem; font-weight: bold; color:black; background-color:white; padding:.5rem; border-radius:0 0 15px 15px;"><%= matchMonth %>/<%= matchDay%></p>
                 </div>
                 <!--팀 요약-->
-                <div style="">
-                    <p style="font-weight: bold; margin-bottom: 0"><%=curTeamname%> 팀</p>
+                <div style="margin-top:auto; margin-bottom:auto; display: block; vertical-align:middle; margin-left:.5rem; color:white;">
+                    <br>
+                    <p style="font-weight: bold; margin-bottom: 0;"><%=curTeamname%> 팀</p>
                     <p style="font-size: .7rem">
                         <span>지역 : <%=curAdd[0]%> <%=curAdd[1]%></span><br>
                         <span>성별 : <%= curGender %></span><br>
@@ -104,7 +122,7 @@
                     </p>
                 </div>
                 <script>
-                    function clicked(email, teamname, add, region, move, age, gender, careerYear, careerCount, date, time, day, mention, createdMonth, createdDay, geoLng, geoLat, nofteam, application_number, index) {
+                    function clicked(email, teamname, add, region, move, age, gender, careerYear, teamTalent, date, time, day, mention, createdMonth, createdDay, geoLng, geoLat, nofteam, application_number, index) {
                         document.getElementsByName('sEmail')[index].value = email;
                         document.getElementsByName('sTeamname')[index].value = teamname;
                         document.getElementsByName('sAdd0')[index].value = add.split(',')[0];
@@ -114,7 +132,7 @@
                         document.getElementsByName('sAge')[index].value = age;
                         document.getElementsByName('sGender')[index].value = gender;
                         document.getElementsByName('sCareerYear')[index].value = careerYear;
-                        document.getElementsByName('sCareerCount')[index].value = careerCount;
+                        document.getElementsByName('sCareerCount')[index].value = teamTalent;
                         document.getElementsByName('sDate')[index].value = date;
                         document.getElementsByName('sTime')[index].value = time;
                         document.getElementsByName('sDay')[index].value = day;
@@ -127,7 +145,7 @@
                         document.getElementsByName('sApplicationNumber')[index].value = application_number;
                         alert(teamname + '팀에게 매칭 신청하였습니다. 상대팀에서 수락하면 채팅방이 열리게 됩니다.')
                     }
-                    function modal_open_clicked(email, teamname, add, region, move, age, gender, careerYear, careerCount, date, time, day, mention, createdMonth, createdDay, geoLng, geoLat, nofteam, allRating, index) {
+                    function modal_open_clicked(email, teamname, add, region, move, age, gender, careerYear, teamTalent, date, time, day, mention, createdMonth, createdDay, geoLng, geoLat, nofteam, allRating, index) {
                         add = add.split(',');
                         // alert('add[0] : ' + add[0]);
                         if(gender == 25) {
@@ -143,36 +161,50 @@
                             move = 'X';
                         }
                         
-                            
-					   if(team_talent == 10){
+                        if(teamTalent == 10){
+                            curTalent = '최상';
+                        }else if(teamTalent == 8){
+                            curTalent = '상';
+                        }else if(teamTalent == 6){
+                            curTalent = '중';
+                        }else if(teamTalent == 4){
+                            curTalent = '하';
+                        }else if(teamTalent == 2){
+                            curTalent = '최하';
+                        }
+                        var today = new Date();
+                        var yyyy = today.getFullYear();
+                        careerYear = yyyy - careerYear;
+                        /*
+					   if(careerCount == 10){
 						  careerCount = '최상';
-					   }else if(team_talent == 8){
+					   }else if(careerCount == 8){
 						  careerCount = '상';
-					   }else if(team_talent == 6){
+					   }else if(careerCount == 6){
 						  careerCount = '중';
-					   }else if(team_talent == 4){
+					   }else if(careerCount == 4){
 						  careerCount = '하';
-					   }else if(team_talent == 2){
+					   }else if(careerCount == 2){
 						  careerCount = '최하';
-					}
+					   }*/
                         // alert(region + email + city);
-                        $("div[name=email]").eq(index).text('주장 이메일 : ' + email);
-                        $("div[name=teamname]").eq(index).text('팀명: ' + teamname + '팀');
-                        $("div[name=add]").eq(index).text('지역 : ' + add[0] + ' ' + add[1]);
-                        $("div[name=region]").eq(index).text('장소 : ' + region);
-                        $("div[name=move]").eq(index).text('원정가능여부 : ' + move);
-                        $("div[name=age]").eq(index).text('연령대 : ' + age +'대');
-                        $("div[name=gender]").eq(index).text('성별 : ' + gender);
-                        $("div[name=careerYear]").eq(index).text('팀 결성 년도 : ' + careerYear + '년');
-                        $("div[name=careerCount]").eq(index).text('팀 실력 : ' + careerCount);
-                        $("div[name=date]").eq(index).text('날짜 : ' + date);
-                        $("div[name=time]").eq(index).text('시간 : ' + time + '시');
-                        $("div[name=day]").eq(index).text('요일 : ' + day + '요일');
-                        $("div[name=mention]").eq(index).text('한마디 : ' + mention);
-                        $("span[name=createdMonth]").eq(index).text('등록한 날짜 : ' + createdMonth + '월 ');
+                        $("div[name=email]").eq(index).text(email);
+                        $("div[name=teamname]").eq(index).text(teamname + ' 팀');
+                        $("div[name=add]").eq(index).text(add[0] + ' ' + add[1]);
+                        $("div[name=region]").eq(index).text(region);
+                        $("div[name=move]").eq(index).text(move);
+                        $("div[name=age]").eq(index).text(age +'대');
+                        $("div[name=gender]").eq(index).text(gender);
+                        $("div[name=careerYear]").eq(index).text(careerYear + '년');
+                        $("div[name=careerCount]").eq(index).text(curTalent);
+                        $("div[name=date]").eq(index).text(date);
+                        $("div[name=time]").eq(index).text(time + '시');
+                        $("div[name=day]").eq(index).text(day + '요일');
+                        $("div[name=mention]").eq(index).text(mention);
+                        $("span[name=createdMonth]").eq(index).text(createdMonth + '월 ');
                         $("span[name=createdDay]").eq(index).text(createdDay + '일');
-                        $("div[name=nofteam]").eq(index).text('인원수 : ' + nofteam + '명');
-                        $("div[name=allRating]").eq(index).text('평점 : ' + allRating);
+                        $("div[name=nofteam]").eq(index).text(nofteam + '명');
+                        $("div[name=allRating]").eq(index).text(allRating);
                         $("div[name=myModal]").eq(index).modal();
                     }
                 </script>
@@ -200,7 +232,7 @@
                 <input type="hidden" name="sApplicationNumber" id="sApplicationNumber" value=''>
                 <div style="text-align: center">
                     <!--<button type="button" class="btn btn-primary" onclick='clicked()'>매칭 신청</button>-->
-                    <button type="button" class="btn btn-primary" name="modal_open_button" onclick="modal_open_clicked(
+                    <button type="button" class="btn" style="color:white; text-align:center; margin-left:auto;margin-right:auto; margin-top:.5rem; background-color:#7473ff;" name="modal_open_button" onclick="modal_open_clicked(
                             '<%= event_data[i].email %>',
                             '<%= event_data[i].teamname %>',
                             '<%= event_data[i].add %>',
@@ -209,7 +241,7 @@
                             '<%= event_data[i].age %>',
                             '<%= event_data[i].gender %>',
                             '<%= event_data[i].career_year %>',
-                            '<%= event_data[i].career_count %>',
+                            '<%= event_data[i].team_talent %>',
                             '<%= event_data[i].event_date %>',
                             '<%= event_data[i].event_time %>',
                             '<%= event_data[i].event_day %>',
@@ -233,30 +265,31 @@
                             </div>
                             <!--&lt;!&ndash; Modal body &ndash;&gt;-->
                             <div class="modal-body">
-                                <div name="email" value='' class="modal_content"></div>
-                                <div name="teamname" value='' class="modal_content"></div>
-                                <div name="add" value='' class="modal_content"></div>
-                                <div name="region" value='' class="modal_content"></div>
-                                <div name="move" value='' class="modal_content"></div>
-                                <div name="age" value='' class="modal_content"></div>
-                                <div name="gender" value='' class="modal_content"></div>
-                                <div name="careerYear" value='' class="modal_content"></div>
-                                <div name="careerCount" value='' class="modal_content"></div>
-                                <div name="date"  value='' class="modal_content"></div>
-                                <div name="time" value='' class="modal_content"></div>
-                                <div name="day" value='' class="modal_content"></div>
-                                <div name="mention" value='' class="modal_content"></div>
-                                <span name="createdMonth" value='' class="modal_content"></span>
+                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:30%;">주장 이메일 : </div><div name="email" value='' class="modal_content"></div></div>
+                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:30%;">팀명 : </div>
+                                <div name="teamname" value='' class="modal_content"></div></div>
+                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:30%;">지역 : </div><div name="add" value='' class="modal_content"></div></div>
+                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:30%;">장소 : </div><div name="region" value='' class="modal_content"></div></div>
+                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:30%;">원정경기 : </div><div name="move" value='' class="modal_content"></div></div>
+                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:30%;">연령대 : </div><div name="age" value='' class="modal_content"></div></div>
+                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:30%;">성별 : </div><div name="gender" value='' class="modal_content"></div></div>
+                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:30%;">경기경력 : </div><div name="careerYear" value='' class="modal_content"></div></div>
+                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:30%;">실력 : </div><div name="careerCount" value='' class="modal_content"></div></div>
+                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:30%;">날짜 : </div><div name="date"  value='' class="modal_content"></div></div>
+                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:30%;">시간 : </div><div name="time" value='' class="modal_content"></div></div>
+                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:30%;">요일 : </div><div name="day" value='' class="modal_content"></div></div>
+                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:30% !important;">한마디 : </div><div name="mention" value='' class="modal_content" style="width:70%;"></div></div>
+                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:30%;">매칭등록일 : </div><span name="createdMonth" value='' class="modal_content"></span>
                                 <span name="createdDay" value='' class="modal_content"></span>
                                 <div name="geoLng" value='' class="modal_content"></div>
-                                <div name="geoLat" value='' class="modal_content"></div>
-                                <div name="nofteam" value='' class="modal_content"></div>
-                                <div name="allRating" value='' class="modal_content"></div>
+                                    <div name="geoLat" value='' class="modal_content"></div></div>
+                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:30%;">인원수 : </div><div name="nofteam" value='' class="modal_content"></div></div>
+                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:30%;">전체 평점 : </div><div name="allRating" value='' class="modal_content"></div></div>
                             </div>
                             <!--&lt;!&ndash; Modal footer &ndash;&gt;-->
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-danger" data-dismiss="modal" >닫기</button>
-                                <a href="/mainsearchresult"><button type="submit" class="btn btn-primary" onclick="clicked(
+                                <button type="button" class="btn" style="color:white; text-align:center; background-color:#7473ff; float:right;" data-dismiss="modal" >닫기</button>
+                                <a href="/mainsearchresult"><button type="submit" class="btn" style="color:white; text-align:center; background-color:#7473ff; float:right;" onclick="clicked(
                                             '<%= event_data[i].email %>',
                                             '<%= event_data[i].teamname %>',
                                             '<%= event_data[i].add %>',
@@ -265,7 +298,7 @@
                                             '<%= event_data[i].age %>',
                                             '<%= event_data[i].gender %>',
                                             '<%= event_data[i].career_year %>',
-                                            '<%= event_data[i].career_count %>',
+                                            '<%= event_data[i].team_talent %>',
                                             '<%= event_data[i].event_date %>',
                                             '<%= event_data[i].event_time %>',
                                             '<%= event_data[i].event_day %>',
