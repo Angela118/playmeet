@@ -98,6 +98,9 @@
             curTalent = '최하';
         }
             
+            if(curTime == 'none'){
+                        curTtime = '(무관)';
+                    }
         %>
         <div>
             <div style="display: flex; justify-content: space-around; margin-left: 1rem; margin-right: 1rem; margin-top:auto; margin-bottom:auto;">
@@ -172,6 +175,11 @@
                         }else if(teamTalent == 2){
                             curTalent = '최하';
                         }
+                        
+                        if(time == 'none'){
+                            time = '(무관)';
+                        }
+                        
                         var today = new Date();
                         var yyyy = today.getFullYear();
                         careerYear = yyyy - careerYear;

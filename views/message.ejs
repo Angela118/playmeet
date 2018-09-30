@@ -35,6 +35,7 @@ var curMove = event_data[index].move;
 var teamTalent = event_data[index].team_talent;
 var careerYear = event_data[index].career_year;
 var curTalent = "";
+var curTime = event_data[index].others.sEvent_time;
     
 if(curGender == 75) {
     curGender = '무관';
@@ -48,6 +49,10 @@ if(curMove == 100){
 }else if(curMove == 50){
     curMove = 'X';
 }
+    if(curTime == 'none'){
+        curTime = '(무관)';
+    }
+    
     var today = new Date();
     var yyyy = today.getFullYear();
     careerYear = yyyy - careerYear;
@@ -110,7 +115,7 @@ if(curMove == 100){
                 <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">경기경력 : </div><div> <%= careerYear %>년 </div></div>
                 <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">경기실력 : </div><div> <%= curTalent %></div></div>
                 <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">경기날짜 : </div><div> <%= event_data[index].others.sEvent_date %></div></div>
-                <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">경기시간 : </div><div> <%= event_data[index].others.sEvent_time %></div></div>
+                <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">경기시간 : </div><div> <%= curTime %>시</div></div>
                 <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">경기요일 : </div><div> <%= event_data[index].others.sEvent_day %>요일</div></div>
                 <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">한마디 : </div><div style="width:60%;"> <%= event_data[index].others.sMention %></div></div>
                 <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">신청 날짜 : </div><div> <%= event_data[index].others.sCreatedMonth %>월 <%= event_data[index].others.sCreatedDay %>일</div></div>

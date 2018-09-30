@@ -96,6 +96,10 @@
                 }else if(curMove == 50){
                     curMove = 'X';
                 }
+                
+                if(curTime == 'none'){
+                    curTime = '무관';
+                }
             %>
 
             <script>
@@ -157,6 +161,10 @@
                         var curTalent = '하';
                     }else if(teamTalent == 2){
                         var curTalent = '최하';
+                    }
+                    
+                    if(time == 'none'){
+                        time = '(무관)';
                     }
 
                     // alert(region + email);
