@@ -85,9 +85,10 @@ if(curMove == 100){
 </nav>
     
 <script>
-    function clicked(email, teamname, sameEmailIndex, match) {
+    function clicked(email, teamname, applicationnumber, sameEmailIndex, match) {
         document.getElementById('sEmail').value = email;
 		document.getElementById('sTeamname').value = teamname;
+		document.getElementById('sApplicationNumber').value = applicationnumber;	
         document.getElementById('sSameEmailIndex').value = sameEmailIndex;
         document.getElementById('match').value = match;
 		if(match == 1){
@@ -128,12 +129,13 @@ if(curMove == 100){
             <form action="/message" method="post" id="formPost">
                 <input type="hidden" name="sEmail" id="sEmail" value=''>
 				<input type="hidden" name="sTeamname" id="sTeamname" value=''>
+				<input type="hidden" name="sApplicationNumber" id="sApplicationNumber" value=''>
                 <input type="hidden" name="sSameEmailIndex" id="sSameEmailIndex" value=''>
                 <input type="hidden" name="match" id="match" value=''>
 
                 <div style="text-align: center">
-                    <button type="button" class="btn" style="color:white; text-align:center; margin-left:auto;margin-right:auto; background-color:#7473ff;" onclick="clicked( `<%= event_data[index].email %>`,`<%=index%>`, 2)">매칭 거절</button>
-                    <button type="button" class="btn" style="color:white; text-align:center; margin-left:auto;margin-right:auto; background-color:#7473ff;" onclick="clicked( `<%= event_data[index].email %>`,`<%= event_data[index].others.sTeamname %>`,`<%=index%>`, 1)">매칭 수락</button>
+                    <button type="button" class="btn" style="color:white; text-align:center; margin-left:auto;margin-right:auto; background-color:#7473ff;" onclick="clicked( `<%= event_data[index].email %>`,`<%= event_data[index].others.sApplicationNumber %>`,`<%=index%>`, 2)">매칭 거절</button>
+                    <button type="button" class="btn" style="color:white; text-align:center; margin-left:auto;margin-right:auto; background-color:#7473ff;" onclick="clicked( `<%= event_data[index].email %>`,`<%= event_data[index].others.sTeamname %>`,`<%= event_data[index].others.sApplicationNumber %>`,`<%=index%>`, 1)">매칭 수락</button>
                 </div>
 
             </form>
