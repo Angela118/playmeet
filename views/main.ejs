@@ -98,8 +98,10 @@
                 }
                 
                 if(curTime == 'none'){
-                    curTime = '무관';
+                    curTime = '(시간무관)';
                 }
+                else
+                    curTime = curTime + ' 시';
             %>
 
             <script>
@@ -164,8 +166,10 @@
                     }
                     
                     if(time == 'none'){
-                        time = '(무관)';
+                        time = '(시간무관)';
                     }
+                    else
+                        time = time + ' 시';
 
                     // alert(region + email);
                     $("div[name=email]").eq(index).text(email);
@@ -178,7 +182,7 @@
                     $("div[name=careerYear]").eq(index).text(careerYear + '년');
                     $("div[name=careerCount]").eq(index).text(curTalent);
                     $("div[name=date]").eq(index).text(date);
-                    $("div[name=time]").eq(index).text(time + '시');
+                    $("div[name=time]").eq(index).text(time);
                     $("div[name=day]").eq(index).text(day + '요일');
                     $("div[name=mention]").eq(index).text(mention);
                     $("span[name=createdMonth]").eq(index).text(createdMonth + '월 ');
@@ -193,10 +197,10 @@
 
             <div class="list_item" style="margin-left:.5rem; margin-right:.5rem;">
                 <div class="list_divide">
-                    <div style="width:70%;">
+                    <div style="width:77%;">
                         <div class="list_item_teamname"><%= curTeamname %></div>
                         <div class="list_item_date">
-                        <%= matchYear %>년 <%= matchMonth %>월 <%= matchDay %>일 <%= curDay %>요일, <%= curTime %>시</div>
+                        <%= matchYear %>년 <%= matchMonth %>월 <%= matchDay %>일 <%= curDay %>요일, <%= curTime %></div>
                     </div>
                     <div class="list_item_icon">
                         <h8><%= curGender %></h8>
@@ -272,26 +276,26 @@
                             </div>
                             <!--&lt;!&ndash; Modal body &ndash;&gt;-->
                             <div class="modal-body">
-                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:30%;">주장 이메일 : </div><div name="email" value='' class="modal_content"></div></div>
-                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:30%;">팀명 : </div>
+                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:35%;">주장 이메일 : </div><div name="email" value='' class="modal_content"></div></div>
+                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:35%;">팀명 : </div>
                                 <div name="teamname" value='' class="modal_content"></div></div>
-                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:30%;">지역 : </div><div name="add" value='' class="modal_content"></div></div>
-                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:30%;">장소 : </div><div name="region" value='' class="modal_content"></div></div>
-                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:30%;">원정경기 : </div><div name="move" value='' class="modal_content"></div></div>
-                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:30%;">연령대 : </div><div name="age" value='' class="modal_content"></div></div>
-                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:30%;">성별 : </div><div name="gender" value='' class="modal_content"></div></div>
-                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:30%;">경기경력 : </div><div name="careerYear" value='' class="modal_content"></div></div>
-                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:30%;">실력 : </div><div name="careerCount" value='' class="modal_content"></div></div>
-                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:30%;">날짜 : </div><div name="date"  value='' class="modal_content"></div></div>
-                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:30%;">시간 : </div><div name="time" value='' class="modal_content"></div></div>
-                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:30%;">요일 : </div><div name="day" value='' class="modal_content"></div></div>
-                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:30% !important;">한마디 : </div><div name="mention" value='' class="modal_content" style="width:70%;"></div></div>
-                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:30%;">매칭등록일 : </div><span name="createdMonth" value='' class="modal_content"></span>
-                                <span name="createdDay" value='' class="modal_content"></span>
+                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:35%;">지역 : </div><div name="add" value='' class="modal_content"></div></div>
+                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:35%;">장소 : </div><div name="region" value='' class="modal_content"></div></div>
+                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:35%;">원정경기 : </div><div name="move" value='' class="modal_content"></div></div>
+                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:35%;">연령대 : </div><div name="age" value='' class="modal_content"></div></div>
+                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:35%;">성별 : </div><div name="gender" value='' class="modal_content"></div></div>
+                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:35%;">경기경력 : </div><div name="careerYear" value='' class="modal_content"></div></div>
+                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:35%;">실력 : </div><div name="careerCount" value='' class="modal_content"></div></div>
+                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:35%;">날짜 : </div><div name="date"  value='' class="modal_content"></div></div>
+                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:35%;">시간 : </div><div name="time" value='' class="modal_content"></div></div>
+                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:35%;">요일 : </div><div name="day" value='' class="modal_content"></div></div>
+                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:35% !important;">한마디 : </div><div name="mention" value='' class="modal_content" style="width:65%;"></div></div>
+                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:35%;">매칭등록일 : </div><div style="display:block;width:65%;"><span name="createdMonth" value='' class="modal_content"></span>
+                                <span name="createdDay" value='' class="modal_content"></span></div>
                                 <div name="geoLng" value='' class="modal_content"></div>
                                     <div name="geoLat" value='' class="modal_content"></div></div>
-                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:30%;">인원수 : </div><div name="nofteam" value='' class="modal_content"></div></div>
-                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:30%;">전체 평점 : </div><div name="allRating" value='' class="modal_content"></div></div>
+                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:35%;">인원수 : </div><div name="nofteam" value='' class="modal_content" style="display:block; width:65%;"></div></div>
+                                <div style="display:flex;"><div style="color:#D2D0DE; display:block; width:35%;">전체 평점 : </div><div name="allRating" value='' class="modal_content" style="display:block; width:65%;"></div></div>
                             </div>
                             <!--&lt;!&ndash; Modal footer &ndash;&gt;-->
                             <div class="modal-footer">

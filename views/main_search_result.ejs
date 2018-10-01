@@ -99,8 +99,10 @@
         }
             
             if(curTime == 'none'){
-                        curTtime = '(무관)';
+                        curTime = '(시간무관)';
                     }
+            else
+                curTime = curTime + ' 시';
         %>
         <div>
             <div style="display: flex; justify-content: space-around; margin-left: 1rem; margin-right: 1rem; margin-top:auto; margin-bottom:auto;">
@@ -177,8 +179,10 @@
                         }
                         
                         if(time == 'none'){
-                            time = '(무관)';
+                            time = '(시간무관)';
                         }
+                        else
+                            time = time + ' 시';
                         
                         var today = new Date();
                         var yyyy = today.getFullYear();
@@ -206,7 +210,7 @@
                         $("div[name=careerYear]").eq(index).text(careerYear + '년');
                         $("div[name=careerCount]").eq(index).text(curTalent);
                         $("div[name=date]").eq(index).text(date);
-                        $("div[name=time]").eq(index).text(time + '시');
+                        $("div[name=time]").eq(index).text(time);
                         $("div[name=day]").eq(index).text(day + '요일');
                         $("div[name=mention]").eq(index).text(mention);
                         $("span[name=createdMonth]").eq(index).text(createdMonth + '월 ');

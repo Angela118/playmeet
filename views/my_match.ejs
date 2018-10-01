@@ -54,8 +54,9 @@
 		}
 
 		if(curTime == 'none'){
-			curTime = '시간 무관';
-		}
+			curTime = '(시간 무관)';
+		} else
+            curTime = curTime + ' 시';
 		%>
     <div class="content"> <!--content-->
       <div class="date" style="padding:0 .5rem;">
