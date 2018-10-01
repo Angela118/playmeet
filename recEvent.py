@@ -13,7 +13,6 @@ def swap(x, i, j):
 
 
 
-
 #파일 불러오기 
 file = open('C:/Users/user/brackets_nodejs/playmeet/recEvent.csv', 'r', encoding='UTF8')
 reader = csv.reader(file)
@@ -39,23 +38,22 @@ print()
 
 original_review=[]
 for i in range(0, len(data)):
-    original_review.append([data[i][8],data[i][8]])
+    original_review.append([data[i][7],data[i][8]])
 
 print(original_review)
 print()
 
 #리뷰 없는 경우 처리
 for i in range(0, len(data)):
-    if(data[i][8] == "리뷰없음"):
-        data[i][8] = '3'
-        if(data[i][9] == "리뷰없음"):
-            data[i][9] = '3'
+    if(data[i][7] == "리뷰없음"):
+        data[i][7] = '3'
+        if(data[i][8] == "리뷰없음"):
+            data[i][8] = '3'
 
 print(data)
 print()   
 
-    
-    
+
 #data의 id값 
 idArray = []
 del data[0][0]
@@ -65,7 +63,7 @@ for i in range(1, len(data)):
 
 
 data = np.array(data)
-data = data[:, 0:9]
+data = data[:, 0:8]
 
 
 print(data)
@@ -77,12 +75,20 @@ data = data.astype('float64')
 
 #scaling
 for i in range(0, len(data)):
-    data[i][0] = data[i][0] / 10
-    data[i][1] = data[i][1] / 10
+    data[i][4] = data[i][4] * 10
     data[i][5] = data[i][5] * 10
+    data[i][6] = data[i][6] * 10
+    data[i][7] = data[i][7] * 10
+    print(data[i][0])
+    print(data[i][1])
+    print(data[i][2])
+    print(data[i][3])
+    print(data[i][4])
+    print(data[i][5])
+    print(data[i][6])
+    print(data[i][7])
+    print()
 
-print(data)
-print()
 
 #euclidean distance
 euc_dst = []
@@ -109,13 +115,14 @@ for size in reversed(range(len(ar_euc))):
 
 print(ar_euc)
 print()
-                
+
+#값 되돌리기                
 result_data = []
 for i in range(0, len(ar_euc)):
     result_data.append(original_data[ar_euc[i][0]])
     result_data[i].insert(0, idArray[ar_euc[i][0]-1])
-    result_data[i][8] = original_review[i+1][0]
-    result_data[i][9] = original_review[i+1][1]
+    result_data[i][7] = original_review[i+1][0]
+    result_data[i][8] = original_review[i+1][1]
 
 print(result_data)
 print()
