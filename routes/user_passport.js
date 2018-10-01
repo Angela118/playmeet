@@ -15,14 +15,6 @@ module.exports = function(router, passport, upload) {
     var profile_img=[];
     var profile_photo;
 
-    /*	var event_search = {
-            'teamname':'',
-            'add': '',
-            'gender': '',
-            'age': '',
-            'event_time': '',
-            'event_day': ''
-        };	*/
     var sn=0;
 
     var selectone = {
@@ -74,8 +66,6 @@ module.exports = function(router, passport, upload) {
 		
 		console.log(userstoken);
 		
-
-  //      res.write("OK");
         res.end();
 		
     });
@@ -103,14 +93,14 @@ module.exports = function(router, passport, upload) {
 				if(err) throw err
 			});
 
-			dbm.ApplicationModel.remove({$and:[{'eventMonth_forExpire':mm}, {'eventDate_forExpire':dd}, {'event_time':{$lt:hh}}]}, function(err){
+			dbm.ApplicationModel.remove({$and:[{'eventMonth_forExpire':mm}, {'eventDate_forExpire':dd}, {'eventTime_forExpire':{$lt:hh}}]}, function(err){
 				if(err) throw err
 			});
             
             var fs = require('fs');
 
             const Json2csvParser = require('json2csv').Parser;
-            const fields = ['email', 'age', 'gender', /*'nofteam',*/ 'career_year' /*'career_count'*/, 'team_talent', 'geoLng', 'geoLat', 'allRating', 'perRating',/*여기까지*/ 'teamname', 'region', 'add', 'nofteam', 'move', 'event_date', 'event_time', 'event_day', 'event_day', 'mention', 'created_month', 'created_day', 'application_number', 'eventYear_forExpire', 'eventMonth_forExpire', 'eventDate_forExpire'];
+            const fields = ['email', 'age', 'gender', /*'nofteam',*/ 'career_year' /*'career_count'*/, 'team_talent', 'geoLng', 'geoLat', 'allRating', 'perRating',/*여기까지*/ 'teamname', 'region', 'add', 'nofteam', 'move', 'event_date', 'event_time', 'event_day', 'event_day', 'mention', 'created_month', 'created_day', 'application_number', 'eventYear_forExpire', 'eventMonth_forExpire', 'eventDate_forExpire', 'eventTime_forExpire'];
 
             const eventData = [];
 
@@ -126,9 +116,9 @@ module.exports = function(router, passport, upload) {
 				'allRating':5.00,
 				'perRating':5.00
             };
+			
             var j=1;
             eventData[0] = userdata;
-
 
             dbm.ApplicationModel.find({$and:[{email:{$ne:req.user.email}}, {match:0}]}, function (err, result) {
                 for(var i = 0 ; i < result.length ; i++) {
@@ -742,6 +732,7 @@ module.exports = function(router, passport, upload) {
     });
 
 
+	/*
     //아이디, 비밀번호 찾기
     router.route('/findid').get(function(req, res){
         console.log('/findid 패스 get 요청됨.');
@@ -752,7 +743,7 @@ module.exports = function(router, passport, upload) {
         console.log('/findpassword 패스 get 요청됨.');
         res.render('find_password.ejs');
     });
-
+*/
 
 
     //===== 채팅
@@ -955,7 +946,7 @@ module.exports = function(router, passport, upload) {
         )
 
         setTimeout(function () {
-            dbm.MatchModel.remove({$and:[
+            dbm.Model.remove({$and:[
                     {$or:[
                             {$and:[
                                     {"email":email}, {"others.sEmail":otherEmail}
@@ -1191,9 +1182,10 @@ module.exports = function(router, passport, upload) {
         var match = req.body.match;
 
         // 매칭 신청한 애
-        var otherEmail = req.body.sEmail;
-		
+        var otherEmail = req.body.sEmail;		
 		var otherTeamname = req.body.sTeamname;
+		
+		var applicationNumber = req.body.sApplicationNumber;
 
         // 걔 동일 이메일 인덱스 있는지 확인
         var sSameEmailIndex = req.body.sSameEmailIndex;
@@ -1203,7 +1195,7 @@ module.exports = function(router, passport, upload) {
 
 
         // 나한테 신청한 사람 이메일 받아온거로 matches에서 email 찾아서
-        dbm.MatchModel.find({email: otherEmail}, function (err, result1) {
+        dbm.MatchModel.find({$and:[{email: otherEmail}, {'others.sApplicationNumber':applicationNumber}]}, function (err, result1) {
             for (var i = 0; i < result1.length; i++) {
                 // 그 사람이 올린 것 중 신청자가 나일 경우
                 if (result1[i]._doc.others.sEmail === req.user.email) {
@@ -2288,10 +2280,10 @@ module.exports = function(router, passport, upload) {
 
                             var description = "\'"+eventData[i].event_region+"\'";
 
-                            if(eventData[i].event_time == 'none')
+                            if(eventData[i].event_time === 'none')
                                 var start =  "\'"+eventData[i].event_date+"\'";
                             else
-                                var start = "\'"+eventData[i].event_date+" "+eventData[i].event_time+":"+"00"+"\'";
+                                var start = "\'"+eventData[i].event_date+" + "+eventData[i].event_time+":"+"00"+"\'";
 
 
 
@@ -3015,7 +3007,8 @@ module.exports = function(router, passport, upload) {
             'application_number' : an,
             'eventYear_forExpire': 0,
             'eventMonth_forExpire': 0,
-            'eventDate_forExpire' : 0
+            'eventDate_forExpire' : 0,
+			'eventTime_forExpire' : 0
         };
 
         var week = new Array('일', '월', '화', '수', '목', '금', '토');
@@ -3025,6 +3018,10 @@ module.exports = function(router, passport, upload) {
         event.eventYear_forExpire = event.event_date.substring(0,4);
         event.eventMonth_forExpire = event.event_date.substring(5,7);
         event.eventDate_forExpire = event.event_date.substring(8,10);
+		if(event.event_time == 'none')
+			event.eventTime_forExpire = 24;
+		else
+			event.eventTime_forExpire = event.event_time;
 
         if(!event.add){		//도로명주소 없는 경우 지번 주소
             event.add = req.body.add2 || req.query.add2;
