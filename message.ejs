@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/common.css" rel="stylesheet">
+    <link href="../css/chat.css" rel="stylesheet">
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="../js/jquery.js"></script>
+    <script src="../js/bootstrap.bundle.min.js"></script>
+    <script src="jquery-3.1.1.min.js"></script>
+    <title>채팅방</title>
+</head>
+<!--메뉴 영역 시작 -->
+<!--여기선 메뉴명 채팅방으로 되어 있음-->
+
+
+
+<body class="coloring">
+
+<script type="text/javascript">
+    function goBack(){
+        window.history.back();
+    }
+</script>
+
+<% var index = sSameEmailIndex;
+var curGender = event_data[index].gender;
+var curMove = event_data[index].move;
+var teamTalent = event_data[index].team_talent;
+var careerYear = event_data[index].career_year;
+var curTalent = "";
+var curTime = event_data[index].others.sEvent_time;
+    
+if(curGender == 75) {
+    curGender = '무관';
+}else if(curGender == 50) {
+    curGender = '남자';
+}else if(curGender == 100){
+    curGender = '여자';
+}
+if(curMove == 100){
+    curMove = 'O';
+}else if(curMove == 50){
+    curMove = 'X';
+}
+    if(curTime == 'none'){
+        curTime = '(시간무관)';
+    } else
+        curTime = curTime + ' 시';
+    
+    var today = new Date();
+    var yyyy = today.getFullYear();
+    careerYear = yyyy - careerYear;
+
+    if(teamTalent == 10){
+        curTalent = '최상';
+    }else if(teamTalent == 8){
+        curTalent = '상';
+    }else if(teamTalent == 6){
+        curTalent = '중';
+    }else if(teamTalent == 4){
+        curTalent = '하';
+    }else if(teamTalent == 2){
+        var curTalent = '최하';
+    }
+%>
+
+<!--메뉴 다름-->
+<nav class="navbar">
+    <div class="top">
+        <img src="../img/left-arrow.png" height="20rem" onclick="goBack();">
+		<!--<a href="/"><img src="../img/update_playmeet3.jpg" height="50rem" style="margin-right:-1rem;"></a>-->
+        <div style="color:white;"> <%= event_data[index].teamname %>팀으로부터 받은 메시지</div>
+        <div class="sets" style="visibility:hidden;">
+            <a href="/chatroomchat"><img src="../img/update_chat.png" class="menu_img" height="20rem" style="margin-right: .3rem;"></a>
+            <img src="../img/update_menu.png" height="20rem" class="navbar-toggler" data-toggle="collapse" data-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
+        </div>
+    </div>
+</nav>
+    
+<script>
+    function clicked(email, teamname, sameEmailIndex, match) {
+        document.getElementById('sEmail').value = email;
+		document.getElementById('sTeamname').value = teamname;
+        document.getElementById('sSameEmailIndex').value = sameEmailIndex;
+        document.getElementById('match').value = match;
+		if(match == 1){
+        	alert('매칭을 승낙하였습니다.');
+		}else if(match == 2){
+			alert('매칭을 거절하였습니다.');
+		}
+        document.getElementById('formPost').submit();
+    }
+</script>
+
+<div class="container" style="padding-top:50px;">
+    <div class="reco">
+        <div class="mb-3">
+            <div style="line-height: 2rem; border:2px solid #7473ff; padding: .5rem;">
+                <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">주장 이메일 : </div> <div><%= event_data[index].email %></div></div>
+                <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">팀명 : </div> <div> <%= event_data[index].teamname %> 팀</div></div>
+                <!--팀 지역에서 add[1]값이 없는 건 회원가입할 때 add가 배열이 아니어서임-->
+                <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">팀 지역 : </div> <div> <%= event_data[index].add%>
+                <!--팀 지역 : <%= event_data[index].add[0] %> <%event_data[index].add[1]%><br>--></div></div>
+                <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">매칭 등록 지역 : </div> <div> <%= event_data[index].others.sAdd[0]%> <%= event_data[index].others.sAdd[1] %></div></div>
+                <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">매칭 등록 장소 : </div> <div> <%= event_data[index].others.sRegion %></div> </div>
+                <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">원정경기 : </div> <div> <%= curMove %></div> </div>
+                <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">연령대 : </div><div> <%= event_data[index].age %>대</div></div>
+                <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">성별 : </div><div> <%= curGender %> </div></div>
+                <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">경기경력 : </div><div> <%= careerYear %>년 </div></div>
+                <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">경기실력 : </div><div> <%= curTalent %></div></div>
+                <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">경기날짜 : </div><div> <%= event_data[index].others.sEvent_date %></div></div>
+                <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">경기시간 : </div><div> <%= curTime %></div></div>
+                <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">경기요일 : </div><div> <%= event_data[index].others.sEvent_day %>요일</div></div>
+                <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">한마디 : </div><div style="width:60%;"> <%= event_data[index].others.sMention %></div></div>
+                <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">신청 날짜 : </div><div> <%= event_data[index].others.sCreatedMonth %>월 <%= event_data[index].others.sCreatedDay %>일</div></div>
+                <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">팀 인원수 : </div><div> <%= event_data[index].nofteam %>명</div></div>
+                <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">상대팀 별점 : </div><div> <%= event_data[index].allRating %></div></div>
+            </div>
+            <p style="padding:.5rem; margin-top: .5rem;"><b>해당 경기 날짜에 매칭 신청합니다. 수락하시겠습니까?</b></p>
+
+            <form action="/message" method="post" id="formPost">
+                <input type="hidden" name="sEmail" id="sEmail" value=''>
+				<input type="hidden" name="sTeamname" id="sTeamname" value=''>
+                <input type="hidden" name="sSameEmailIndex" id="sSameEmailIndex" value=''>
+                <input type="hidden" name="match" id="match" value=''>
+
+                <div style="text-align: center">
+                    <button type="button" class="btn" style="color:white; text-align:center; margin-left:auto;margin-right:auto; background-color:#7473ff;" onclick="clicked( `<%= event_data[index].email %>`,`<%=index%>`, 2)">매칭 거절</button>
+                    <button type="button" class="btn" style="color:white; text-align:center; margin-left:auto;margin-right:auto; background-color:#7473ff;" onclick="clicked( `<%= event_data[index].email %>`,`<%= event_data[index].others.sTeamname %>`,`<%=index%>`, 1)">매칭 수락</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+    </body>
+    <footer class="my-5 pt-5 text-muted text-center text-small"></footer>
+</html>
