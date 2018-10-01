@@ -110,7 +110,7 @@ module.exports = function(router, passport, upload) {
             var fs = require('fs');
 
             const Json2csvParser = require('json2csv').Parser;
-            const fields = ['email', 'age', 'gender', 'nofteam', 'career_year' /*'career_count'*/, 'team_talent', 'geoLng', 'geoLat', 'allRating', 'perRating',/*여기까지*/ 'teamname', 'region', 'add', 'move', 'event_date', 'event_time', 'event_day', 'event_day', 'mention', 'created_month', 'created_day', 'application_number', 'eventYear_forExpire', 'eventMonth_forExpire', 'eventDate_forExpire'];
+            const fields = ['email', 'age', 'gender', /*'nofteam',*/ 'career_year' /*'career_count'*/, 'team_talent', 'geoLng', 'geoLat', 'allRating', 'perRating',/*여기까지*/ 'teamname', 'region', 'add', 'move', 'event_date', 'event_time', 'event_day', 'event_day', 'mention', 'created_month', 'created_day', 'application_number', 'eventYear_forExpire', 'eventMonth_forExpire', 'eventDate_forExpire'];
 
             const eventData = [];
 
@@ -118,8 +118,8 @@ module.exports = function(router, passport, upload) {
                 'email':req.user.email,
                 'age':req.user.age,
                 'gender':req.user.gender,
-                'nofteam':req.user.nofteam,
-                'career_year':yyyy-req.user.career_year,
+   //             'nofteam':req.user.nofteam,
+                'career_year':req.user.career_year,
                 'team_talent':req.user.team_talent,
                 'geoLng':req.user.geoLng,
                 'geoLat':req.user.geoLat,
