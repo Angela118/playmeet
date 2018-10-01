@@ -32,6 +32,11 @@
 <% var index = sSameEmailIndex;
 var curGender = event_data[index].gender;
 var curMove = event_data[index].move;
+var teamTalent = event_data[index].team_talent;
+var careerYear = event_data[index].career_year;
+var curTalent = "";
+var curTime = event_data[index].others.sEvent_time;
+    
 if(curGender == 75) {
     curGender = '무관';
 }else if(curGender == 50) {
@@ -44,6 +49,26 @@ if(curMove == 100){
 }else if(curMove == 50){
     curMove = 'X';
 }
+    if(curTime == 'none'){
+        curTime = '(시간무관)';
+    } else
+        curTime = curTime + ' 시';
+    
+    var today = new Date();
+    var yyyy = today.getFullYear();
+    careerYear = yyyy - careerYear;
+
+    if(teamTalent == 10){
+        curTalent = '최상';
+    }else if(teamTalent == 8){
+        curTalent = '상';
+    }else if(teamTalent == 6){
+        curTalent = '중';
+    }else if(teamTalent == 4){
+        curTalent = '하';
+    }else if(teamTalent == 2){
+        var curTalent = '최하';
+    }
 %>
 
 <!--메뉴 다름-->
@@ -66,9 +91,9 @@ if(curMove == 100){
         document.getElementById('sSameEmailIndex').value = sameEmailIndex;
         document.getElementById('match').value = match;
 		if(match == 1){
-        	alert('email : ' + email + '/ sameEmailIndex : ' + sameEmailIndex + '/ match : ' + match + '매칭을 승낙하였습니다.');
+        	alert('매칭을 승낙하였습니다.');
 		}else if(match == 2){
-			alert('email : ' + email + '/ sameEmailIndex : ' + sameEmailIndex + '/ match : ' + match + '매칭을 거절하였습니다.');
+			alert('매칭을 거절하였습니다.');
 		}
         document.getElementById('formPost').submit();
     }
@@ -77,28 +102,28 @@ if(curMove == 100){
 <div class="container" style="padding-top:50px;">
     <div class="reco">
         <div class="mb-3">
-            <p style="line-height: 2rem; border:2px solid #7473ff; padding: .5rem;">
-                주장 이메일 : <%= event_data[index].email %><br>
-                팀명 : <%= event_data[index].teamname %> 팀<br>
+            <div style="line-height: 2rem; border:2px solid #7473ff; padding: .5rem;">
+                <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">주장 이메일 : </div> <div><%= event_data[index].email %></div></div>
+                <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">팀명 : </div> <div> <%= event_data[index].teamname %> 팀</div></div>
                 <!--팀 지역에서 add[1]값이 없는 건 회원가입할 때 add가 배열이 아니어서임-->
-                팀 지역 : <%= event_data[index].add%><br>
-                <!--팀 지역 : <%= event_data[index].add[0] %> <%event_data[index].add[1]%><br>-->
-                내가 등록했던 지역 : <%= event_data[index].others.sAdd[0]%> <%= event_data[index].others.sAdd[1] %><br>
-                내가 등록했던 장소 : <%= event_data[index].others.sRegion %><br>
-                원정가능 여부 : <%= curMove %><br>
-                연령대 : <%= event_data[index].age %>대<br>
-                성별 : <%= curGender %><br>
-                경기 경력(년수) : <%=event_data[index].career_year%>년<br>
-                경기 경력(횟수) : <%=event_data[index].career_count%>번<br>
-                경기 날짜 : <%= event_data[index].others.sEvent_date %><br>
-                경기 시간 : <%= event_data[index].others.sEvent_time %><br>
-                경기 요일 : <%= event_data[index].others.sEvent_day %>요일<br>
-                한마디 : <%= event_data[index].others.sMention %><br>
-                신청 날짜 : <%= event_data[index].others.sCreatedMonth %>월 <%= event_data[index].others.sCreatedDay %>일<br>
-                팀 인원수 : <%= event_data[index].nofteam %>명<br>
-                상대팀 별점 : <%= event_data[index].allRating %><br>
-            </p>
-            <p><b>해당 경기 날짜에 매칭 신청합니다. 수락하시겠습니까?</b></p>
+                <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">팀 지역 : </div> <div> <%= event_data[index].add%>
+                <!--팀 지역 : <%= event_data[index].add[0] %> <%event_data[index].add[1]%><br>--></div></div>
+                <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">매칭 등록 지역 : </div> <div> <%= event_data[index].others.sAdd[0]%> <%= event_data[index].others.sAdd[1] %></div></div>
+                <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">매칭 등록 장소 : </div> <div> <%= event_data[index].others.sRegion %></div> </div>
+                <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">원정경기 : </div> <div> <%= curMove %></div> </div>
+                <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">연령대 : </div><div> <%= event_data[index].age %>대</div></div>
+                <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">성별 : </div><div> <%= curGender %> </div></div>
+                <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">경기경력 : </div><div> <%= careerYear %>년 </div></div>
+                <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">경기실력 : </div><div> <%= curTalent %></div></div>
+                <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">경기날짜 : </div><div> <%= event_data[index].others.sEvent_date %></div></div>
+                <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">경기시간 : </div><div> <%= curTime %></div></div>
+                <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">경기요일 : </div><div> <%= event_data[index].others.sEvent_day %>요일</div></div>
+                <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">한마디 : </div><div style="width:60%;"> <%= event_data[index].others.sMention %></div></div>
+                <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">신청 날짜 : </div><div> <%= event_data[index].others.sCreatedMonth %>월 <%= event_data[index].others.sCreatedDay %>일</div></div>
+                <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">팀 인원수 : </div><div> <%= event_data[index].nofteam %>명</div></div>
+                <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">상대팀 별점 : </div><div> <%= event_data[index].allRating %></div></div>
+            </div>
+            <p style="padding:.5rem; margin-top: .5rem;"><b>해당 경기 날짜에 매칭 신청합니다. 수락하시겠습니까?</b></p>
 
             <form action="/message" method="post" id="formPost">
                 <input type="hidden" name="sEmail" id="sEmail" value=''>
@@ -107,8 +132,8 @@ if(curMove == 100){
                 <input type="hidden" name="match" id="match" value=''>
 
                 <div style="text-align: center">
-                    <button type="button" class="btn" style="color:white; text-align:center; margin-left:Auto;margin-right:auto; background-color:#7473ff;" onclick="clicked( `<%= event_data[index].email %>`,`<%=index%>`, 2)">매칭 거절</button>
-                    <button type="button" class="btn" style="color:white; text-align:center; margin-left:Auto;margin-right:auto; background-color:#7473ff;" onclick="clicked( `<%= event_data[index].email %>`,`<%= event_data[index].others.sTeamname %>`,`<%=index%>`, 1)">매칭 수락</button>
+                    <button type="button" class="btn" style="color:white; text-align:center; margin-left:auto;margin-right:auto; background-color:#7473ff;" onclick="clicked( `<%= event_data[index].email %>`,`<%=index%>`, 2)">매칭 거절</button>
+                    <button type="button" class="btn" style="color:white; text-align:center; margin-left:auto;margin-right:auto; background-color:#7473ff;" onclick="clicked( `<%= event_data[index].email %>`,`<%= event_data[index].others.sTeamname %>`,`<%=index%>`, 1)">매칭 수락</button>
                 </div>
 
             </form>

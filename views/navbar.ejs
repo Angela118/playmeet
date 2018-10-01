@@ -1,6 +1,5 @@
 <link rel="stylesheet" href="//fonts.googleapis.com/earlyaccess/nanumgothic.css">
 
-
     <script>
         function goBack(){
             window.history.back();
@@ -19,12 +18,21 @@
 
     <div class="collapse navbar-collapse" id="navbarsExample01">
         <div class="mypage">
-            <img src="../profile_img/<%= profile_img %>" id="profile_pic" style="width:3.5rem; height: 3.5rem">
-            <div id="name" style="font-weight: bold; margin-right: 2rem; color:#292941;"><%= teamname %> 팀</div>
-            <div style="display: flex; flex-direction: row; align-items: center; background-color: #7473ff;">
-                <a href="/teamprofile"><button class="btn" type="submit" style="background-color: transparent; color: white; font-size: .8rem; font-weight: bold;">내 정보</button></a>
-                <a href="/logout"><button class="btn" type="submit" style="background-color: transparent; color: white; font-size: .8rem; font-weight: bold;">로그아웃</button></a>
+            <div style="display:flex; flex-wrap:nowrap; width:100%;">
+                <img src="../profile_img/<%= profile_img %>" id="profile_pic" style="width:5rem; height: 5rem; margin:.5rem; border-radius:50%;">
+                
+                <div style="display:flex; flex-direction:column; margin-top:auto; margin-bottom:auto; width:100%;">
+                    <div id="name" style="font-weight: bold; color:white; font-size:1.2rem;"><%= teamname %> 팀</div>
+                    <div style="background-color: #7473ff; display:block; float:right; padding-right:.5rem;">
+                        <a href="/logout"><button class="btn" type="submit" style="background-color: transparent; color: white; font-size: .8rem; font-weight: bold; float:right;">로그아웃</button></a>
+                        <a href="/teamprofile"><button class="btn" type="submit" style="background-color: transparent; color: white; font-size: .8rem; font-weight: bold; padding-right:0; float:right;">내 정보</button></a>
+                        
+                    </div>
+                    
+                </div>
             </div>
+            
+            
         </div>
 
     <ul class="navbar-nav mr-auto">

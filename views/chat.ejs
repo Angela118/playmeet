@@ -27,7 +27,7 @@
             login();
         });
         function connect(){
-            var host = '192.168.0.105';  // 아이피 바꾸기!!!!!!
+            var host = '192.168.26.141';  // 아이피 바꾸기!!!!!!
             $('#hostInput').val(); //203.153.146.124
             var port = 3000;  // $('#portInput').val();
             //서버에 접속
@@ -116,7 +116,7 @@
                 contents =
                     "<li class=" + writer + ">"
                     + "<div class='img_div'" + "style='margin-left: 0rem; margin-right: 0'>" + "<img class='profile_img' src='../profile_img/" + profile + "'/>" + "</div>"
-                    + "<div class='msg'" + "<p>" + msg + "</p><button class='btn' onclick=\"location.href='/teamcal'\">상대방 리뷰" + "</button></div>"
+                    + "<div class='msg'" + "<p>" + msg + "</p><button class='btn' style='color:white; background-color:transparent; border:1px solid white; border-radius: 10px; display:block;margin-left:auto;margin-right:auto;margin-top:.5rem;' onclick=\"location.href='/teamcal'\">상대방 리뷰" + "</button></div>"
                     + "</li> ";
             }
             // 매칭 중단시
@@ -126,7 +126,7 @@
                     contents =
                         "<li class=" + writer + ">"
                         + "<div class='img_div'" + "style='margin-left: 0rem; margin-right: 0'>" + "<img class='profile_img' src='../profile_img/" + profile + "'/>" + "</div>"
-                        + "<div class='msg'" + "<p>" + msg + "</p><button class='btn' onclick='deleteClick()'>수락" + "</button></div>"
+                        + "<div class='msg' style='width:100%;'" + "<p>" + msg + "</p><button class='btn' style='color:white; background-color:transparent; border:1px solid white; border-radius: 10px; display:block;margin-left:auto;margin-right:auto;margin-top:.5rem;'  onclick='deleteClick()'>수락" + "</button></div>"
                         + "</li> ";
                     $(".chatting").append(contents);
                     var objDiv = document.getElementById("chatting");
@@ -203,10 +203,10 @@
     <!-- The Modal -->
     <div class="modal" id="myModal">
         <div class="modal-dialog modal-dialog-centered modal-sm">
-            <div class="modal-content">
+            <div class="modal-content" style="background-color:#292941; color:white;">
                 <!--&lt;!&ndash; Modal body &ndash;&gt;-->
                 <div class="modal-body">
-                    <p style="color:black"></p>매칭을 중단하시겠습니까? 상대방과의 모든 매칭 정보가 삭제됩니다.
+                    <p>매칭을 중단하시겠습니까? 상대방과의 모든 매칭 정보가 삭제됩니다.</p>
                 </div>
 
                 <input type="hidden" name="otherEmail" value="<%= event_data.otherEmail%>">
@@ -216,8 +216,8 @@
 
                 <!--&lt;!&ndash; Modal footer &ndash;&gt;-->
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal" >닫기</button>
-                    <button type="button" class="btn" onclick="cancel()" data-dismiss="modal" data-toggle="collapse" data-target="#navbarsExample01" >매칭 중단</button>
+                    <button type="button" class="btn" data-dismiss="modal" style="background-color:transparent; color:white; border:1px solid white;">닫기</button>
+                    <button type="button" class="btn btn-danger" onclick="cancel()" data-dismiss="modal" data-toggle="collapse" data-target="#navbarsExample01" >매칭 중단</button>
                 </div>
 
             </div>
@@ -319,20 +319,20 @@
     <% var add = /d/.exec(event_data.event_add);
     %>
 
-    <h4 style="font-size:1.2rem; text-align:center;"> § 경기 정보 § </h4>
-    <div style="width:40%; float:left;">경기 날짜</div> 
+    <h4 style="font-size:1.2rem; text-align:center;"> 경기 정보 </h4>
+    <div style="width:40%; float:left; color:#D2D0DE;">경기 날짜</div> 
     <div style="width:60%; float:right;"> : <%=event_data.event_date%></div>
     
-    <div style="width:40%; float:left;">경기 시간 </div> 
+    <div style="width:40%; float:left; color:#D2D0DE;">경기 시간 </div> 
     <div style="width:60%; float:right;">: <%=time%></div>
     
-    <div style="display:inline-block;"><div style="width:40%; float:left;">경기 장소 </div> 
+    <div style="display:inline-block;"><div style="width:40%; float:left; color:#D2D0DE;">경기 장소 </div> 
     <div style="width:60%; float:right;">: <%=event_data.event_add[0]%> <%=event_data.event_add[1]%> <%=event_data.event_region%></div></div>
     
-    <div style="width:40%; float:left;">상대팀 경기 인원 </div> 
+    <div style="width:40%; float:left; color:#D2D0DE;">상대팀 경기 인원 </div> 
     <div style="width:60%; float:right;">: <%=event_data.other_nofteam%>명</div>
     
-    <div style="width:40%; float:left;">우리팀 경기 인원</div> 
+    <div style="width:40%; float:left; color:#D2D0DE;">우리팀 경기 인원</div> 
     <div style="width:60%; float:right;">: <%=event_data.nofteam%>명</div>
     
     <p style="font-size: 0.9rem; margin-bottom: 0;">(상대방이 업데이트 한 정보는 새로고침해야 확인 가능합니다.)</p>
@@ -356,7 +356,7 @@
     <!-- The report Modal -->
     <div class="modal" id="reportModal">
         <div class="modal-dialog modal-dialog-centered modal-sm">
-            <div class="modal-content">
+            <div class="modal-content" style="background-color:#292941; color:white;">
                 <div class="modal-body" style="border-top:1px solid black">
                     관리자에게 신고할 내용을 입력<br>
                     신고할 팀 : <b><%=event_data.otherTeamname%>팀</b> <br>(id : <%=event_data.otherEmail%>)
@@ -365,8 +365,8 @@
                 <textarea name="report_content" id="" cols="7" rows="4" placeholder="여기 입력"></textarea>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal" >닫기</button>
-                    <button type="button" class="btn" onclick="report()" data-dismiss="modal" data-toggle="collapse" data-target="#navbarsExample01">제출</button>
+                    <button type="button" class="btn" data-dismiss="modal" style="background-color:transparent; color:white; border:1px solid white;">닫기</button>
+                    <button type="button" class="btn btn-danger" onclick="report()" data-dismiss="modal" data-toggle="collapse" data-target="#navbarsExample01">제출</button>
                 </div>
 
             </div>

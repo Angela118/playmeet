@@ -28,7 +28,7 @@
 <% include ./navbar %>
 <div class="container">
     <div class="reco" style="margin-top:0;">
-        <h5 class="mb-3" style="font-weight: bold; border-bottom: 1px solid white; padding-bottom: .5rem;">기본 정보</h5>
+        <h5 class="mb-3" style="font-weight: bold; border-bottom: 1px solid white; padding-bottom: .5rem;">My Page</h5>
 
         
         <%
@@ -44,88 +44,86 @@
                     }else if(move == 50){
                         var curMove = 'X';
                     }
+        
+                    if(team_talent == 10){
+						var curTalent = '최상';
+					}else if(team_talent == 8){
+						var curTalent = '상';
+					}else if(team_talent == 6){
+						var curTalent = '중';
+					}else if(team_talent == 4){
+						var curTalent = '하';
+					}else if(team_talent == 2){
+						var curTalent = '최하';
+					}
             %>
         
-            <p style="margin-bottom:.5rem;">프로필 사진</p> <!--프로필 사진-->
             <div class="profile_img_upload">
                 <div class="img_div mb-1"><img id="profile_img" src="../profile_img/<%= profile_img %>"/></div>
-                <a href="/uploadimg"><button class="btn btn-sm" type="submit" style="margin-top:.5rem; background-color:#7473ff; color:white; border-color:#ffc107; margin-bottom: 1rem;">프로필 사진 변경</button></a>
+                <a href="/uploadimg"><button class="btn btn-sm" type="submit" style="font-size:.8rem; background-color:transparent; color:grey; margin-bottom: 1rem;">수정</button></a>
             </div>
 
-            <div class="mb-3">
-                <div>팀 이름</div>
-            <div class="change" style="text-align:left;"><%= teamname %></div>
+            <div class="mb-3" style="width: 100%; display:flex;">
+                <div style="float:left; width:30%;">팀 이름</div>
+                <div class="bordering"><%= teamname %></div>
             </div>
 
-            <div class="mb-3"> <!--아이디-->
-                <div>팀장 이메일</div>
-            <div class="change" style="text-align:left;"><%= email %></div>
+            <div class="mb-3" style="width:100%; display:flex;"> <!--아이디-->
+                <div style="float:left; width:30%;">팀장 이메일</div>
+                <div class="bordering"><%= email %></div>
             </div>
       
-         <div class="mb-3">
-                <div id="user-gender">성별</div>
-            <div class="change" style="text-align:left;"><%= curGender %></div>
+         <div class="mb-3" style="display:flex;">
+                <div id="user-gender" style="float:left; width:30%;">성별</div>
+                <div class="bordering"><%= curGender %></div>
             </div>
       
-			<div class="mb-3">
-                <div>평균 연령</div>
-                <div class="enter">
-                <div class="change one"><%= age %></div><div class="two">세</div>
-                </div>
+			<div class="mb-3" style="display:flex;">
+                <div style="float:left; width:30%;">평균 연령</div>
+                <div class="bordering"><%= age %>세</div>
             </div>
 
       
-            <div class="mb-3">
-                <div>주 경기 장소</div>
-            <div class="change" style="text-align:left;"><%= region %></div>
+            <div class="mb-3" style="display:flex;">
+                <div style="float:left; width:30%;">주 경기 장소</div>
+                <div class="bordering"><%= region %></div>
             </div>
    
    
    
-         <div class="mb-3">
-                <div>원정 가능 유무</div>
-            <div class="change" style="text-align:left;"><%= curMove %></div>
+         <div class="mb-3" style="display:flex;">
+                <div style="float:left; width:30%;">원정</div>
+            <div class="bordering"><%= curMove %></div>
+        </div>
+   
+        <div class="mb-3" style="display:flex;">
+                <div style="float:left; width:30%;">팀원 수</div>
+                <div class="bordering"> <%= nofteam %></div>
             </div>
    
    
    
-         <div class="mb-3">
-                <div>팀원 수</div>
-                <div class="enter">
-                    <div class="change one"><%= nofteam %></div><div class="two">명</div>
-                </div>
-            </div>
-   
-   
-   
-         <div class="mb-3">
-                <div>경기 경력</div>
-                <div class="enter">
-                    <div class="change one"><%= career_year %></div><div class="two">년</div>
-                </div>
-            </div>
+         <div class="mb-3" style="display:flex;">
+                <div style="float:left; width:30%;">팀을 결성한 년도</div>
+                <div class="bordering"> <%= career_year %></div>
+        </div>
       
       
-         <div class="mb-3">
-                <div>여태까지 경기 횟수</div>
-                <div class="enter">
-                    <div class="change one"><%= team_talent %></div> <div class="two">번</div>
-                </div>
-            </div>
+         <div class="mb-3" style="display:flex;">
+                <div style="float:left; width:30%;">팀의 실력</div>
+                <div class="bordering"> <%= curTalent %> </div>
+        </div>
    
       
          <div class="mb-3">
                 <div>팀 소개글</div>
-                <div class="change" style="text-align:left;"><%= introteam %></div>
+                <div style="text-align:left; border:1px solid #7473ff; padding: .3rem; height: 7rem; margin-top:.5rem;"><%= introteam %></div>
             </div>
    
    
-
-            <hr class="mb-4">
-
-        <a href="/teamprofileedit"><button class="btn btn-block" style="color:white; text-align:center; margin-left:Auto;margin-right:auto;margin-top:2rem; background-color:#7473ff;">회원정보 수정하기</button></a>
+        <a href="/teamprofileedit"><button class="btn btn-block" style="color:white; text-align:center; margin-left:auto;margin-right:auto;margin-top:2rem; background-color:#7473ff;">회원정보 수정하기</button></a>
     </div>
-</div>
+    </div>
 </body>
 <footer class="my-5 pt-5 text-muted text-center text-small"></footer>
 </html>
