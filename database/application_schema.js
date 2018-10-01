@@ -39,6 +39,7 @@ Schema.createSchema = function(mongoose) {
 		eventYear_forExpire: {type:Number},
 		eventMonth_forExpire: {type:Number},
 		eventDate_forExpire: {type:Number},
+		eventTime_forExpire: {type:Number},
 		
 		match:{type:Number, 'default':0}	//0:아무것도아님 1:신청 2:승낙
    });
