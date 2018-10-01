@@ -155,8 +155,11 @@ module.exports = function(router, passport, upload) {
 						'perRating': '',
                         'allRating': ''
                     };
-                    eventData[j] = data;
-                    j+=1;
+					var move_ok = req.user.move + data.move;
+				    if(move_ok != 5050){
+						eventData[j] = data;
+					  	j+=1;
+				   	}
                 }
 
 
