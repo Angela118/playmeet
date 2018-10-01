@@ -6,33 +6,33 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>경기 스케줄</title>
-
+    
+    <link href="https://fonts.googleapis.com/css?family=Nanum+Gothic" rel="stylesheet">
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <link href="../css/team_schedule.css" rel="stylesheet">
     <link href="../css/calendar.css" rel="stylesheet">
     <link href="../css/common.css" rel="stylesheet">
     
-    <link href="https://fonts.googleapis.com/css?family=Nanum+Gothic" rel="stylesheet">
+    <link href="../css/fullcalendar.css" rel="stylesheet"/>
+	<link href="../css/fullcalendar.print.css" rel="stylesheet" media="print">    
     
     <!-- Bootstrap core JavaScript -->
-    <script src="../js/jquery.js"></script>
+    <script src="../js/jquery.js"></script>    
     <script src="../js/bootstrap.bundle.min.js"></script>	
-        
-    <script type="text/javascript" src="../js/moment.min.js"></script>
-	<script type="text/javascript" src="../js/jquery.min.js"></script>
-	<script type="text/javascript" src="../js/fullcalendar.js"></script>
     
-    <link href="../css/fullcalendar.css" rel="stylesheet"/>
-	<link href="../css/fullcalendar.print.css" rel="stylesheet" media="print">
+     <script type="text/javascript" src="../js/moment.min.js"></script>
+	<!--<script type="text/javascript" src="../js/jquery.min.js"></script>-->
+	<script type="text/javascript" src="../js/fullcalendar.js"></script>
 <!---->
     <script>
+        jQuery.noConflict();
     // 로딩 - 안할거면 div id = loading 내 코드 전부 & div id = page 는 태그만 삭제
     /*window.onload = function(){
         document.getElementById("loading").style.display = "none"; // to undisplay
         document.getElementById("page").style.display = ""; // to display
         return true;
     }*/
-</script>
+    </script>
 	
 </head>
 <body class="coloring">   <!-- 
@@ -51,7 +51,7 @@
         <!--달력-->
 		<script type="text/javascript">
 			
-			$(function(){
+			jQuery(function(){
 
 				var today = new Date();
 				var dd = today.getDate();
@@ -81,7 +81,7 @@
 					
 
 				var ww,view;
-				$("#calendar").fullCalendar({
+				jQuery("#calendar").fullCalendar({
 					  defaultDate : yyyy+"-"+mm+"-"+dd
 					, defaultView : 'month'
 					, editable : false
@@ -96,14 +96,14 @@
 					, windowResize: function(view) {
 							ww = getWindowWidth();
 							view = getView();
-							var currentView = $('#calendar').fullCalendar('getView');
+							var currentView = jQuery('#calendar').fullCalendar('getView');
 							if(view != currentView){
-                                $('#calendar').fullCalendar('changeView',view);
+                                jQuery('#calendar').fullCalendar('changeView',view);
 							}
 							if(ww <= 768){
-                                $('.fc-header-right .fc-button').hide();
+                                jQuery('.fc-header-right .fc-button').hide();
                             }else{
-                                $('.fc-header-right .fc-button').show();
+                                jQuery('.fc-header-right .fc-button').show();
                             }
 					}
 				});
@@ -138,7 +138,7 @@
 			}
 			
 			function getWindowWidth(){
-				return $(window).width();
+				return jQuery(window).width();
 			}
 			function getView(){
 				return (ww <= 768) ? 'basicDay' : 'month';
@@ -320,18 +320,18 @@
                                 }
                                 
                                 careerYear = <%= yyyy %> - careerYear;
-                                $("div[name=email]").eq(index).text(email);
-                                $("div[name=teamname]").eq(index).text(teamname + '팀');
-                                $("div[name=realAdd]").eq(index).text(realAdd);
-                                $("div[name=realRegion]").eq(index).text(realRegion);
-                                $("div[name=move]").eq(index).text(move);
-                                $("div[name=age]").eq(index).text(age +'대');
-                                $("div[name=gender]").eq(index).text(gender);
-                                $("div[name=careerYear]").eq(index).text(careerYear + '년');
-                                $("div[name=careerCount]").eq(index).text(careerCount);
-                                $("div[name=nofteam]").eq(index).text(nofteam + '명');
-                                $("div[name=allRating]").eq(index).text(allRating);
-                                $("div[name=myModal]").eq(index).modal();
+                                jQuery("div[name=email]").eq(index).text(email);
+                                jQuery("div[name=teamname]").eq(index).text(teamname + '팀');
+                                jQuery("div[name=realAdd]").eq(index).text(realAdd);
+                                jQuery("div[name=realRegion]").eq(index).text(realRegion);
+                                jQuery("div[name=move]").eq(index).text(move);
+                                jQuery("div[name=age]").eq(index).text(age +'대');
+                                jQuery("div[name=gender]").eq(index).text(gender);
+                                jQuery("div[name=careerYear]").eq(index).text(careerYear + '년');
+                                jQuery("div[name=careerCount]").eq(index).text(careerCount);
+                                jQuery("div[name=nofteam]").eq(index).text(nofteam + '명');
+                                jQuery("div[name=allRating]").eq(index).text(allRating);
+                                jQuery("div[name=myModal]").eq(index).modal();
                             }
 						</script>
 						<!-- The Modal -->
