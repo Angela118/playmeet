@@ -31,6 +31,7 @@ select.custom-select option{
 
 .list_item{
   display: flex;
+    flex-direction: column;
   justify-content: space-between;
   padding: .5rem .8rem;
     border: 3px solid;
@@ -40,22 +41,26 @@ select.custom-select option{
     padding-right: 0;
 }
 .list_divide {
-    display: block;
+    display: flex;
     width: 100%;
-    position: relative;
-    margin-right: 10px;
+    /*position: relative;*/
 }
 .list_divide_2 {
     display: block;
-    width: 93%;
-    position: absolute;
+  width: 100%;
+    /*position: absolute;*/
 }
 
 .list_item_teamname{
+    display:inline-block;
+    width:100%;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow: ellipsis;
   color:white;
   letter-spacing:.2rem;
   font-weight: bold;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     margin-bottom: -.2rem;;
 }
 .list_item_date{
@@ -74,27 +79,32 @@ select.custom-select option{
     border-radius: 15px;
     margin-right: 10px;
 }
+
 .list_item_icon {
-    float: right;
+    display:block;
+    width:30%;
+    float:right;
+    margin-right: 5px;
 }
-.list_item_icon >h8{
+.list_item_icon >h7{
+    float:right;
     background-color: #9933dd;
     color: white;
     font-weight: bold;
-    font-size: .9rem;
-    padding: 10px;
+    font-size: .7rem;
+    padding: 7px;
     border-radius: 50%;
-    line-height: 250%;
-    text-align: center;   
+    text-align: center;
+    margin-right: 5px;
 }
-.list_item_icon >h7{
+.list_item_icon >h8{
+    float:right;
     background-color: #dd3366;
     color: white;
     font-weight: bold;
-    font-size: .9rem;
-    padding: 10px;
+    font-size: .7rem;
+    padding: 7px;
     border-radius: 50%;
-    line-height: 250%;
     text-align: center;
 }
 
@@ -154,15 +164,6 @@ select.custom-select option{
 
 
 /*main_search-------------------------------------------*/
-.search {
-    display: flex;
-    width: 100%;
-    margin-bottom: 1rem;
-}
-.p_title {
-    font-weight: bold;
-    font-size: 1.5rem;
-}
 
 .wrapper {
   margin-bottom:1rem;
@@ -182,6 +183,12 @@ select {
   text-align: center;
 }
 
+.boxing {
+    border: 2px solid #7473ff;
+    background-color:#292941;
+    color:white;
+}
+
 /*match_application_form-------------------------------------------*/
 .table{
   border-top:2px solid #dee2e6;
@@ -199,4 +206,11 @@ select {
 /*main_search_result------------------------------------------------*/
 .modal_content{
   margin-bottom: 0.2rem;
+}
+
+
+/*모달창------------------------------------------------*/
+.modal-content {
+    color:white !important;
+    background-color: #292941 !important;
 }

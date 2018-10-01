@@ -1,11 +1,14 @@
 html{
   height: 100%;
 }
+@import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
 
 body{
   height: 100%;
+    width:100%;
   background-color: #292941;  
     font-family: 'Nanum Gothic', sans-serif;
+    font-style: normal;
 }
 
 .menu_img {
@@ -22,6 +25,7 @@ body{
   position:fixed;
     background-color: #292941;
     z-index: 2;
+    padding: .5rem 1rem !important;
 }
 .top{
   display:flex;
@@ -47,23 +51,22 @@ a{color:white;text-decoration:none;-webkit-text-decoration-skip:objects}a:hover{
 }
 
 .mypage{
-  display: flex;
   width: 100%;
+    display: flex;
   flex-wrap: wrap;
-  align-items: center;
     margin-top: .5rem;
   padding: .3rem;
-  justify-content: space-between;
     background-color: #7473ff;
 }
 
-.name{
+#name{
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  width: 6rem;
+  width: 100%;
+    margin-left:1rem;
   font-weight: bold;
-  text-align: center;
+    padding:.5rem;
 }
 .img_div{
   overflow:hidden;
@@ -91,33 +94,32 @@ a{color:white;text-decoration:none;-webkit-text-decoration-skip:objects}a:hover{
 .coloring {
     background-color: #292941;
     margin: 0;
+    width:100%;
 }
 .container {
     padding-top: 70px;
 }
 .reco {
     color: white;
-    margin-top: 1rem;
+    margin-top: 0;
 }
 
-#load {
-	width: 100%;
-	height: 100%;
-	top: 0;
-	left: 0;
-	position: fixed;
-	display: block;
-	opacity: 0.8;
-	background: white;
+#load {   
+    width: 100%;
+    height: 100%;
 	z-index: 99;
 	text-align: center;
 }
 
 #load > img {
-	position: absolute;
-	top: 50%;
-	left: 50%;
+    position: absolute;    
+    width: 50px;
+    height: 50px;
+	top: 45%;
+	left: 45%;
+    
 	z-index: 100;
+    align-items: center;
 }
 .button{
     color: black;
