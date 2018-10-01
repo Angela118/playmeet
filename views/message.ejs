@@ -90,9 +90,9 @@ if(curMove == 100){
         document.getElementById('sSameEmailIndex').value = sameEmailIndex;
         document.getElementById('match').value = match;
 		if(match == 1){
-        	alert('email : ' + email + '/ sameEmailIndex : ' + sameEmailIndex + '/ match : ' + match + '매칭을 승낙하였습니다.');
+        	alert('매칭을 승낙하였습니다.');
 		}else if(match == 2){
-			alert('email : ' + email + '/ sameEmailIndex : ' + sameEmailIndex + '/ match : ' + match + '매칭을 거절하였습니다.');
+			alert('매칭을 거절하였습니다.');
 		}
         document.getElementById('formPost').submit();
     }
@@ -107,8 +107,8 @@ if(curMove == 100){
                 <!--팀 지역에서 add[1]값이 없는 건 회원가입할 때 add가 배열이 아니어서임-->
                 <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">팀 지역 : </div> <div> <%= event_data[index].add%>
                 <!--팀 지역 : <%= event_data[index].add[0] %> <%event_data[index].add[1]%><br>--></div></div>
-                <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">매칭 등록한 지역 : </div> <div> <%= event_data[index].others.sAdd[0]%> <%= event_data[index].others.sAdd[1] %></div></div>
-                <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">매칭 등록한 장소 : </div> <div> <%= event_data[index].others.sRegion %></div> </div>
+                <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">매칭 등록 지역 : </div> <div> <%= event_data[index].others.sAdd[0]%> <%= event_data[index].others.sAdd[1] %></div></div>
+                <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">매칭 등록 장소 : </div> <div> <%= event_data[index].others.sRegion %></div> </div>
                 <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">원정경기 : </div> <div> <%= curMove %></div> </div>
                 <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">연령대 : </div><div> <%= event_data[index].age %>대</div></div>
                 <div style="display:flex;"><div style="display:block; width:40%; color:#D2D0DE;">성별 : </div><div> <%= curGender %> </div></div>
