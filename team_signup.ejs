@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>팀 회원 가입</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="../css/common.css" rel="stylesheet">
+    <link href="../css/signup.css" rel="stylesheet">
+
+    <script src="../js/jquery.js"></script>
+    <script src="../js/bootstrap.bundle.min.js"></script>
+   
+    <script>
+        function goBack(){
+            window.history.back();
+        }
+    </script>
+    
+    <style>
+      .map_wrap {position:relative;width:100%;height:350px;}
+      .title {font-weight:bold;display:block;}
+      .hAddr {position:absolute;left:10px;top:10px;border-radius: 2px;background:#fff;background:rgba(255,255,255,0.8);z-index:1;padding:5px;}
+      #centerAddr {display:block;margin-top:2px;font-weight: normal;}
+      .bAddr {padding:5px;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
+   </style>
+
+<!--숫자만 입력-->
+<script>
+    function onlyNumber(event){
+        event = event || window.event;
+        var keyID = (event.which) ? event.which : event.keyCode;
+        if ( (keyID >= 48 && keyID <= 57) || (keyID >= 96 && keyID <= 105) || keyID == 8 || keyID == 46 || keyID == 37 || keyID == 39 )
+            return;
+        else
+            return false;
+    }
+    function removeChar(event) {
+        event = event || window.event;
+        var keyID = (event.which) ? event.which : event.keyCode;
+        if ( keyID == 8 || keyID == 46 || keyID == 37 || keyID == 39 )
+            return;
+        else
+            event.target.value = event.target.value.replace(/[^0-9]/g, "");
+    }
+</script>   
+</head>
+<body class="coloring">
+<nav class="navbar">
+    <div class="top">
+        <img src="../img/left-arrow.png" height="20rem" onclick="goBack();">
+      <a href="/"><img src="../img/update_playmeet3.jpg" height="50rem" style="margin-right:-1rem;"></a>
+        <div class="sets" style="visibility:hidden;">
+            <a href="/chatroomchat"><img src="../img/update_chat.png" class="menu_img" height="20rem" style="margin-right: .3rem;"></a>
+            <img src="../img/update_menu.png" height="20rem" class="navbar-toggler" data-toggle="collapse" data-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
+        </div>
+    </div>
+    </nav>
+    
+<div class="container">    
+    <div class="reco" style="margin:0;">
+        <h5 class="mb-3" style="font-weight: bold; border-bottom: 1px solid white; padding-bottom: .5rem;">Sign up</h5>
+      
+        <form class="" action="/teamsignup" method="post">
+              <div class="mb-3">
+                <label for="user-name">팀 이름</label>
+                <input type="text" class="form-control" name="teamname" id="user-name" placeholder="" value="" required>
+                <div class="invalid-feedback">
+                    Valid name is required.
+                </div>
+                </div>
+
+            <div class="mb-3"> <!--아이디-->
+                <label for="user-ID">아이디</label>
+                <div class="input-group">
+                    <input type="email" class="form-control" name="email" id="user-ID" placeholder="팀장 이메일 주소" required>
+                    <div class="invalid-feedback" style="width: 100%;">
+                        Your ID is required.
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="user-password">비밀번호</label>
+                <input type="password" class="form-control" name="password" id="user-password">
+            </div>
+
+
+            <div class="mb-3">
+                <label for="user-gender">성별</label>
+                <select class="custom-select d-block w-100" name="gender" id="user-gender" required>
+                    <option value="" disabled selected hidden>Choose...</option>
+                    <option value="75">혼성</option>
+                    <option value="100">여자</option>
+                   <option value="50">남자</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="">평균 연령</label>
+                <select class="custom-select d-block w-100" name="age" id="" required>
+                    <option value="" disabled selected hidden>Choose...</option>
+                    <option value="10">10대</option>
+               <option value="20">20대</option>
+               <option value="30">30대</option>
+               <option value="40">40대</option>
+               <option value="50">50대</option>
+               <option value="60">60대</option>
+               <option value="70">70대</option>
+                    <option value="80">80대 이상</option>
+                </select>
+            </div>
+
+           
+           
+           <div class="mb-3">
+                <label for="region">주 경기 장소</label>   
+            <br>   
+                <input placeholder="숙명여자대학교" id="keyword" size="15"> 
+				<input type="button" onclick="searchPlaces()" value="검색하기" style="color:grey; background-color:#292941; border:none; padding:0;">            
+
+				<input type="hidden" name="resultLat" id="resultLat" placeholder="위도" class="form-control" readonly/ > 
+				<input type="hidden" name="resultLng" id="resultLng" placeholder="경도" class="form-control" readonly/ >
+				<input name="region" id="region" class="readonly form-control" size="15" style="background-color: transparent; color:white; border:none; border-bottom: 1px dotted white; font-size:0.8rem;" required/>
+                    <script>
+                        $(".readonly").keydown(function(e){
+                            e.preventDefault();
+                        });
+                    </script>
+				<input name="add" id="add" class="form-control" style="background-color: transparent; color:white; border:none; border-bottom: 1px dotted white; font-size:0.8rem;" readonly/>
+				<input name="add2" id="add2" class="form-control" style="background-color: transparent; color:white; border:none; border-bottom: 1px dotted white; font-size:0.8rem; margin-bottom: .5rem;" readonly/>
+
+				<div id="map" style="width:100%;height:300px; border-radius:15px;"></div>
+
+				<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=df8f5565b51994aa9c71d2128dcdfec5&libraries=services"></script>
+				<script>
+		   // 마커를 클릭하면 장소명을 표출할 인포윈도우 입니다
+				var infowindow = new daum.maps.InfoWindow({zIndex:1});
+				var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+					mapOption = {
+						center: new daum.maps.LatLng(37.54528542434111, 126.96541439095647), // 지도의 중심좌표
+						level: 4 // 지도의 확대 레벨
+					};  
+				// 지도를 생성합니다    
+				var map = new daum.maps.Map(mapContainer, mapOption); 
+				// 장소 검색 객체를 생성합니다
+				var ps = new daum.maps.services.Places(); 
+	   //          ps.keywordSearch('숙명여자대학교', placesSearchCB); 
+				// 키워드로 장소를 검색합니다
+				//searchPlaces();
+				// 키워드 검색을 요청하는 함수입니다
+				function searchPlaces() {
+					var keyword = document.getElementById('keyword').value;
+					if (!keyword.replace(/^\s+|\s+$/g, '')) {
+						alert('키워드를 입력해주세요!');
+						return false;
+					}
+					// 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
+					ps.keywordSearch( keyword, placesSearchCB); 
+				}
+				// 키워드 검색 완료 시 호출되는 콜백함수 입니다
+				function placesSearchCB (data, status, pagination) {
+					if (status === daum.maps.services.Status.OK) {
+						// 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
+						// LatLngBounds 객체에 좌표를 추가합니다
+						var bounds = new daum.maps.LatLngBounds();
+						for (var i=0; i<data.length; i++) {
+							displayMarker(data[i]);    
+							bounds.extend(new daum.maps.LatLng(data[i].y, data[i].x));
+						}       
+						// 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
+						map.setBounds(bounds);
+					} 
+				}
+				 // 주소-좌표 변환 객체를 생성합니다
+				var geocoder = new daum.maps.services.Geocoder();
+				function searchDetailAddrFromCoords(coords, callback) {
+					// 좌표로 법정동 상세 주소 정보를 요청합니다
+					geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
+				}   
+				// 지도에 마커를 표시하는 함수입니다
+				function displayMarker(place) {
+					// 마커를 생성하고 지도에 표시합니다
+					var marker = new daum.maps.Marker({
+						map: map,
+						position: new daum.maps.LatLng(place.y, place.x) 
+					});
+					var geoLat = place.y;
+					var geoLng = place.x;
+					// 마커에 클릭이벤트를 등록합니다
+					daum.maps.event.addListener(marker, 'click', function() {
+		//               displayPlaceInfo(place);
+						document.getElementById('region').value = place.place_name;
+						document.getElementById('resultLat').value = geoLat;
+						document.getElementById('resultLng').value = geoLng;
+						document.getElementById('add').value = place.road_address_name;
+						document.getElementById('add2').value = place.address_name;
+					});
+					// 클릭한 마커에 대한 장소 상세정보를 커스텀 오버레이로 표시하는 함수입니다
+					function displayPlaceInfo (place) {
+						var content = '<div class="placeinfo">' +
+									'   <a class="title" href="' + place.place_url + '" target="_blank" title="' + place.place_name + '">' +    place.place_name + '</a>';   
+						if (place.road_address_name) {
+							content += '    <span title="' + place.road_address_name + '">' + place.road_address_name + '</span>' +
+									'  <span class="jibun" title="' + place.address_name + '">(지번 : ' + place.address_name + ')</span>';
+						}  else {
+							content += '    <span title="' + place.address_name + '">' + place.address_name + '</span>';
+						}                
+						content += '    <span class="tel">' + place.phone + '</span>' + 
+								'</div>' + 
+								'<div class="after"></div>';
+						// 인포윈도우에 클릭한 위치에 대한 법정동 상세 주소정보를 표시합니다
+						infowindow.setContent(content);
+						infowindow.open(map, marker); 
+					}
+				}
+				</script>
+            </div>
+           
+           
+           
+
+            <div class="mb-3">            
+                <label for="move">원정 경기</label>
+                <select class="custom-select d-block w-100" name="move" id="" required>
+                    <option value="" disabled selected hidden>Choose...</option>
+                    <option value="100">O</option>
+                    <option value="50">X</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="nofteam">팀원 수</label>
+                <div class="enter">
+                    <input type="text" class="form-control one" name="nofteam" id="nofteam" placeholder="숫자 입력" onkeydown='return onlyNumber(event)' onkeyup='removeChar(event)' style='ime-mode:disabled;' required><div class="two">명</div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="career_year">팀을 결성한 년도</label>
+                <div class="enter">
+                    <input type="text" class="form-control one" name="career_year" id="career_year" placeholder="숫자 입력" onkeydown='return onlyNumber(event)' onkeyup='removeChar(event)' style='ime-mode:disabled;' required><div class="two">년</div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="team_talent">팀의 실력</label>
+                    <select class="custom-select d-block w-100" name="team_talent" id="" required>
+                        <option value="" disabled selected hidden>Choose...</option>
+                        <option value="10">최상</option>
+                        <option value="8">상</option>
+                  		<option value="6">중</option>
+						<option value="4">하</option>
+                        <option value="2">최하</option>
+                    </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="introteam">팀 소개글</label>
+                <textarea class="form-control" name="introteam" rows="5" placeholder="100자 내로 입력"></textarea>
+            </div>
+
+           <a href="/uploadimg"><button class="btn btn-block" style="color:white; text-align:center; margin-left:Auto;margin-right:auto;margin-top:2rem; background-color:#7473ff;">팀 회원가입 완료</button></a>
+        </form>
+    </div>
+</div>
+</body>
+    <footer class="my-5 pt-5 text-muted text-center text-small"></footer>
+</html>
