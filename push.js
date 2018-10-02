@@ -28,12 +28,11 @@ exports.sendPushAlert = function(client_token, push_message){
 		// App 패키지 이름
 		restricted_package_name: "com.playmeet.playmeet",
 		// App에게 전달할 데이터
-/*		data: {
+		data: {
 			num1: 2000,
 			num2: 3000
 		}
 		
-		*/
 	};
 	
 	fcm.send(push_data, function(err, response) {
