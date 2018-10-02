@@ -8,7 +8,7 @@ module.exports = function(router, passport, upload) {
 		
 	var pushAlert = require('../push');
 
-    var an = 0;
+    var an = 5;
     var dbm = require('../database/database');
 
     var imgi=0;
@@ -150,6 +150,7 @@ module.exports = function(router, passport, upload) {
 						eventData[j] = data;
 					  	j+=1;
 				   	}
+                    
                 }
 
 
@@ -389,12 +390,14 @@ module.exports = function(router, passport, upload) {
         dbm.ApplicationModel.update({email:others.sEmail, application_number:others.sApplicationNumber}, {$set: {match: 1}}, function (err) {
             if(err) throw err;
             
+            /*
 			var push_message = event.teamname + "팀으로부터 매칭 신청이 왔습니다.";
 			dbm.UserModel.find({email:others.sEmail}, function(err, result){
 				if(err) throw err;
 				pushAlert.sendPushAlert(result[0]._doc.usertoken, push_message);
 				console.log('=== '+ others.sEmail +' 에게 푸시 알람 ===');
 			});
+            */
 			
 			console.log('=== ApplicationModel update in main ===');
 
@@ -677,16 +680,16 @@ module.exports = function(router, passport, upload) {
         }
         if(req.body.region || req.query.region){
             user_context.add = req.body.add || req.query.add;
-            if(!event.add){		//도로명주소 없는 경우 지번 주소
-                event.add = req.body.add2 || req.query.add2;
+            if(!user_context.add){		//도로명주소 없는 경우 지번 주소
+                user_context.add = req.body.add2 || req.query.add2;
             }
             var addr = [];
-            addr= event.add.split(' ');
+            addr= user_context.add.split(' ');
 
             if(addr[0] == '제주특별자치도'){
-                event.add = [addr[1], addr[2]];
+                user_context.add = [addr[1], addr[2]];
             }else
-                event.add = [addr[0], addr[1]];
+                user_context.add = [addr[0], addr[1]];
 
             user_context.region = req.body.region || req.query.region;
             user_context.geoLat = req.body.resultLat || req.query.resultLat;
@@ -933,7 +936,7 @@ module.exports = function(router, passport, upload) {
         dbm.ApplicationModel.update({application_number:application_number}, {$set: {match:0}}, function (err) {
                 if(err) throw err;
 			
-				
+				/*
 				dbm.UserModel.find({email:otherEmail}, function(err, result){
 					if(err) throw err
 
@@ -941,6 +944,7 @@ module.exports = function(router, passport, upload) {
 					pushAlert.sendPushAlert(result[0]._doc.usertoken, push_message);
 					console.log('=== '+ otherEmail +' 에게 푸시 알람 ===');
 				});
+                */
             }
         )
 
@@ -2014,16 +2018,18 @@ module.exports = function(router, passport, upload) {
 
         dbm.ApplicationModel.update({email:others.sEmail, application_number:others.sApplicationNumber}, {$set: {match: 1}}, function (err) {
             if(err) throw err;
-			
+			                
+            /*
 			dbm.UserModel.find({email:others.sEmail}, function(err, result){
 				if(err) throw err;
-				
+
 				var push_message = teamname + "팀이 매칭 신청 하였습니다.";
 				pushAlert.sendPushAlert(result[0]._doc.usertoken, push_message);
 				console.log(result[0]._doc.email);
 				console.log('=== '+ others.sEmail +' 에게 푸시 알람 ===');
 			});
-			
+			*/
+            
 			console.log('=== application updated ===');
             res.redirect('/');
         });
@@ -2707,6 +2713,7 @@ module.exports = function(router, passport, upload) {
                     if (err) throw err;
 					
 					
+                    /*
 					if(scoreReceiveTeamEmail === req.user.email){
 						dbm.UserModel.find({email:scoreCallTeamEmail}, function(err, result){
 							if(err) throw err;
@@ -2728,6 +2735,7 @@ module.exports = function(router, passport, upload) {
 							});
 						});						
 					}
+                    */
 					
 					console.log('=== Score updated ===');
                     
@@ -2814,7 +2822,7 @@ module.exports = function(router, passport, upload) {
             {$set: {"others.sReceivedReview": rating, "others.sReceivedReviewComment": review_comment, "others.sReviewDate": reviewDate}}, function (err) {
                 if (err) throw err;
 					
-				
+				/*
 				if(req.user.email === email){
 					dbm.UserModel.find({email:reviewedTeamEmail}, function(err, result){
 						if(err) throw err;
@@ -2825,6 +2833,7 @@ module.exports = function(router, passport, upload) {
 						console.log('=== '+ reviewedTeamEmail +' 에게 푸시 알람 ===');
 					});
 				}
+                */
 				console.log('내가 신청했을 때 review updated');
                 
             });
@@ -2839,6 +2848,7 @@ module.exports = function(router, passport, upload) {
 					dbm.UserModel.find({email:reviewedTeamEmail}, function(err, result1){
 						var reviewedTeamname = result1[0]._doc.teamname;
 						
+                        /*
 						dbm.UserModel.find({email:email}, function(err, result){
 							if(err) throw err;
 
@@ -2846,7 +2856,7 @@ module.exports = function(router, passport, upload) {
 							pushAlert.sendPushAlert(result[0]._doc.usertoken, push_message);
 							console.log('=== '+ email +' 에게 푸시 알람 ===');
 						});
-						
+						*/
 					});
 				}
 				console.log('내가 신청받았을 때 review updated');                
