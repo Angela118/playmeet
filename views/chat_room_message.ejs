@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/chat_room.css" rel="stylesheet">
+    <link href="../css/common.css" rel="stylesheet">
+
+    <script src="../js/jquery.js"></script>
+    <script src="../js/bootstrap.bundle.min.js"></script>
+
+
+    <title>채팅방 목록 - 메시지</title>
+</head>
+<body class="coloring">
+<% include ./navbar %>
+<div class="container" style="padding-top:7.5rem">
+    <div class = "chat_tab">
+        <div class="chat_chat" onclick="location='./chatroomchat'">채팅</div>
+        <div class="chat_message" style="background-color:#7473ff; padding: .5rem 0;" onclick="location='./chatroommessage'">메시지</div>
+    </div>
+    
+    <div class="reco">
+        <% if(event_data.length == 0) { %>
+        <p style="font-weight: bold; margin-left:2rem;">우리 팀에게 온 메시지가 없습니다.</p>
+        <%}else{
+            var notZeroCount = 0; // 나한테 신청왔는데 매칭 수락이나 거절한거
+            var count = 0; // 띄워지는 값 count
+        <!--event_data는 내게 신청한 상대팀 정보-->
+        <!--event_data.others는 선택된 (내가 올렸던) 경기 날짜 & 시간 등 들어있음 -->
+        for(var i = 0; i < event_data.length; i++) {
+            var curEmail = event_data[i].email;
+            var curTeamname = event_data[i].teamname;
+            var curMention = event_data[i].mention;
+            var curCreatedMonth = event_data[i].created_month;
+            var curCreatedDay = event_data[i].created_day;
+            var match_succcess = event_data[i].match_success;
+            // matchsuccess=0인것만 메시지함에서 띄우기
+            if(event_data[i].match_success != 0) {
+                // event_data 다 돌았는데 다 매칭 수락이나 거절했으면
+                if((i == (event_data.length - 1)) && ((notZeroCount) == i)) {%>
+                    <p style="font-weight: bold; margin-left:2rem;">우리 팀에게 온 메시지가 없습니다.</p>
+                <%}
+                notZeroCount++;
+            }else{
+        %>
+        <script>
+            function clicked(email, sameEmailIndex, index) {
+                document.getElementsByName('sEmail')[index].value = email;
+                document.getElementsByName('sSameEmailIndex')[index].value = sameEmailIndex;
+                // alert(email + '주장팀 클릭클릭 sameEmailIndex : ' + sameEmailIndex + '/ index : ' + index);
+                document.getElementsByName('formPost')[index].submit();
+            }
+        </script>
+        <form action="/chatroommessage" name="formPost" method="post" style="padding-bottom: .5rem; border-bottom:1.5px solid #7473ff; margin-bottom:.5rem;">
+            <input type="hidden" name="sEmail" id="sEmail" value=''>
+            <input type="hidden" name="sSameEmailIndex" id="sSameEmailIndex" value=''>
+            <div class="message" onclick="clicked( `<%= curEmail %>`,`<%=event_data[i].sameEmailIndex%>`, `<%= count%>`)">
+            <div style="padding:.5rem 1rem;">
+                <div class="chat_room_name mb-2" >
+                    <span style="font-weight:bold; color:#CFD1E3; font-size:1.2rem;"> <%=curTeamname%> 팀</span>
+                    <span class="chat_room_date" style="float:right;"> </span>
+                </div>
+                <div class="chat_room_content">매칭 신청합니다. <%=curMention%></div>
+            </div>
+         </div>
+        </form>
+        <%
+                count++;
+                }
+            }
+        }%>
+    </div>
+    <!--</div>-->
+</div>
+    
+</body>
+</html>

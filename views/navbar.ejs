@@ -1,0 +1,64 @@
+<link rel="stylesheet" href="//fonts.googleapis.com/earlyaccess/nanumgothic.css">
+
+    <script>
+        function goBack(){
+            window.history.back();
+        }
+    </script>
+
+<nav class="navbar">
+    <div class="top">
+        <img src="../img/left-arrow.png" height="20rem" onclick="goBack();">
+		<a href="/"><img src="../img/update_playmeet3_low.jpg" height="50rem" style="margin-right:-1rem;"></a>
+        <div class="sets">
+            <a href="/chatroomchat"><img src="../img/update_chat.png" class="menu_img" height="20rem" style="margin-right: .3rem;"></a>
+            <img src="../img/update_menu.png" height="20rem" class="navbar-toggler" data-toggle="collapse" data-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
+        </div>
+    </div>
+
+    <div class="collapse navbar-collapse" id="navbarsExample01">
+        <div class="mypage" style="background-color:#7473ff !important;">
+            <div style="display:flex; flex-wrap:nowrap; width:100%;">
+                <img src="../profile_img/<%= profile_img %>" id="profile_pic" style="width:5rem; height: 5rem; margin:.5rem; border-radius:50%;">
+                
+                <div style="display:flex; flex-direction:column; margin-top:auto; margin-bottom:auto; width:100%;">
+                    <div id="name" style="font-weight: bold; color:white; font-size:1.2rem;"><%= teamname %> 팀</div>
+                    <div style="background-color: #7473ff; display:block; float:right; padding-right:.5rem;">
+                        <a href="/logout"><button class="btn" type="submit" style="background-color: transparent; color: white; font-size: .8rem; font-weight: bold; float:right;">로그아웃</button></a>
+                        <a href="/teamprofile"><button class="btn" type="submit" style="background-color: transparent; color: white; font-size: .8rem; font-weight: bold; padding-right:0; float:right;">내 정보</button></a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            
+        </div>
+
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="/">홈 (매칭 팀 검색)</a>
+      </li>
+      <li class="nav-item" style="display:flex; align-items:center">
+        <span style="margin-bottom: 0; padding: .5rem 0rem; color:white">우리 팀</span>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" href="/teamreceivedreview" style="margin-left:2rem">우리 팀 평가 점수</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/teamcal" style="margin-left:2rem">경기 스케줄</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/matchapplication">매칭 등록</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/mymatch">내가 등록한 매칭</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/contact">개발자에게 연락</a>
+      </li>
+    </ul>
+
+    </div>
+</nav>

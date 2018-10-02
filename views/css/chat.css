@@ -1,0 +1,84 @@
+.chatting {
+    list-style: none;
+    margin: 0;
+    overflow: auto;
+}
+
+.chatting li {
+    padding: 0.5em;
+    overflow: hidden;
+    display: flex;
+}
+/*
+.chatting .pic {
+    width: 40px;
+    position: relative;
+}
+.chatting .pic img {
+    display: block;
+    width: 100%;
+}
+.you .pic:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    border: 5px solid white;
+    border-left-color: transparent;
+    border-bottom-color: transparent;
+}
+*/
+.me {
+    justify-content: flex-end;
+    align-items: flex-end;
+    width: 100%;
+}
+
+.me .msg {
+    order: 1;
+    border-bottom-right-radius: 0;
+    background-color: #2C2C4C;
+    color: white;
+}
+
+.you .msg {
+    background-color: #4E4D82;
+    color: white;
+}
+
+.msg {
+    max-width: 70%;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.msg p {
+    font-size: 0.8em;
+    margin: 0 0 0.2em 0;
+}
+
+
+.img_div{
+    overflow:hidden;
+    height: 3rem;
+    width: 3rem;
+    border-radius: 50%;
+    display: block;
+    margin: 0 auto;
+}
+
+.profile_img {
+    max-height: 100%;
+    margin: 0 auto;
+}
+
+/* chatappointment */
+.fit {
+    margin: 20px;
+}
+.marginbottom {
+    margin-bottom: 10px;
+}

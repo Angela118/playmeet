@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/chat_room.css" rel="stylesheet">
+    <link href="../css/common.css" rel="stylesheet">
+
+    <script src="../js/jquery.js"></script>
+    <script src="../js/bootstrap.bundle.min.js"></script>
+
+    <script type="text/javascript">
+        jQuery.noConflict();
+        jQuery(document).ready(function () {
+            jQuery('.message').click(function (e) {
+                // location.href = '/chat';
+            });
+        });
+    </script>
+
+    <script>
+        function createRoom(){
+            var roomId = $('#roomIdInput').val();
+            var roomName = $('#roomNameInput').val();
+            var id = $('#idInput').val();
+            var output = {
+                command:'create',
+                roomId:roomId,
+                roomName:roomName,
+                roomOwnoer:id
+            };
+            socket.emit('room', output);
+        }
+        function updateRoom(){
+            var roomId = $('#roomIdInput').val();
+            var roomName = $('#roomNameInput').val();
+            var id = $('#idInput').val();
+            var output = {
+                command:'update',
+                roomId:roomId,
+                roomName:roomName,
+                roomOwnoer:id
+            };
+            socket.emit('room', output);
+        }
+        function deleteRoom(){
+            var roomId = $('#roomIdInput').val();
+            var id = $('#idInput').val();
+            var output = {
+                command:'delete',
+                roomId:roomId,
+                roomName:'',
+                roomOwnoer:id
+            };
+            socket.emit('room', output);
+        }
+        function joinRoom(){
+            var roomId = $('#roomIdInput').val();
+            var output = {
+                command:'join',
+                roomId:roomId
+            };
+            socket.emit('room', output);
+        }
+        function leaveRoom(){
+            var roomId = $('#roomIdInput').val();
+            var output = {
+                command:'leave',
+                roomId:roomId
+            };
+            socket.emit('room', output);
+        }
+        function println(data){      //상태 프린트
+            console.log(data);
+            $('#results').append('<p>' + data + '</p>');
+        }
+    </script>
+
+    <title>채팅방 목록</title>
+</head>
+
+
+
+<body class="coloring">
+<% include ./navbar %>
+<div class="container" style="padding-top:7.5rem">
+    <div class = "chat_tab">
+        <div class="chat_chat" style="background-color:#7473ff; padding: .5rem 0;" onclick="location='./chatroomchat'">채팅</div>
+        <div class="chat_message" onclick="location='./chatroommessage'">메시지</div>
+    </div>
+    
+    <div class="reco">
+        
+        <!--event_data는 내게 신청한 상대팀 정보-->
+        <!--event_data.others는 선택된 (내가 올렸던) 경기 날짜 & 시간 등 들어있음 -->
+        
+        <% if(event_data.length == 0){ %>
+            <p style="font-weight: bold; margin-left:2rem;">진행중인 매칭이 없습니다.</p>
+        <%}else{
+        var count = 0; // 띄워지는 값 count
+        for(var i = 0; i < event_data.length; i++) {
+            if((event_data[i].match_success != 0) && (event_data[i].other_review_date == '')) {
+        %>
+        <script>
+            function clicked(otherEmail, application_number, index) {
+                document.getElementsByName('otherEmail')[index].value = otherEmail;
+                document.getElementsByName('application_number')[index].value = application_number;
+                document.getElementsByName('formPost')[index].submit();
+            }
+        </script>
+        <form action="/chatroomchat" method="post" name="formPost">
+            <input type="hidden" name="otherEmail" id="otherEmail">
+            <input type="hidden" name="application_number" id="application_number">
+        </form>
+        
+        <div class="message" onclick="clicked(
+                '<%=event_data[i].otherEmail%>'
+                , '<%= event_data[i].application_number%>'
+                , '<%= count%>')" style="padding-bottom: .5rem; border-bottom:1.5px solid #7473ff; margin-bottom:.5rem;">
+            <div class="chat_room_content">
+                <% if(event_data[i].event_time == 'none') {
+                    var time = '시간 무관';
+                }else {
+                    var time = event_data[i].event_time + '시'
+                }%>
+                <div style="padding:.5rem 1rem;"><b style="color:#CFD1E3; font-size:1.2rem;"><%= event_data[i].otherTeamname%>팀 <br></b>
+                <b style="float:right;"> <%= event_data[i].event_date%> <%= time%> 경기 </b></div>
+            </div>
+        </div>
+        <%
+            count++;
+            // 다 돌았는데 다 main_search != 1일 때
+        } else if((i == event_data.length - 1) && (count == 0)) {%>
+            <p style="font-weight: bold; margin-left:2rem;">진행중인 매칭이 없습니다.</p>
+        <%}
+        }
+        }
+        %>
+    </div>
+</div>
+</body>
+</html>
