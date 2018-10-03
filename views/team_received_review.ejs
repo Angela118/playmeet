@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/team_received_review.css" rel="stylesheet">
+    <link href="../css/common.css" rel="stylesheet">
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="../js/jquery.js"></script>
+    <script src="../js/bootstrap.bundle.min.js"></script>
+
+    <title>우리 팀 평가</title>
+</head>
+    
+<body class="coloring">
+<% include ./navbar %>
+<div class="container">
+    <div class="reco">
+        <div class="team_score" style="margin-left:auto; margin-right:auto; margin-bottom:2rem;">
+            <div class="team_inform" style="">
+
+                <div class="img_div" style="margin-left: 0rem; margin-right: 0; margin-bottom: 1rem">
+
+                    <img class="profile_img" src="../profile_img/<%= profile_img %>" id="profile_pic"/>
+                </div>
+
+
+                <h6 style="font-weight: bold"><%= teamname %> 팀</h6>
+            </div>
+
+            <div class = average-score>
+                <span style="font-size:3rem; font-weight:bold">
+                    <% var average = 0; %>
+
+                    <% for(var i = 0; i < event_data.length; i++) {
+                        average = average + parseInt(event_data[i].rating);
+                    }%>
+
+                    <%if(average === 0) {
+                        var result = 0;
+                        result.toFixed(2);
+                    }else {
+                        var result = (Math.round((average/event_data.length) * 100)/100).toFixed(2);
+                    }%>
+
+                    <%= result%>
+                </span>
+
+                <div class="stars mb-3">
+
+                    <% if((result >= 1) && (result <1.5)) {%>
+                    <img src="../img/star.png" width="20" height="20">
+                    <%}else if((result >= 0.5) && (result < 1)){%>
+                    <img src="../img/star-half.png" width="20" height="20">
+                    <%}%>
+
+                    <% for(var i = 0; i < Math.round(result)-1; i++) {%>
+                    <img src="../img/star.png" width="20" height="20">
+                    <% if(i == Math.round(result)-2){%>
+                    <%if ((result % 1) < 0.5) { %>
+                    <img src="../img/star.png" width="20" height="20">
+                    <%} else {%>
+                    <img src="../img/star-half.png" width="20" height="20">
+                    <%}%>
+                    <%}%>
+                    <%}%>
+
+                    <%for(var i = 1; i < 5 - Math.round(result - 1); i++) {%>
+                    <img src="../img/star-empty.png" width="20" height="20">
+                    <%}%>
+                </div>
+                <span style="color:#efce4a"><%= event_data.length %>개의 평가</span>
+            </div>
+        </div>
+
+        <% if(event_data.length == 0) { %>
+        <div class="review">
+            <hr class="mb-4">
+            <p style="margin-left:2rem;">받은 리뷰가 없습니다.</p>
+        </div>
+        <%}%>
+
+        <% for(var i = 0; i < event_data.length; i++) {
+            var reviewer_teamname = event_data[i].otherTeam;
+            var event_date = event_data[i].review_date;
+            var rating = event_data[i].rating;
+            var review_comment = event_data[i].review_comment;
+            var random = Math.floor(Math.random() * 100000) + 100000;
+        %>
+
+        <!--<hr class="mb-4">-->
+        <div class="review" style="border-top: 1px solid white; border-bottom: 1px solid white; padding: .5rem 0 .7rem 0;">
+            <div class="review-random-profile mb-2">
+                <div class="review-name">
+                    <span style="font-weight:bold; margin-right:1rem;">
+                        <%= reviewer_teamname %>
+                    </span>
+
+                    <div class="stars">
+                        <% for(var j = 0; j < rating; j++) {%>
+                        <img src="../img/star.png" width="10" height="10">
+                        <%}%>
+                        <% for(var j = 1; j <  6 - rating; j++){ %>
+                        <img src="../img/star-empty.png" width="10" height="10">
+                        <%}%>
+                    </div>
+
+                </div>
+                <span class="review-date"><%= event_date %></span>
+            </div>
+
+            <span class="review-comment"><%= review_comment %></span>
+        </div>
+        <%}%>
+    </div>
+</div>
+</body>
+</html>

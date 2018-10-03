@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link href="../css/bootstrap.min.css" rel="stylesheet">
+  <link href="../css/common.css" rel="stylesheet">
+  <link href="../css/my_match.css" rel="stylesheet">
+  <!--<link href="https://fonts.googleapis.com/css?family=Yeon+Sung" rel="stylesheet">-->
+  <title>내가 등록한 매칭</title>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="../js/jquery.js"></script>
+  <script src="../js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript">
+        function goBack(){
+            window.history.back();
+     }
+    </script>
+</head>
+
+<body class="coloring">
+<% include ./navbar %>
+<div class="container">
+  <div class="reco">
+	  
+	 <% if(event_data[0] == null) { %>
+       <p style="font-weight: bold; margin-left:2rem; margin-top:1rem;">등록한 매칭이 없습니다.</p>
+     <%} else{ %>
+	  
+		<% for(var i = 0; i < event_data.length; i++) {
+		  var curEmail = event_data[i].email;
+		  var curCreatedMonth = event_data[i].created_month;
+		  var curCreatedDay = event_data[i].created_day;
+		  var curTeamname = event_data[i].teamname;
+		  var curAdd = event_data[i].add[0] +' '+ event_data[i].add[1];
+		  var curRegion = event_data[i].region;
+		  var curMove = event_data[i].move;
+		  var curAge = event_data[i].age;
+		  var curDate = event_data[i].event_date;
+		  var curTime = event_data[i].event_time;
+		  var curMention = event_data[i].mention;
+		  var curApplicationNumber = event_data[i].application_number;
+		  
+		  var matchYear = curDate.substring(0,4);
+		  var matchMonth = curDate.substring(5,7);
+		  var matchDay = curDate.substring(8,10);
+
+		if(curMove == 100){
+			curMove = 'O';
+		}else if(curMove == 50){
+			curMove = 'X';
+		}
+
+		if(curTime == 'none'){
+			curTime = '(시간 무관)';
+		} else
+            curTime = curTime + ' 시';
+		%>
+    <div class="content"> <!--content-->
+      <div class="date" style="padding:0 .5rem;">
+        <h3 style="font-weight: bold"><%= matchMonth %>/<%= matchDay %></h3>
+      </div>
+      <div class= "events" style="padding: 0 .5rem; margin-bottom:1.5rem;">
+        <div class="score_content">
+          <div class = "schedule-detail">
+            <p class="schedule-detail-content">
+              <span class="bold">지역 | </span>
+              <span><%= curAdd %></span>
+            </p>
+            <p class="schedule-detail-content">
+              <span class="bold">장소 | </span>
+              <span><%= curRegion %></span>
+            </p>
+            <p class="schedule-detail-content">
+              <span class="bold">원정경기 | </span>
+              <span><%= curMove %></span>
+            </p>
+            <p class="schedule-detail-content">
+              <span class="bold">연령대 | </span>
+              <span><%= curAge %> 대</span>
+            </p>
+			  
+			  <!--
+            <p class="schedule-detail-content">
+              <span class="bold">등록한 날짜 | </span>
+              <span><%= curCreatedMonth %>월 <%= curCreatedDay %>일</span>
+            </p>
+-->
+			  
+            <p class="schedule-detail-content">
+              <span class="bold">시간 | </span>
+              <span><%= curTime %></span>
+            </p>
+            <p class="schedule-detail-content">
+              <span class="bold">한마디 | </span>
+              <span><%= curMention %></span>
+            </p>
+            <div>
+				<form action="/mymatch" method="post">
+					<input type="hidden" name="user" id="user" class="form-control" value="<%= curEmail %>" readonly/>
+					<input type="hidden" name="date" id="date" class="form-control" value="<%= curDate %>" readonly/>
+					<input type="hidden" name="time" id="time" class="form-control" value="<%= curTime %>" readonly/>
+					<input type="hidden" name="event_region" id="event_region" class="form-control" value="<%= curRegion %>" readonly/>
+					<input type="hidden" name="event_application_number" id="event_application_number" class="form-control" value="<%= curApplicationNumber %>" readonly/>
+					
+					<a href="/matchapplicationedit"><button value="mod" class="btn btn-block" onclick="href='/matchapplicationedit'" id="opt" name="opt" value="mod" style="color:white; text-align:center; margin-left:auto;margin-right:auto;margin-top:1rem; background-color:#7473ff;">수정하기</button></a>
+					<a href="/mymatch"><button class="btn btn-block" onclick="alert('삭제되었습니다.')" id="opt" name="opt" value="del" style="color:white; text-align:center; margin-left:auto;margin-right:auto; margin-top:.5rem; background-color:#7473ff;">삭제하기</button></a>
+				</form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> <!--content-->
+    <%} %>
+	  <%} %>
+  </div> <!--reco-->
+
+</div><!--container-->
+
+</body>
+</html>

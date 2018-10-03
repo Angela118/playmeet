@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/main.css" rel="stylesheet">
+    <link href="../css/common.css" rel="stylesheet">
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="../js/jquery.js"></script>
+    <script src="../js/bootstrap.bundle.min.js"></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>-->
+	<title> Loading . . . </title>
+</head>
+<body>
+    <div class="container">
+    <div class="py-4 text-center"  style="margin-top:2.5rem;">
+      <img src="../img/update_playmeet3_low.jpg" width="280rem">
+      <h5 class="mb-3 align-center" style="color: #676789; font-style:oblique; font-size:small;">축구하고 싶은 사람 모여라!</h5>
+    </div>
+	<div id="load" class="coloring">
+		<img src="../img/doughnut.gif" alt="loading">
+	</div>
+	</div>
+	<!--<p> Loading . . . </p>-->
+    
+	<script lang="javascript">
+		window.onload=function(){
+		//	$('#load').hide();
+			setTimeout(function(){
+				location.href="/main";
+			},1600);			
+		}
+	</script>
+	</body>
+</html>
