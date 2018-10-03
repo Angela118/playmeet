@@ -1,0 +1,49 @@
+.chat_room_name{
+    display:flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.chat_room_content{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    /*width: 17rem;*/
+    margin-top: auto;
+    margin-bottom:auto;
+}
+
+.chat_tab{
+    color: white;
+    width: 100% !important;
+    position: fixed;
+    top: 70px;
+    width: 100%;
+    display:flex;
+    align-items: center;
+    justify-content: space-around;
+    font-weight: bold;
+    border: 1.5px solid #7473ff;
+}
+
+.chat_chat, .chat_message{
+    width: 50%;
+    text-align: center;
+    padding-bottom: 0.5rem
+    color: #7473ff;
+}
+
+.chat_chat:hover {
+    text-decoration: underline;
+}
+.chat_message:hover {
+    text-decoration: underline;
+}
+.reco  {
+    width: 100% !important;
+    height: 100% !important;
+}
+.container {
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+}
