@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+    <link href="./css/common.css" rel="stylesheet">
+    <link href="./css/chat.css" rel="stylesheet">
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="../js/jquery.js"></script>
+    <script src="../js/bootstrap.bundle.min.js"></script>
+    <script src="jquery-3.1.1.min.js"></script>
+    <script src="socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.dev.js"></script>
+
+    <script>
+        var socket;
+        var writer;
+        var recipient = '<%= event_data.otherEmail %>';
+        //jquery에서 문서가 다 로딩 되었을 때 호출되는 함수
+        $(function(){
+            connect();
+            login();
+        });
+        function connect(){
+            var host = '203.153.146.124';  // 아이피 바꾸기!!!!!!
+            $('#hostInput').val(); //203.153.146.124
+            var port = 3000;  // $('#portInput').val();
+            //서버에 접속
+            connectToServer(host, port);
+        }
+        function connectToServer(host, port){
+            var url = 'http://' + host + ':' + port;
+            var options = {
+                forceNew:true   //연결이 끊어질 때마다 새로운 연결을 만들어라
+            };
+            socket = io.connect(url, options);   //socket객체 생성
+            socket.on('connect'/*connect 이벤트 발생*/, function(){
+                console.log('웹소켓 서버에 연결됨 -> ' + url);
+            });
+            socket.on('disconnect'/*disconnect 이벤트 발생*/, function(){
+                console.log('웹소켓 연결 종료됨.');
+            });
+            socket.on('message', function(message){
+                //println('수신 -> ' + JSON.stringify(message));
+                //      $(output).prependTo('#content');
+                addToChatting(message.email, message.data, message.application_number, message.cancel, 0);
+            });
+            socket.on('preload',function(dbData){
+                addToChatting(dbData.email, dbData.message, dbData.application_number, dbData.cancel, dbData.reviewed);
+            });
+        }
+        function login(){
+            var id = '<%= email %>';
+            var teamname = '<%= teamname %>';
+            var today = new Date();
+            var otherId = '<%= event_data.otherEmail %>';
+            var application_number = '<%= event_data.application_number%>';
+            var output = {
+                id:id,
+                teamname:teamname,
+                otherId:otherId,
+                today:today,
+                application_number:application_number
+            };
+            socket.emit('login', output);
+        }
+        function send(){
+            var email = '<%= email %>';
+            var sender = '<%= teamname %>';   //senderInput 입력상자에서 입력 값 가져오기
+//          var recipient = $('#recipientInput').val();
+            var recipient = '<%= event_data.otherEmail %>';
+            var application_number = '<%=event_data.application_number%>';
+            var data = $('#dataInput').val();
+            var chattype = $('#chattype option:selected').val();
+            var message = {
+                email:email,
+                sender:sender,
+                recipient:recipient,
+                application_number: application_number,
+                command:chattype,
+                data:data,
+                type:'text'
+            };
+            socket.emit('message', message);
+            addToChatting(message.email, message.data, message.application_number, 0, null);
+            $('#dataInput').val('');
+        }
+        function addToChatting(writer, msg, application_number, cancel, reviewed) {
+            var temp = '<%= email %>';
+            if (writer == temp)
+                writer = 'me';
+            else
+                writer = 'you';
+            var contents;
+            // 그냥 메시지
+            if (writer == 'me') {
+                contents =
+                    "<li class="+ writer +">"
+                    +"<div class='msg' style='margin-right:.5rem;'"+"<p>"+msg+"</p>"
+                    +"</div></li>";
+            } else {
+                var profile = '<%= event_data.otherProfile %>';
+                contents =
+                    "<li class=" + writer + ">"
+                    + "<div class='img_div'" + "style='margin-left: 0rem; margin-right: .5rem;'>" + "<img class='profile_img' src='../profile_img/" + profile + "'/>" + "</div>"
+                    + "<div class='msg' style='margin-top:auto;margin-bottom:auto;'" + "<p>" + msg + "</p></div>"
+                    + "</li>";
+            }
+            //상대방이 리뷰했을 경우
+            if(reviewed) {
+                contents =
+                    "<li class=" + writer + ">"
+                    + "<div class='img_div'" + "style='margin-left: 0rem; margin-right: 0'>" + "<img class='profile_img' src='../profile_img/" + profile + "'/>" + "</div>"
+                    + "<div class='msg'" + "<p>" + msg + "</p><button class='btn' style='color:white; background-color:transparent; border:1px solid white; border-radius: 10px; display:block;margin-left:auto;margin-right:auto;margin-top:.5rem;' onclick=\"location.href='/teamcal'\">상대방 리뷰" + "</button></div>"
+                    + "</li> ";
+            }
+            // 매칭 중단시
+            if(cancel == 1) {
+                if((writer == 'you') && (application_number == '<%= event_data.application_number%>')) {
+                    msg = '상대방이 ' + msg + ' 수락을 누르면 매칭 정보가 삭제되며, 필요시 상대방 신고하기 버튼을 누르면 관리자에게 접수됩니다.';
+                    contents =
+                        "<li class=" + writer + ">"
+                        + "<div class='img_div'" + "style='margin-left: 0rem; margin-right: 0'>" + "<img class='profile_img' src='../profile_img/" + profile + "'/>" + "</div>"
+                        + "<div class='msg' style='width:100%;'" + "<p>" + msg + "</p><button class='btn' style='color:white; background-color:transparent; border:1px solid white; border-radius: 10px; display:block;margin-left:auto;margin-right:auto;margin-top:.5rem;'  onclick='deleteClick()'>수락" + "</button></div>"
+                        + "</li> ";
+                    $(".chatting").append(contents);
+                    var objDiv = document.getElementById("chatting");
+                    objDiv.scrollTop = objDiv.scrollHeight;
+                }else if((writer == 'me') && (application_number == '<%= event_data.application_number%>')) {
+                    msg = msg + ' 상대방이 확인을 누르면 매칭 정보가 삭제됩니다.';
+                    contents =
+                        "<li class=" + writer + ">"
+                        + "<div class='msg'" + "<p>" + msg + "</p>"
+                        + "</li>";
+                    $(".chatting").append(contents);
+                    var objDiv = document.getElementById("chatting");
+                    objDiv.scrollTop = objDiv.scrollHeight;
+                }
+            }else{
+                if(application_number == '<%= event_data.application_number%>') {
+                    $(".chatting").append(contents);
+                    var objDiv = document.getElementById("chatting");
+                    objDiv.scrollTop = objDiv.scrollHeight;
+                }
+            }
+        }
+        function println(data){      //상태 프린트
+            //       console.log(data);
+            $('#chatting').append('<p>' + data + '</p>');
+        }
+        function clearText(field) {
+            field.value="";
+        }
+    </script>
+
+    <title><%= event_data.otherTeamname %>팀과의 채팅방</title>
+</head>
+<!--메뉴 영역 시작 : 나중에 파일로 따로 빼기 -->
+<!--여기선 메뉴명 채팅방으로 되어 있음-->
+
+<body style="background-color:#0C0C1C;">
+<!--메뉴 다름-->
+<nav class="navbar">
+    <div class="top" style="padding: .5rem;">        
+        <img src="../img/left-arrow.png" height="20rem" onclick="location.href='/chatroomchat'">
+        <div style="color:white; margin-left: -4rem;"> <%= event_data.otherTeamname %> 팀과의 채팅방</div>
+        
+        <div class="sets">
+            <a href="/chatroomchat"><img src="../img/update_chat.png" class="menu_img" height="20rem" style="margin-right: .3rem; visibility:hidden;"></a>
+            <img src="../css/img/menu.png" height="20rem" class="navbar-toggler" data-toggle="collapse" data-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
+        </div>
+    </div>
+
+    <div class="collapse navbar-collapse" id="navbarsExample01">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link">
+                    <div onclick="appointment()" onmouseover="this.style.color='#dfe3ee'" onmouseout="this.style.color='white'"><b>시간 장소 다시 정하기</b></div>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="" data-toggle="modal" data-target="#myModal">
+                    <b>매칭 중단하기</b><br>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="" data-toggle="modal" data-target="#reportModal">
+                    <b>상대방 신고하기</b><br>
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<!--메뉴 영역 끝 : -->
+
+<form action="/chat" method="post" id="formPost">
+    <!-- The Modal -->
+    <div class="modal" id="myModal">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content" style="background-color:#292941; color:white;">
+                <!--&lt;!&ndash; Modal body &ndash;&gt;-->
+                <div class="modal-body">
+                    <p>매칭을 중단하시겠습니까? 상대방과의 모든 매칭 정보가 삭제됩니다.</p>
+                </div>
+
+                <input type="hidden" name="otherEmail" value="<%= event_data.otherEmail%>">
+                <input type="hidden" name="event_date" value="<%=event_data.event_date%>">
+                <input type="hidden" name="event_time" value="<%=event_data.event_time%>">
+                <input type="hidden" name="application_number" value="<%=event_data.application_number%>">
+
+                <!--&lt;!&ndash; Modal footer &ndash;&gt;-->
+                <div class="modal-footer">
+                    <button type="button" class="btn" data-dismiss="modal" style="background-color:transparent; color:white; border:1px solid white;">닫기</button>
+                    <button type="button" class="btn btn-danger" onclick="cancel()" data-dismiss="modal" data-toggle="collapse" data-target="#navbarsExample01" >매칭 중단</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!--Modal end-->
+</form>
+
+<div id="mydiv">
+    <div class="chatting" id="chatting" style="height:91vh; padding-top: 60px;"></div>
+</div>
+
+<div style="position:fixed; bottom:0; display: flex; width:100%; justify-content: space-between; align-items: center; background-color:#292941; padding: 1rem;">
+    <img src="./css/img/add.png" id="add_button" width="30rem" height="30rem" alt="" style="margin-right:.5rem;">
+    <input type="text" class="form-control" id="dataInput" placeholder="내용을 입력해주세요."  style="margin-right: .5rem; border-radius:15px;" onFocus="clearText(this)">
+    <button type="submit" class="btn" id="text_button" style="color:white; background-color:#292941; border:1px solid white; border-radius: 10px;" onclick="send();">전송</button>
+
+    <script>
+        function goBack(){
+            window.history.back();
+        }
+        // $(".add_button_content").hide();
+        $("#add_button").click(function(){
+            var add = './css/img/add.png';
+            var close = './css/img/close-button.png';
+            if($('#add_button').attr('src') === add) {
+                $('#add_button').attr('src', close);
+            } else {
+                $('#add_button').attr('src', add);
+            }
+            $("#add_button_content").toggle();
+        });
+        var email = '<%= email %>';
+        var sender = '<%= teamname %>';
+        var recipient = '<%= event_data.otherEmail %>';
+        var application_number = '<%=event_data.application_number%>';
+        function cancel() {
+            var data = '매칭 신청을 취소 하였습니다.'
+            var chattype = $('#chattype option:selected').val();
+            var message = {
+                email:email,
+                sender:sender,
+                recipient:recipient,
+                application_number: application_number,
+                cancel:1,
+                command:chattype,
+                data:data,
+                type:'text'
+            };
+            socket.emit('message', message);
+            // addToChatting(message.email, message.data, message.application_number, message.cancel);
+            addToChatting(message.email, message.data, message.application_number, message.cancel, 0);
+        }
+        function deleteClick() {
+            var data = '매칭이 취소되었습니다. 채팅방을 더 이상 사용할 수 없습니다.';
+            var chattype = $('#chattype option:selected').val();
+            var message = {
+                email:email,
+                sender:sender,
+                recipient:recipient,
+                application_number: application_number,
+                cancel:0,
+                command:chattype,
+                data:data,
+                type:'text'
+            };
+            socket.emit('message', message);
+            // setTimeout(function () {
+            document.getElementById('formPost').submit();
+            // }, 500);
+        }
+        function report() {
+            alert('신고가 접수되었습니다.');
+            document.getElementById('formPost_report').submit();
+        }
+        function appointment() {
+            document.getElementById('formPost_appoint').submit();
+        }
+        function reloadChat() {
+            document.getElementById('formPost_reload').submit();
+        }
+    </script>
+</div>
+
+<form action="/chatroomchat" method="post" id="formPost_reload">
+    <input type="hidden" name="otherEmail" value="<%=event_data.otherEmail%>">
+    <input type="hidden" name="application_number" value="<%=event_data.application_number%>">
+</form>
+
+<div id="add_button_content" style="display: none; color: white; margin:0; justify-content: space-around; padding: .5rem 1rem 0 1rem; position: fixed; bottom: 70px; z-index:2; background-color:#292941;">
+
+    <% if(event_data.event_time == 'none') {
+        var time = '시간 무관';
+    }else {
+        var time = event_data.event_time + '시'
+    }%>
+
+    <!-- add에 "" 표시 검사 -->
+    <% var add = /d/.exec(event_data.event_add);
+    %>
+
+    <h4 style="font-size:1.2rem; text-align:center;"> 경기 정보 </h4>
+    <div style="width:40%; float:left; color:#D2D0DE;">경기 날짜</div> 
+    <div style="width:60%; float:right;"> : <%=event_data.event_date%></div>
+    
+    <div style="width:40%; float:left; color:#D2D0DE;">경기 시간 </div> 
+    <div style="width:60%; float:right;">: <%=time%></div>
+    
+    <div style="display:inline-block;"><div style="width:40%; float:left; color:#D2D0DE;">경기 장소 </div> 
+    <div style="width:60%; float:right;">: <%=event_data.event_add[0]%> <%=event_data.event_add[1]%> <%=event_data.event_region%></div></div>
+    
+    <div style="width:40%; float:left; color:#D2D0DE;">상대팀 경기 인원 </div> 
+    <div style="width:60%; float:right;">: <%=event_data.other_nofteam%>명</div>
+    
+    <div style="width:40%; float:left; color:#D2D0DE;">우리팀 경기 인원</div> 
+    <div style="width:60%; float:right;">: <%=event_data.nofteam%>명</div>
+    
+    <p style="font-size: 0.9rem; margin-bottom: 0;">(상대방이 업데이트 한 정보는 새로고침해야 확인 가능합니다.)</p>
+    <button type="button" class="btn" value="페이지 새로 고침" style="display: block; color:white; text-align:center; margin-left:Auto;margin-right:auto; background-color:#7473ff;" onClick="reloadChat()">새로고침</button>
+</div>
+
+<form action="/chatappointment" method="get" id="formPost_appoint">
+    <input type="hidden" name="email" value="<%=event_data.email%>">
+    <input type="hidden" name="otherEmail" value="<%=event_data.otherEmail%>">
+    <input type="hidden" name="otherTeamname" value="<%=event_data.otherTeamname%>">
+    <input type="hidden" name="event_date" value="<%=event_data.event_date%>">
+    <input type="hidden" name="event_time" value="<%=event_data.event_time%>">
+    <input type="hidden" name="application_number" value="<%=event_data.application_number%>">
+</form>
+
+<form action="/reportdeveloper" method="post" id="formPost_report">
+    <input type="hidden" name="otherEmail" value="<%=event_data.otherEmail%>">
+    <input type="hidden" name="otherTeamname" value="<%=event_data.otherTeamname%>">
+    <input type="hidden" name="application_number" value="<%=event_data.application_number%>">
+
+    <!-- The report Modal -->
+    <div class="modal" id="reportModal">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content" style="background-color:#292941; color:white;">
+                <div class="modal-body" style="border-top:1px solid black">
+                    관리자에게 신고할 내용을 입력<br>
+                    신고할 팀 : <b><%=event_data.otherTeamname%>팀</b> <br>(id : <%=event_data.otherEmail%>)
+                </div>
+
+                <textarea name="report_content" id="" cols="7" rows="4" placeholder="여기 입력"></textarea>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn" data-dismiss="modal" style="background-color:transparent; color:white; border:1px solid white;">닫기</button>
+                    <button type="button" class="btn btn-danger" onclick="report()" data-dismiss="modal" data-toggle="collapse" data-target="#navbarsExample01">제출</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!--reportModal end-->
+
+</form>
+
+
+
+</body>
+</html>
