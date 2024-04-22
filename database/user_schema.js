@@ -13,11 +13,11 @@ Schema.createSchema = function(mongoose) {
 	var UserSchema = mongoose.Schema({		//18개
 		email: {type: String, 'default':''},
 		userstoken:{type:String, 'default':''},
-	    hashed_password: {type: String, required: true, 'default':''},
-	    teamname: {type: String, index: 'hashed', 'default':''},
-	    salt: {type:String, required:true},
-        gender: {type:String, 'default':''},
-        age: {type:Number, 'default':''},
+	    	hashed_password: {type: String, required: true, 'default':''},
+	    	teamname: {type: String, index: 'hashed', 'default':''},
+	    	salt: {type:String, required:true},
+        	gender: {type:String, 'default':''},
+        	age: {type:Number, 'default':''},
 		region: {type:String, 'default':''},
 		add: [{type:String, 'default':''}],
 		move: {type:String, 'default':''},
@@ -31,7 +31,7 @@ Schema.createSchema = function(mongoose) {
 		geoLat:{type:Number, 'default':''},
 		usertoken:{type:String, 'default':''},
 		created_at: {type: Date, index: {unique: false}, 'default': Date.now},
-	    updated_at: {type: Date, index: {unique: false}, 'default': Date.now},
+	    	updated_at: {type: Date, index: {unique: false}, 'default': Date.now},
 	});
 	
 	// password를 virtual 메소드로 정의 : MongoDB에 저장되지 않는 편리한 속성임. 특정 속성을 지정하고 set, get 메소드를 정의함
